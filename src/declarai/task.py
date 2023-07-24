@@ -16,8 +16,9 @@ class LLMFunction(Callable[[tuple[Any, ...], dict[str, Any]], Any]):
 
 
 # Define the provider literals
+# TODO: Replace with actual providers and models.
 ProviderOpenai = Literal["openai"]
-ModelsOpenai = Literal["gpt-3", "gpt-3.5-turbo", "davinci", "curie", "babbage"]
+ModelsOpenai = Literal["gpt-4", "gpt-3.5-turbo", "text-davinci-003"]
 
 ProviderCohere = Literal["Cohere"]
 ModelsCohere = Literal["claude"]
