@@ -5,7 +5,8 @@ from .openai_llm import OpenAILLM
 
 def resolve_llm_from_config(llm_config: LLMConfig, **kwargs) -> LLM:
     if llm_config.provider == "openai":
-        if open_ai_token := kwargs.get("openai_token"):
+        open_ai_token = kwargs.get("openai_token")
+        if open_ai_token:
             return OpenAILLM(open_ai_token)
         return OpenAILLM()
     raise NotImplementedError()
