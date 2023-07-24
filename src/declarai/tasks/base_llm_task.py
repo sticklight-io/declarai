@@ -10,7 +10,7 @@ we will need to create the following:
 import json
 import logging
 import re
-from typing import Any, TypeVar, Dict, Callable
+from typing import Any, Callable, Dict, TypeVar
 
 from declarai.configurations.prompt_config import PromptConfig
 from declarai.llm import LLM
@@ -41,7 +41,7 @@ class BaseLLMTask:
         template: str,
         template_args: Dict[str, str],
         llm: LLM,
-        prompt_config: PromptConfig = PromptConfig()
+        prompt_config: PromptConfig = PromptConfig(),
     ):
         self._llm = llm
         self._template = template

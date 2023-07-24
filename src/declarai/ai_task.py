@@ -20,28 +20,38 @@ from .templates import InstructFunctionTemplate
 
 # Custom function to enforce the relationship between PROVIDER and MODELS
 @overload
-def init_declarai(provider: ProviderOpenai, model: ModelsOpenai) -> Callable[[Callable], LLMTask]:
+def init_declarai(
+    provider: ProviderOpenai, model: ModelsOpenai, openai_token: str | None = None
+) -> Callable[[Callable], LLMTask]:
     ...
 
 
 @overload
-def init_declarai(provider: ProviderCohere, model: ModelsCohere) -> Callable[[Callable], LLMTask]:
+def init_declarai(
+    provider: ProviderCohere, model: ModelsCohere
+) -> Callable[[Callable], LLMTask]:
     ...
 
 
 @overload
-def init_declarai(provider: ProviderAI21labs, model: ModelsAI21labs) -> Callable[[Callable], LLMTask]:
+def init_declarai(
+    provider: ProviderAI21labs, model: ModelsAI21labs
+) -> Callable[[Callable], LLMTask]:
     ...
 
 
 @overload
-def init_declarai(provider: ProviderGoogle, model: ModelsGoogle) -> Callable[[Callable], LLMTask]:
+def init_declarai(
+    provider: ProviderGoogle, model: ModelsGoogle
+) -> Callable[[Callable], LLMTask]:
     ...
 
 
-def init_declarai(provider: str, model: AllModels) -> Callable[[Callable], LLMTask]:
+def init_declarai(
+    provider: str, model: AllModels, **kwargs
+) -> Callable[[Callable], LLMTask]:
     llm_config = LLMConfig(provider=provider, model=model)
-    llm = resolve_llm_from_config(llm_config)
+    llm = resolve_llm_from_config(llm_config, **kwargs)
 
     def ai_task(func: Callable) -> LLMTask:
         """
@@ -74,7 +84,7 @@ def init_declarai(provider: str, model: AllModels) -> Callable[[Callable], LLMTa
                 "input_placeholder": llm_translator.make_input_placeholder(),
                 "output_instructions": llm_translator.make_output_prompt(),
             },
-            llm=llm
+            llm=llm,
         )
         llm_task.compile()
 
