@@ -1,2 +1,2 @@
-from .reducer import Reducer
-from .task import magic, init_declarai
+from .sequence import Sequence
+from .ai_task import init_declarai, magic
