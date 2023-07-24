@@ -79,14 +79,17 @@ In this example, we define a task to extract phone numbers from a given email co
     
     print(f"Phone numbers: {res}")
     ```
+
 * Run the file:
 
     <div class="termy">
-    ```console
-    $ python extract_phone_number.py
-
-  Phone numbers: [123456789]
-    ```
+    
+        ```console
+        $ python extract_phone_number.py
+        
+        Phone numbers: [123456789]
+        ```
+    
     </div>
 
 
