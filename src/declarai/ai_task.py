@@ -86,7 +86,6 @@ def init_declarai(
             },
             llm=llm,
         )
-        llm_task.compile()
 
         llm_task.__name__ = func.__name__
 

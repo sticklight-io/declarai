@@ -22,15 +22,29 @@ LLMTask = TypeVar("LLMTask", bound="BaseLLMTask")
 
 
 class LLMTaskFuture:
-    def __init__(self, exec_func: Callable[[], Any], populated_prompt: str):
+    def __init__(
+        self,
+        exec_func: Callable[[str], Any],
+        kwargs: Dict[str, Any],
+        compiled_template: str,
+        populated_prompt: str
+    ):
         self.exec_func = exec_func
         self.__populated_prompt = populated_prompt
+        self.__compiled_template = compiled_template
+        self.__kwargs = kwargs
 
     def __call__(self) -> str:
         return self.exec_func(self.__populated_prompt)
 
     def get_populated_prompt(self) -> str:
         return self.__populated_prompt
+
+    def get_compiled_template(self) -> str:
+        return self.__compiled_template
+
+    def get_kwargs(self) -> Dict[str, Any]:
+        return self.__kwargs
 
 
 class BaseLLMTask:
@@ -79,12 +93,16 @@ class BaseLLMTask:
             )
             return None
 
-    def compile(self) -> str:
+    def compile(self, **kwargs) -> str:
         """
         Generates the initial template to be used for later predictions.
+        Optionally passing kwargs will also inject the data into the compiled template.
         """
         logger.debug("Compiling task template")
-        return self._template.format(**self._template_args)
+        template = self._template.format(**self._template_args)
+        if kwargs:
+            template.format(**kwargs)
+        return template
 
     def _plan(self, **kwargs) -> str:
         logger.debug("Creating task plan (Injecting data into template)")
@@ -96,7 +114,12 @@ class BaseLLMTask:
         :param kwargs: the data to populate the template with
         """
         populated_prompt = self._plan(**kwargs)
-        return LLMTaskFuture(self.exec, populated_prompt)
+        return LLMTaskFuture(
+            self.exec,
+            kwargs=kwargs,
+            compiled_template=self.compile(),
+            populated_prompt=populated_prompt,
+        )
 
     def exec(self, populated_prompt: str) -> Any:
         """
