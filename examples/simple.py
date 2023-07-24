@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from src.declarai import magic, task
+from declarai import magic, task
 
 
 @task

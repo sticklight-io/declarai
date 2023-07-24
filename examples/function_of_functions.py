@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from src.declarai import Reducer, magic, task
+from declarai import Reducer, magic, task
 
 
 @task
