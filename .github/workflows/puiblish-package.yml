@@ -3,8 +3,6 @@ on:
   push:
     tags:
       - "v*.*.*"
-    branches:
-      - publish-package-to-pypi
 jobs:
   build:
     runs-on: ubuntu-latest
