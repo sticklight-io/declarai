@@ -1,6 +1,3 @@
-
-
-
 @task
 def describe_conversation(conversation: List[str]) -> str:
     """
@@ -9,7 +6,6 @@ def describe_conversation(conversation: List[str]) -> str:
     :return: A one liner description of the conversation
     """
     return magic(conversation)
-
 
 
 @search

@@ -43,15 +43,13 @@ available_departments = ["sales", "support", "billing"]
 def handle_customer_question(question: str) -> Dict[str, Any]:
     suggested_title = suggest_title.plan(question=question)
     selected_department = route_to_department.plan(
-        title=suggested_title,
-        departments=available_departments
+        title=suggested_title, departments=available_departments
     )
     suggested_answers = suggest_department_answers.plan(
-        question=question,
-        department=selected_department
+        question=question, department=selected_department
     )
 
-    res = suggested_answers(reduce='CoT')
+    res = suggested_answers(reduce="CoT")
 
     return {
         "question_title": res["question_title"],
