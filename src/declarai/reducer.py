@@ -16,8 +16,8 @@ Usage:
 
 from typing import Any
 
-from src.declarai.tasks.base_llm_task import BaseLLMTask
-from src.declarai import templates
+from declarai.tasks.base_llm_task import BaseLLMTask
+from declarai import templates
 
 
 class Reducer:

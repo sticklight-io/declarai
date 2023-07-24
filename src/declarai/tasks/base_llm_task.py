@@ -12,9 +12,9 @@ import logging
 import re
 from typing import Any
 
-from src.declarai.clients.openai_client import OpenAIClient
-from src.declarai.configurations.llm_config import LLMConfig
-from src.declarai.configurations.prompt_config import PromptConfig
+from declarai.clients.openai_client import OpenAIClient
+from declarai.configurations.llm_config import LLMConfig
+from declarai.configurations.prompt_config import PromptConfig
 
 logger = logging.getLogger("BaseFunction")
 

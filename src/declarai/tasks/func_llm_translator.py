@@ -1,4 +1,4 @@
-from src.declarai.python_parser import ParsedFunction
+from declarai.python_parser import ParsedFunction
 
 FORMAT_INSTRUCTIONS = (
     "The output should be a markdown code snippet formatted in the following schema, "
