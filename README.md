@@ -1,4 +1,7 @@
 # Introducing declareai
+
+![Logo - declarai.png](..%2F..%2FDocuments%2FLogo%20-%20declarai.png)
+
 Using AI in your code shouldn't be difficult. Supporting the mission of bringing AI to the masses,
 this repo is meant to abstract the know-how of prompt engineering and make using LLMs for daily programming accessible to everyone.
 
