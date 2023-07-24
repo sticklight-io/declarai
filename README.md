@@ -47,9 +47,10 @@ declarai aims to promote clean and readable code by enforcing the use of doc-str
 The resulting code is readable and easily maintainable.
 
 For more complex use cases you can use a reducer, to build and compile multiple prompts into one!
+
 ```python
 from typing import Any, Dict, List
-from declarai import Reducer, magic, task
+from declarai import Sequence, magic, task
 
 
 @task
@@ -86,8 +87,9 @@ def suggest_department_answers(question: str, department: str) -> List[str]:
 
 departments = ["sales", "support", "billing"]
 
+
 def handle_customer_question(question: str) -> Dict[str, Any]:
-    plan = Reducer()
+    plan = Sequence()
     plan.add("question_title", suggest_title, question=question)
     plan.add("department", route_to_department, title=plan["question_title"], departments=departments)
     plan.add("answers", suggest_department_answers, question=question, department=plan["department"])

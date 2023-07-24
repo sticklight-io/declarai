@@ -1,12 +1,11 @@
 from typing import Dict, List
 
-from declarai import magic, init_declarai
+from declarai import init_declarai, magic
+
+ai_task = init_declarai(provider="openai", model="gpt-3.5-turbo")
 
 
-task = init_declarai(provider="openai", model="gpt-3.5-turbo")
-
-
-@task
+@ai_task
 def extract_email_phonenum(email: str) -> List[str]:
     """
     Extract the phone number from the provided email
@@ -17,12 +16,22 @@ def extract_email_phonenum(email: str) -> List[str]:
 
 
 res = extract_email_phonenum(
-    email="Hey jenny,\nyou can call me at 124-3435-132.\nThanks!, I'm also available at 123-456-7890."
+    email="Hey jenny,\nyou can call me at 124-3435-132.\n"
+          "Thanks!, I'm also available at 123-456-7890."
 )
+print(extract_email_phonenum.compile())
 print(res)
 
+planned = extract_email_phonenum.plan(
+    email="Hey jenny,\nyou can call me at 000999999999.\n"
+          "Thanks!, I'm also available at 123-456-7890."
+)
+print(planned.get_populated_prompt())
+res_2 = planned()
+print(res_2)
 
-@task
+
+@ai_task
 def extract_email_info(text: str, contact_fields: List[str]) -> Dict[str, str]:
     """
     Extract the provided contact fields from the given text
@@ -34,13 +43,14 @@ def extract_email_info(text: str, contact_fields: List[str]) -> Dict[str, str]:
 
 
 res = extract_email_info(
-    text="""I am John Doe and my phone number is 123-456-7890. My email address is johndoe@walla.co.il""",
+    text="I am John Doe and my phone number is 123-456-7890. "
+         "My email address is johndoe@walla.co.il",
     contact_fields=["phone", "name", "email"],
 )
 print(res)
 
 
-@task
+@ai_task
 def get_tables(query: str) -> List[str]:
     """
     Extract the tables used in the given query
@@ -53,7 +63,7 @@ def get_tables(query: str) -> List[str]:
 print(get_tables(query="SELECT * FROM table_1 JOIN table_2"))
 
 
-@task
+@ai_task
 def generate_a_poem(title: str) -> str:
     """
     Generate a poem based on the given title
