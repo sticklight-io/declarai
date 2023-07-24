@@ -1,6 +1,15 @@
 from typing import Dict, List
 
-from declarai import magic, task
+from declarai import magic, init_declarai
+from declarai.llm import LLMConfig, LLMProviders
+from declarai.llm.providers import LLMModels
+
+task = init_declarai(
+    llm_config=LLMConfig(
+        provider=LLMProviders.OPENAI,
+        model=LLMModels.GPT_3P5_TURBO,
+    )
+)
 
 
 @task

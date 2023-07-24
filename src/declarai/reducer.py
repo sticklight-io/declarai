@@ -16,8 +16,8 @@ Usage:
 
 from typing import Any
 
-from declarai.tasks.base_llm_task import BaseLLMTask
 from declarai import templates
+from declarai.tasks.base_llm_task import BaseLLMTask
 
 
 class Reducer:
@@ -39,7 +39,7 @@ class Reducer:
 
     @staticmethod
     def get_ai_func_template(function, kwargs):
-        return function.llm_task.generation_prompt(**kwargs)
+        return function.llm_task.populate_template(**kwargs)
 
     def __compile(self):
         step_count = len(self.res)

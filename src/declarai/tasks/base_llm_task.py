@@ -12,22 +12,21 @@ import logging
 import re
 from typing import Any
 
-from declarai.clients.openai_client import OpenAIClient
-from declarai.configurations.llm_config import LLMConfig
 from declarai.configurations.prompt_config import PromptConfig
+from declarai.llm import LLM
 
 logger = logging.getLogger("BaseFunction")
 
 
 class BaseLLMTask:
-    prompt_config: PromptConfig = PromptConfig()
-    llm_config: LLMConfig = LLMConfig()
-
-    def __init__(self, template: str):
-        self.openai = OpenAIClient()
+    def __init__(
+        self, template: str, llm: LLM, prompt_config: PromptConfig = PromptConfig()
+    ):
+        self.llm = llm
         self.generation_template = template
+        self.prompt_config = prompt_config
 
-    def generation_prompt(
+    def populate_template(
         self,
         **kwargs,
     ) -> str:
@@ -40,33 +39,37 @@ class BaseLLMTask:
 
     def generate_unstructured(self, prompt: str) -> str | None:
         logger.debug(prompt)
-        generated = self.openai.predict(prompt)
+        generated = self.llm.predict(prompt)
         return generated
 
     def generate_structured(self, prompt: str, multi_results: bool = False) -> Any:
         logger.debug(prompt)
-        generated = self.openai.predict(prompt)
+        generated = self.llm.predict(prompt)
         try:
             if multi_results:
                 json_values = re.findall(r"{.*?}", generated, re.DOTALL)
             else:
                 json_values = re.findall(r"{.*}", generated, re.DOTALL)
-            res = {}
-            for v in json_values:
-                raw_res = json.loads(v)
-                res.update(raw_res)
-            return res
+
+            serialized = {}
+            for json_value in json_values:
+                serialized_json_value = json.loads(json_value)
+                serialized.update(serialized_json_value)
+            return serialized
+
         except json.JSONDecodeError:
             logger.warning(
-                f"Failed to parse generated data\nprompt: {prompt}\ngenerated: {generated}"
+                "Failed to parse generated data\nprompt: %s\ngenerated: %s",
+                prompt,
+                generated,
             )
 
     def generate(
         self,
         **kwargs,
     ) -> Any:
-        logger.info("Generating data")
-        data_generation_prompt = self.generation_prompt(**kwargs)
+        logger.debug("Generating task result")
+        data_generation_prompt = self.populate_template(**kwargs)
         if self.prompt_config.structured:
             return self.generate_structured(data_generation_prompt)
         return self.generate_unstructured(data_generation_prompt)

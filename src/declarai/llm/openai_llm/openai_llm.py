@@ -1,9 +1,10 @@
 import openai
 
+from ..base_llm import BaseLLM
 from .config import OpenAIConfig
 
 
-class OpenAIClient:
+class OpenAILLM(BaseLLM):
     def __init__(self, openai_token: str = None):
         self.openai = openai
 
