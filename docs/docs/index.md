@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://localhost:8000"><img src="./img/Logo-declarai.svg" alt="FastAPI"></a>
+  <a href="https://vendi-ai.github.io/declarai/"><img src="./img/Logo-declarai.svg" alt="FastAPI"></a>
 </p>
 <p align="center">
     <em>Declarai, turning Python functions into LLM tasks, easy to use, and production-ready.</em>
