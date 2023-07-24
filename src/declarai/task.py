@@ -1,5 +1,6 @@
-from typing import Any, Callable
+from typing import Any, Callable, Literal, overload, Union
 
+from .llm import resolve_llm_from_config, LLMConfig
 from .python_parser import ParsedFunction
 from .tasks.base_llm_task import BaseLLMTask
 from .tasks.func_llm_translator import FunctionLLMTranslator
@@ -14,49 +15,93 @@ class LLMFunction(Callable[[tuple[Any, ...], dict[str, Any]], Any]):
     _llm_func: Callable
 
 
-def task(func: Callable) -> LLMFunction:
-    """
-    This is a decorator that reads the provided function and translates it to an AI function.
-    The code generates templates and configurations to apply to the call at runtime.
+# Define the provider literals
+# TODO: Replace with actual providers and models.
+ProviderOpenai = Literal["openai"]
+ModelsOpenai = Literal["gpt-4", "gpt-3.5-turbo", "text-davinci-003"]
 
-    :param func: The function to translate
-    :return: An LLM function
+ProviderCohere = Literal["Cohere"]
+ModelsCohere = Literal["claude"]
 
-    usage:
-    ```
-    @task
-    def add(a: int, b: int) -> int:
-        '''
-        Add two numbers
-        :param a: The first number
-        :param b: The second number
-        :return: The sum of the two numbers
-        '''
-        return magic(a, b)
-    ```
-    """
-    parsed_function = ParsedFunction(func)
-    llm_translator = FunctionLLMTranslator(parsed_function)
+ProviderAI21labs = Literal["AI21Labs"]
+ModelsAI21labs = Literal["curie", "babbage"]
 
-    template = InstructFunctionTemplate.format(
-        input_instructions=llm_translator.parsed_func.doc_description,
-        input_placeholder=llm_translator.make_input_placeholder(),
-        output_instructions=llm_translator.make_output_prompt(),
-    )
+ProviderGoogle = Literal["google"]
+ModelsGoogle = Literal["palm2", "text-bison"]
 
-    llm_task = BaseLLMTask(template=template)
+AllModels = Union[ModelsOpenai, ModelsCohere, ModelsAI21labs, ModelsGoogle]
 
-    def llm_function(*args, **kwargs):
-        return llm_task.generate(**kwargs)["result"]
 
-    llm_function._use_ai = True
-    llm_function.__name__ = func.__name__
+# Custom function to enforce the relationship between PROVIDER and MODELS
+@overload
+def init_declarai(provider: ProviderOpenai, model: ModelsOpenai) -> Callable:
+    ...
 
-    llm_function.llm_task = llm_task
-    llm_function.parsed_function = parsed_function
-    llm_function.llm_translator = llm_translator
 
-    return llm_function
+@overload
+def init_declarai(provider: ProviderCohere, model: ModelsCohere) -> Callable:
+    ...
+
+
+@overload
+def init_declarai(provider: ProviderAI21labs, model: ModelsAI21labs) -> Callable:
+    ...
+
+
+@overload
+def init_declarai(provider: ProviderGoogle, model: ModelsGoogle) -> Callable:
+    ...
+
+
+def init_declarai(provider: str, model: AllModels) -> Callable:
+    llm_config = LLMConfig(provider=provider, model=model)
+    llm = resolve_llm_from_config(llm_config)
+
+    def task(func: Callable) -> LLMFunction:
+        """
+        This is a decorator that reads the provided function and translates it to an AI function.
+        The code generates templates and configurations to apply to the call at runtime.
+
+        :param func: The function to translate
+        :return: An LLM function
+
+        usage:
+        ```
+        @task
+        def add(a: int, b: int) -> int:
+            '''
+            Add two numbers
+            :param a: The first number
+            :param b: The second number
+            :return: The sum of the two numbers
+            '''
+            return magic(a, b)
+        ```
+        """
+        parsed_function = ParsedFunction(func)
+        llm_translator = FunctionLLMTranslator(parsed_function)
+
+        template = InstructFunctionTemplate.format(
+            input_instructions=llm_translator.parsed_func.doc_description,
+            input_placeholder=llm_translator.make_input_placeholder(),
+            output_instructions=llm_translator.make_output_prompt(),
+        )
+
+        llm_task = BaseLLMTask(template=template, llm=llm)
+
+        def llm_function(*args, **kwargs):
+            return llm_task.generate(**kwargs)["result"]
+
+        llm_function._use_ai = True
+        llm_function.__name__ = func.__name__
+
+        llm_function.llm_task = llm_task
+        llm_function.parsed_function = parsed_function
+        llm_function.llm_translator = llm_translator
+
+        return llm_function
+
+    return task
 
 
 def magic(*args, **kwargs):

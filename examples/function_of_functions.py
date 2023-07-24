@@ -1,6 +1,8 @@
 from typing import Any, Dict, List
 
-from declarai import Reducer, magic, task
+from declarai import Reducer, magic, init_declarai
+
+task = init_declarai(provider="openai", model="gpt-3.5-turbo")
 
 
 @task
