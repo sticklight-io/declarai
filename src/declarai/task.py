@@ -1,7 +1,6 @@
-from typing import Any, Callable, Literal
+from typing import Any, Callable, Literal, overload, Union
 
 from .llm import resolve_llm_from_config, LLMConfig
-from .llm.config import init_declarai
 from .python_parser import ParsedFunction
 from .tasks.base_llm_task import BaseLLMTask
 from .tasks.func_llm_translator import FunctionLLMTranslator
@@ -16,7 +15,44 @@ class LLMFunction(Callable[[tuple[Any, ...], dict[str, Any]], Any]):
     _llm_func: Callable
 
 
-def init_declarai(provider: str, model: str):
+# Define the provider literals
+ProviderOpenai = Literal["openai"]
+ModelsOpenai = Literal["gpt-3", "gpt-3.5-turbo", "davinci", "curie", "babbage"]
+
+ProviderCohere = Literal["Cohere"]
+ModelsCohere = Literal["claude"]
+
+ProviderAI21labs = Literal["AI21Labs"]
+ModelsAI21labs = Literal["curie", "babbage"]
+
+ProviderGoogle = Literal["google"]
+ModelsGoogle = Literal["palm2", "text-bison"]
+
+AllModels = Union[ModelsOpenai, ModelsCohere, ModelsAI21labs, ModelsGoogle]
+
+
+# Custom function to enforce the relationship between PROVIDER and MODELS
+@overload
+def init_declarai(provider: ProviderOpenai, model: ModelsOpenai) -> Callable:
+    ...
+
+
+@overload
+def init_declarai(provider: ProviderCohere, model: ModelsCohere) -> Callable:
+    ...
+
+
+@overload
+def init_declarai(provider: ProviderAI21labs, model: ModelsAI21labs) -> Callable:
+    ...
+
+
+@overload
+def init_declarai(provider: ProviderGoogle, model: ModelsGoogle) -> Callable:
+    ...
+
+
+def init_declarai(provider: str, model: AllModels) -> Callable:
     llm_config = LLMConfig(provider=provider, model=model)
     llm = resolve_llm_from_config(llm_config)
 

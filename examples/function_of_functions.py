@@ -1,6 +1,8 @@
 from typing import Any, Dict, List
 
-from declarai import Reducer, magic, task
+from declarai import Reducer, magic, init_declarai
+
+task = init_declarai(provider="openai", model="gpt-3.5-turbo")
 
 
 @task
@@ -38,8 +40,18 @@ def suggest_department_answers(question: str, department: str) -> List[str]:
 def handle_customer_question(question: str) -> Dict[str, Any]:
     plan = Reducer()
     plan.add("question_title", suggest_title, question=question)
-    plan.add("department",route_to_department,title=plan["question_title"],departments=["sales", "support", "billing"])
-    plan.add("answers",suggest_department_answers,question=question,department=plan["department"])
+    plan.add(
+        "department",
+        route_to_department,
+        title=plan["question_title"],
+        departments=["sales", "support", "billing"],
+    )
+    plan.add(
+        "answers",
+        suggest_department_answers,
+        question=question,
+        department=plan["department"],
+    )
 
     print(plan.compile())
 

@@ -2,10 +2,8 @@ from typing import Dict, List
 
 from declarai import magic, init_declarai
 
-task = init_declarai(
-    provider="openai",
-    model="gpt-3.5-turbo",
-)
+
+task = init_declarai(provider="openai", model="gpt-3.5-turbo")
 
 
 @task
