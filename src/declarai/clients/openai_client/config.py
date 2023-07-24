@@ -2,4 +2,4 @@ from pydantic import BaseSettings
 
 
 class OpenAIConfig(BaseSettings):
-    OPENAI_TOKEN: str
+    USE_AI_OPENAI_TOKEN: str

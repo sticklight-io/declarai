@@ -9,7 +9,7 @@ class OpenAIClient:
 
         if not openai_token:
             config = OpenAIConfig()
-            openai_token = config.OPENAI_TOKEN
+            openai_token = config.USE_AI_OPENAI_TOKEN
 
         self.openai.api_key = openai_token
 

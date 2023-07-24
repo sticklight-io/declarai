@@ -18,6 +18,7 @@ def route_to_department(title: str, departments: List[str]) -> str:
     """
     Given a question title, route it to the relevant department
     :param title: A title generated for the question
+    :param departments: The departments to route the question to
     :return: The department that the question should be routed to
     """
     return magic(title, departments)
