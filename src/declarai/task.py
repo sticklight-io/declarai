@@ -1,6 +1,7 @@
-from typing import Any, Callable
+from typing import Any, Callable, Literal
 
 from .llm import resolve_llm_from_config, LLMConfig
+from .llm.config import init_declarai
 from .python_parser import ParsedFunction
 from .tasks.base_llm_task import BaseLLMTask
 from .tasks.func_llm_translator import FunctionLLMTranslator
@@ -15,7 +16,8 @@ class LLMFunction(Callable[[tuple[Any, ...], dict[str, Any]], Any]):
     _llm_func: Callable
 
 
-def init_declarai(llm_config: LLMConfig):
+def init_declarai(provider: str, model: str):
+    llm_config = LLMConfig(provider=provider, model=model)
     llm = resolve_llm_from_config(llm_config)
 
     def task(func: Callable) -> LLMFunction:

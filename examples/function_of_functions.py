@@ -38,18 +38,8 @@ def suggest_department_answers(question: str, department: str) -> List[str]:
 def handle_customer_question(question: str) -> Dict[str, Any]:
     plan = Reducer()
     plan.add("question_title", suggest_title, question=question)
-    plan.add(
-        "department",
-        route_to_department,
-        title=plan["question_title"],
-        departments=["sales", "support", "billing"],
-    )
-    plan.add(
-        "answers",
-        suggest_department_answers,
-        question=question,
-        department=plan["department"],
-    )
+    plan.add("department",route_to_department,title=plan["question_title"],departments=["sales", "support", "billing"])
+    plan.add("answers",suggest_department_answers,question=question,department=plan["department"])
 
     print(plan.compile())
 
