@@ -10,7 +10,7 @@ class OpenAILLM(BaseLLM):
 
         if not openai_token:
             config = OpenAIConfig()
-            openai_token = config.USE_AI_OPENAI_TOKEN
+            openai_token = config.OPENAI_API_KEY
 
         self.openai.api_key = openai_token
 
