@@ -32,7 +32,7 @@ handles the rest.
   
   
   print(generate_a_joke(title="Spongebob Squarepants"))
-  # > Why did Spongebob Squarepants bring a ladder to the Krusty Krab? Because he wanted to reach new heights in his career as a fry cook!
+  > "Why did Spongebob Squarepants bring a ladder to the Krusty Krab? Because he wanted to reach new heights in his career as a fry cook!"
   ```
 
 
@@ -49,8 +49,8 @@ handles the rest.
 - **Contextual Prompts through Docstrings:** - Use function docstrings to provide contextual information to LLMs,
   enhancing their understanding of the task at hand and improving their performance.
 
-- **Automated LLM Task Execution:** - Feeding prompts to the LLM, collecting and processing responses is seamlessly
-  automated, reducing boilerplate and focusing on core application logic.
+- **Automated LLM Task Execution:** - Abstracts away the exeuction code, allowing you to focus on the business
+  logic.
 
 This approach enhances code readability, maintainability, and predictability
 
@@ -94,13 +94,13 @@ task = init_declarai(provider="openai", model="gpt-3.5-turbo")
 
 
 @task # (1)!
-def extract_phone_number(email: str) -> List[str] # (2)!
+def extract_phone_number(email_content: str) -> List[str]: # (2)!
     """
-    Extract the phone numbers from the provided email
-    :param email: email content
+    Extract the phone numbers from the provided email_content
+    :param email_content: Text represents the email content
     :return: The phone numbers that are used in the email
     """ # (3)!
-    return magic(email)
+    return magic(email_content)
 
 
 res = extract_phone_number(
@@ -148,7 +148,7 @@ search = init_declarai(provider="openai", model="text-embedding-ada-002")
 def get_relevant_blog_posts(query: str, data: VectorStore) -> List[str]:
   """
   Find the relevant blog posts
-  :param query: A use provided query to search with
+  :param query: A user provided query to search with
   :param data: A vector store data object that contains the blog posts
   :return: The relevant blog posts
   """
@@ -170,7 +170,7 @@ print(f"Blog posts: {blogs_posts}")
 
 ### Multitask flow
 
-We can leverage Chain-of-thought to efficiently solve multiple tasks in a single flow.
+We can execute multiple tasks in a single flow by leveraging techniques like Chain-of-Thought
 ```Python title="sequence_of_tasks.py"
 
 from declarai import Sequence, init_declarai, magic

@@ -1,10 +1,10 @@
 # Tutorial - User Guide
 
 <br>
-The tutorial is a step-by-step guide to using **Declarai**. It will walk you through the process of creating a simple Declarai task, and will introduce you to the main concepts of Declarai.
+The tutorial is a step-by-step guide to using **Declarai**. It walks you through the main features of Declarai.
 
 Each section gradually builds on the previous ones, but it's structured to separate topics, so that you can go directly
-to any specific one to solve your specific API needs.
+to any specific one to solve your specific task needs.
 
 It is also built to work as a future reference.
 
@@ -24,9 +24,9 @@ is.
 
 ## Install Declarai
 
-For this tutorial, we will mainly use the `openai` provider, which is the default provider for Declarai.
+For this tutorial, we use the `openai` provider, which is the default provider in Declarai.
 
-To install it, Declarai and the `openai` provider, run the following command:
+To install it Declarai with the `openai` provider, run the following command:
 <div class="termy">
 
 ```console

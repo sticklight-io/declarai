@@ -17,7 +17,7 @@ print(say_something())
 
 > "Spread love, kindness, and unity."
 ```
-In **Declarai**, The docstring represents the task's description which is used to generate the prompt.
+In **Declarai**, The docstring represents the task's description and is used to generate the prompt.
     
    - `description` - the context of the task
    - `:param` - The function's parameters and their description
@@ -25,13 +25,14 @@ In **Declarai**, The docstring represents the task's description which is used t
 
 In the example above we have created a task called `say_something` that returns a string.
 The task is using the `openai` provider, and the `gpt-3.5-turbo` model.
-When we call the task, it will use the model to generate a string for us by following the task's docstring.
+Once we call the task, it uses the provided language model to generate a response for us.
 
 
 ## Passing parameters to the task  :accordion:
-Here we declare a task that takes a `movie` parameter and returns a string.
+To pass parameters into our functions, we can simply add them as arguments to the function and use the `:param` fields in docstrings to describe the task's parameters.
 
-We use the `:param` fields in docstrings to describe the task's parameters.
+
+Here we declare a task that takes a `movie` parameter.
 ```py
 from declarai import init_declarai, magic
 
@@ -59,13 +60,10 @@ powerful and charismatic characters"""
 
 
 ## Declare response :outbox_tray:
-
-Here we declare a task that returns a list of strings.
-
-Using `:return` in docstrings we can describe the output of the task.
- 
+To declare the response of the task, we can use the `:return` field in the docstrings and type hints.
 By declaring the output type, we make sure that the output of the model will be parsed to the provided type.
 
+Here we declare a task that returns a list of strings.
 ```py
 from declarai import init_declarai, magic
 from typing import List
@@ -136,7 +134,6 @@ The output should be a markdown code snippet formatted in the following schema, 
 You can see that the real prompt sent to the model is a bit different than the docstring.
 
 Declarai uses the docstring to generate the prompt, but it also adds some minimal additional information to the prompt, helping the model to generate better results.
-You can also compile the task with the real values of the parameters:
 
 You can also compile the task with the real values of the parameters:
 
@@ -205,18 +202,6 @@ print(plan)
 > #<declarai.tasks.base_llm_task.LLMTaskFuture object at 0x106795790>
 
 
-print(plan.get_populated_prompt())
->"""
-Say one thing you liked and one thing you didn't like about the following movie
-Inputs:
-movie: Avengers 
-The output should be a markdown code snippet formatted in the following schema, including the leading and trailing '```json' and '```':
-```json
-{{
-    result: typing.List[str]  #  A list of two strings - one thing you liked and one thing you didn't like
-}}
-"""
-
 # Execute the task by calling the plan
 plan()
 > ['I liked the action-packed storyline and the epic battle scenes.',
@@ -240,7 +225,7 @@ plan()
 - Add type hints to the task.
 - Add a docstring to the task.
 - Use the `compile` method to view the prompt that will be sent to the model.
-- Use the 'plan' method to create a plan for the task.
+- Use the `plan` method to create a plan for the task.
 
 
 
