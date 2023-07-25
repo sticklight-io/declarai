@@ -73,10 +73,14 @@ def init_declarai(
 
         llm_task = BaseLLMTask(
             template=InstructFunctionTemplate,
-            template_args={
+            template_kwargs={
                 "input_instructions": llm_translator.parsed_func.doc_description,
                 "input_placeholder": llm_translator.make_input_placeholder(),
                 "output_instructions": llm_translator.make_output_prompt(),
+            },
+            prompt_kwargs={
+                "structured": llm_translator.has_any_return_defs(),
+                "return_name": parsed_function.return_name or "declarai_result"
             },
             llm=llm,
         )

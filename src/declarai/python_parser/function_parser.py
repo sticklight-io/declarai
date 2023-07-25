@@ -46,8 +46,13 @@ class ParsedFunction:
         }
 
     @property
-    def return_type(self) -> str:
-        return self.__signature.return_annotation
+    def return_type(self) -> Optional[str]:
+        _return_type = self.__signature.return_annotation
+        try:
+            if issubclass(_return_type, inspect._empty):
+                return None
+        except:
+            return _return_type
 
     @property
     def doc(self) -> str:
@@ -77,4 +82,4 @@ class ParsedFunction:
         matches = re.findall(pattern, func_str)
         if not matches:
             return None
-        return matches[0]
+        return matches[0].strip("'").strip('"')

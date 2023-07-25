@@ -53,14 +53,14 @@ class BaseLLMTask:
     def __init__(
         self,
         template: str,
-        template_args: Dict[str, str],
+        template_kwargs: Dict[str, str],
         llm: LLM,
-        prompt_config: PromptConfig = PromptConfig(),
+        prompt_kwargs: Dict[str, Any]
     ):
         self._llm = llm
         self._template = template
-        self._template_args = template_args
-        self._prompt_config = prompt_config
+        self._template_args = template_kwargs
+        self._prompt_config = PromptConfig(**prompt_kwargs)
 
     def _exec_unstructured(self, prompt: str) -> str | None:
         logger.debug(prompt)
@@ -76,16 +76,20 @@ class BaseLLMTask:
         try:
             if multi_results:
                 json_values = re.findall(r"{.*?}", raw_result, re.DOTALL)
+                serialized = {}
+                for json_value in json_values:
+                    serialized_json_value = json.loads(json_value)
+                    serialized.update(serialized_json_value)
+                return serialized
             else:
                 json_values = re.findall(r"{.*}", raw_result, re.DOTALL)
-
-            serialized = {}
-            for json_value in json_values:
-                serialized_json_value = json.loads(json_value)
-                serialized.update(serialized_json_value)
-            if "result" in serialized:
-                return serialized["result"]
-            return serialized
+                serialized = {}
+                for json_value in json_values:
+                    serialized_json_value = json.loads(json_value)
+                    serialized.update(serialized_json_value)
+                if self._prompt_config.return_name in serialized:
+                    return serialized[self._prompt_config.return_name]
+                return serialized
 
         except json.JSONDecodeError:
             logger.warning(
@@ -103,7 +107,7 @@ class BaseLLMTask:
         logger.debug("Compiling task template")
         template = self._template.format(**self._template_args)
         if kwargs:
-            template.format(**kwargs)
+            template = template.format(**kwargs)
         return template
 
     def _plan(self, **kwargs) -> str:
@@ -128,6 +132,8 @@ class BaseLLMTask:
         Executes the task.
         """
         logger.debug("Running planned task")
+        print(populated_prompt)
+        print(self._prompt_config.structured)
         if self._prompt_config.structured:
             return self._exec_structured(populated_prompt, multiple_results)
         return self._exec_unstructured(populated_prompt)

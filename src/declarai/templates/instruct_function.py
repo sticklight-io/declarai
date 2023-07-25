@@ -1,5 +1,3 @@
-InstructFunctionTemplate = """
-{input_instructions}
+InstructFunctionTemplate = """{input_instructions}
 {input_placeholder}
-{output_instructions}
-"""
+{output_instructions}"""
