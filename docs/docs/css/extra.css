@@ -1,3 +1,7 @@
 .md-header{
   background-color: #1a1c1b;
 }
+
+.md-annotation__index:before{
+  background: rgba(133, 236, 199, 0.62);
+}
