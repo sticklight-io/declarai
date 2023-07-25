@@ -40,16 +40,16 @@ handles the rest.
 
 ## Why use Declarai?
 
-- ** Pythonic Interface to LLM:** - Leverage python expertise instead of working hard crafting prompts.
+- **Pythonic Interface to LLM:** - Leverage python expertise instead of working hard crafting prompts.
 
-- ** Type-Guided Prompt Engineering:** - Using Python's type annotations, Declarai crafts precise prompts that guide
+- **Type-Guided Prompt Engineering:** - Using Python's type annotations, Declarai crafts precise prompts that guide
   LLMs towards the expected output type. This reduces potential misunderstandings and boosts the consistency of AI
   outputs.
 
-- ** Contextual Prompts through Docstrings:** - Use function docstrings to provide contextual information to LLMs,
+- **Contextual Prompts through Docstrings:** - Use function docstrings to provide contextual information to LLMs,
   enhancing their understanding of the task at hand and improving their performance.
 
-- ** Automated LLM Task Execution:** - Feeding prompts to the LLM, collecting and processing responses is seamlessly
+- **Automated LLM Task Execution:** - Feeding prompts to the LLM, collecting and processing responses is seamlessly
   automated, reducing boilerplate and focusing on core application logic.
 
 This approach enhances code readability, maintainability, and predictability

@@ -4,7 +4,11 @@ nav:
 - Tutorial - User Guide:
   - tutorial/index.md
   - First Steps: tutorial/first_steps.md
+  - Providers:
+    - tutorial/providers/index.md
+    - tutorial/providers/openai.md
 - Changelog: changelog.md
+- Contribute : contribute.md
 
 theme:
     features:
@@ -12,6 +16,7 @@ theme:
       - content.tooltips
       - content.code.copy
       - content.code.annotate
+      - navigation.indexes
     name: material
     icon:
       logo: material/cloud
