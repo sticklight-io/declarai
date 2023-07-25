@@ -23,7 +23,7 @@ In **Declarai**, The docstring represents the task's description which is used t
    - `:param` - The function's parameters and their description
    - `:return` - The output description
 
-In the example about we have created a task called `say_something` that returns a string.
+In the example above we have created a task called `say_something` that returns a string.
 The task is using the `openai` provider, and the `gpt-3.5-turbo` model.
 When we call the task, it will use the model to generate a string for us by following the task's docstring.
 

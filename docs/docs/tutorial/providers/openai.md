@@ -20,10 +20,8 @@ You can set your API key at runtime like this:
 ```python
 import declarai
 
-# Marvin 1.1+
 declarai.settings.openai.api_key = YOUR_API_KEY
 
-# Marvin 1.0
 declarai.settings.openai_api_key = YOUR_API_KEY
 ```
 
