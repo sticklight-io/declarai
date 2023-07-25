@@ -1,9 +1,13 @@
 site_name: Declarai
 nav:
 - Declarai: index.md
-- Tutorial - User Guide: tutorial/index.md
+- Tutorial - User Guide:
+  - tutorial/index.md
+  - First Steps: tutorial/first_steps.md
+- Changelog: changelog.md
+
 theme:
-    feaures:
+    features:
       - tabs
       - content.tooltips
       - content.code.copy
@@ -20,14 +24,20 @@ extra_javascript:
 repo_url: https://github.com/vendi-ai/declarai
 repo_name: vendi-ai/declarai
 markdown_extensions:
-  - abbr
-  - attr_list
-  - pymdownx.snippets
-  - md_in_html
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.superfences
+- attr_list
+- md_in_html
+- tables
+- toc:
+    permalink: true
+    title: Page contents
+- admonition
+- pymdownx.details
+- pymdownx.superfences
+- pymdownx.highlight
+- pymdownx.extra
+- pymdownx.emoji:
+    emoji_index: !!python/name:materialx.emoji.twemoji
+    emoji_generator: !!python/name:materialx.emoji.to_svg
+- pymdownx.tabbed:
+    alternate_style: true
+

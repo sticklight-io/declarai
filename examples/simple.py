@@ -73,4 +73,4 @@ def generate_a_poem(title: str) -> str:
     return magic(title)
 
 
-print(generate_a_poem(title="The cat in the hat"))
+print(generate_a_poem(title="The Road Not Taken"))
