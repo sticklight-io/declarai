@@ -22,15 +22,29 @@ LLMTask = TypeVar("LLMTask", bound="BaseLLMTask")
 
 
 class LLMTaskFuture:
-    def __init__(self, exec_func: Callable[[], Any], populated_prompt: str):
+    def __init__(
+        self,
+        exec_func: Callable[[str, bool], Any],
+        kwargs: Dict[str, Any],
+        compiled_template: str,
+        populated_prompt: str,
+    ):
         self.exec_func = exec_func
         self.__populated_prompt = populated_prompt
+        self.__compiled_template = compiled_template
+        self.__kwargs = kwargs
 
     def __call__(self) -> str:
         return self.exec_func(self.__populated_prompt)
 
     def get_populated_prompt(self) -> str:
         return self.__populated_prompt
+
+    def get_compiled_template(self) -> str:
+        return self.__compiled_template
+
+    def get_kwargs(self) -> Dict[str, Any]:
+        return self.__kwargs
 
 
 class BaseLLMTask:
@@ -39,14 +53,14 @@ class BaseLLMTask:
     def __init__(
         self,
         template: str,
-        template_args: Dict[str, str],
+        template_kwargs: Dict[str, str],
         llm: LLM,
-        prompt_config: PromptConfig = PromptConfig(),
+        prompt_kwargs: Dict[str, Any]
     ):
         self._llm = llm
         self._template = template
-        self._template_args = template_args
-        self._prompt_config = prompt_config
+        self._template_args = template_kwargs
+        self._prompt_config = PromptConfig(**prompt_kwargs)
 
     def _exec_unstructured(self, prompt: str) -> str | None:
         logger.debug(prompt)
@@ -62,14 +76,20 @@ class BaseLLMTask:
         try:
             if multi_results:
                 json_values = re.findall(r"{.*?}", raw_result, re.DOTALL)
+                serialized = {}
+                for json_value in json_values:
+                    serialized_json_value = json.loads(json_value)
+                    serialized.update(serialized_json_value)
+                return serialized
             else:
                 json_values = re.findall(r"{.*}", raw_result, re.DOTALL)
-
-            serialized = {}
-            for json_value in json_values:
-                serialized_json_value = json.loads(json_value)
-                serialized.update(serialized_json_value)
-            return serialized["result"]
+                serialized = {}
+                for json_value in json_values:
+                    serialized_json_value = json.loads(json_value)
+                    serialized.update(serialized_json_value)
+                if self._prompt_config.return_name in serialized:
+                    return serialized[self._prompt_config.return_name]
+                return serialized
 
         except json.JSONDecodeError:
             logger.warning(
@@ -79,12 +99,16 @@ class BaseLLMTask:
             )
             return None
 
-    def compile(self) -> str:
+    def compile(self, **kwargs) -> str:
         """
         Generates the initial template to be used for later predictions.
+        Optionally passing kwargs will also inject the data into the compiled template.
         """
         logger.debug("Compiling task template")
-        return self._template.format(**self._template_args)
+        template = self._template.format(**self._template_args)
+        if kwargs:
+            template = template.format(**kwargs)
+        return template
 
     def _plan(self, **kwargs) -> str:
         logger.debug("Creating task plan (Injecting data into template)")
@@ -96,17 +120,24 @@ class BaseLLMTask:
         :param kwargs: the data to populate the template with
         """
         populated_prompt = self._plan(**kwargs)
-        return LLMTaskFuture(self.exec, populated_prompt)
+        return LLMTaskFuture(
+            self._exec,
+            kwargs=kwargs,
+            compiled_template=self.compile(),
+            populated_prompt=populated_prompt,
+        )
 
-    def exec(self, populated_prompt: str) -> Any:
+    def _exec(self, populated_prompt: str, multiple_results: bool = False) -> Any:
         """
         Executes the task.
         """
         logger.debug("Running planned task")
+        print(populated_prompt)
+        print(self._prompt_config.structured)
         if self._prompt_config.structured:
-            return self._exec_structured(populated_prompt)
+            return self._exec_structured(populated_prompt, multiple_results)
         return self._exec_unstructured(populated_prompt)
 
     def __call__(self, **kwargs):
         populated_prompt = self._plan(**kwargs)
-        return self.exec(populated_prompt)
+        return self._exec(populated_prompt)

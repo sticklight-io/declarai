@@ -21,7 +21,8 @@ usage:
 """
 
 import inspect
-from typing import Callable, Dict
+import re
+from typing import Callable, Dict, Optional
 
 from .method_docstring_parser import parse_method_docstring
 
@@ -45,8 +46,13 @@ class ParsedFunction:
         }
 
     @property
-    def return_type(self) -> str:
-        return self.__signature.return_annotation
+    def return_type(self) -> Optional[str]:
+        _return_type = self.__signature.return_annotation
+        try:
+            if issubclass(_return_type, inspect._empty):
+                return None
+        except:
+            return _return_type
 
     @property
     def doc(self) -> str:
@@ -68,3 +74,12 @@ class ParsedFunction:
             name, doc = param.split(":")
             parsed_params[name] = doc
         return parsed_params
+
+    @property
+    def return_name(self) -> Optional[str]:
+        func_str = inspect.getsource(self.func)
+        pattern = r'return magic\((["\'].*?["\']),'  # Matches the first string value in the magic function
+        matches = re.findall(pattern, func_str)
+        if not matches:
+            return None
+        return matches[0].strip("'").strip('"')

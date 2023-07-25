@@ -1,3 +1,6 @@
+import inspect
+import logging
+
 from declarai.python_parser import ParsedFunction
 
 FORMAT_INSTRUCTIONS = (
@@ -8,6 +11,9 @@ JSON_SNIPPET_TEMPLATE = "```json\n{{{{\n    {format}\n}}}}\n```"
 INPUTS_TEMPLATE = "Inputs:\n{inputs}\n"
 INPUT_LINE_TEMPLATE = "{param}: {{{param}}}"
 NEW_LINE_INPUT_LINE_TEMPLATE = "\n{param}: {{{param}}}"
+
+
+logger = logging.getLogger("generator")
 
 
 class FunctionLLMTranslator:
@@ -48,17 +54,51 @@ class FunctionLLMTranslator:
 
         return INPUTS_TEMPLATE.format(inputs=inputs)
 
-    def make_output_prompt(self, return_name: str = "result") -> str:
+    def has_any_return_defs(self) -> bool:
+        return any([
+            self.parsed_func.return_name,
+            self.parsed_func.return_type,
+        ])
+
+    def make_output_prompt(self) -> str:
         return_type = self.parsed_func.return_type
         return_doc = self.parsed_func.return_doc
+        return_name = self.parsed_func.return_name
 
-        if return_doc:
+        output_schema = ""
+
+        if return_doc and not (return_type or return_name):
+            return f"{return_doc}:"
+
+        if return_type and not (return_doc or return_name):
+            output_schema = f"declarai_result: {return_type}"
+
+        if return_name and not (return_doc or return_type):
+            output_schema = f"{return_name}: "
+
+        if return_type and return_doc and not return_name:
+            output_schema = f"declarai_result: {return_type}  # {return_doc}"
+
+        if return_name and return_type and not return_doc:
+            output_schema = f"{return_name}: {return_type}"
+
+        if return_doc and return_name and not return_type:
+            output_schema = f"{return_name}:  # {return_doc}"
+
+        if return_type and return_doc and return_name:
             output_schema = f"{return_name}: {return_type}  # {return_doc}"
-            instructions = (
-                FORMAT_INSTRUCTIONS
-                + "\n"
-                + JSON_SNIPPET_TEMPLATE.format(format=output_schema)
-            )
-            return instructions
 
-        return ""
+        if not output_schema:
+            logger.warning(
+                "Failed to create output schema for function %s."
+                "Please add atleast one of the following: return type, return doc, return name",
+                self.parsed_func.name,
+            )
+            return ""
+
+        instructions = (
+            FORMAT_INSTRUCTIONS
+            + "\n"
+            + JSON_SNIPPET_TEMPLATE.format(format=output_schema)
+        )
+        return instructions

@@ -2,20 +2,20 @@ from typing import Any, Dict, List
 
 from declarai import Sequence, init_declarai, magic
 
-task = init_declarai(provider="openai", model="gpt-3.5-turbo")
+ai_task = init_declarai(provider="openai", model="gpt-3.5-turbo")
 
 
-@task
+@ai_task
 def suggest_title(question: str) -> str:
     """
     Given a question from our customer support, suggest a title for it
     :param question: the provided question
     :return: The title suggested for the question
     """
-    return magic(question)
+    return magic("question_title", question)
 
 
-@task
+@ai_task
 def route_to_department(title: str, departments: List[str]) -> str:
     """
     Given a question title, route it to the relevant department
@@ -23,18 +23,18 @@ def route_to_department(title: str, departments: List[str]) -> str:
     :param departments: The departments to route the question to
     :return: The department that the question should be routed to
     """
-    return magic(title, departments)
+    return magic("department", title, departments)
 
 
-@task
-def suggest_department_answers(question: str, department: str) -> List[str]:
+@ai_task
+def suggest_department_answers(title: str, department: str) -> List[str]:
     """
     Given a question and a department, suggest 2 answers from the department's knowledge base
-    :param question: The question to suggest answers for
+    :param title: The question title to suggest answers for
     :param department: The department to suggest answers from
     :return: The suggested answers
     """
-    return magic(question, department)
+    return magic("answers", title, department)
 
 
 available_departments = ["sales", "support", "billing"]
@@ -46,10 +46,11 @@ def handle_customer_question(question: str) -> Dict[str, Any]:
         title=suggested_title, departments=available_departments
     )
     suggested_answers = suggest_department_answers.plan(
-        question=question, department=selected_department
+        title=suggested_title, department=selected_department
     )
 
-    res = suggested_answers(reduce="CoT")
+    reduced_task = Sequence(suggested_answers, reduce_strategy="CoT")
+    res = reduced_task()
 
     return {
         "question_title": res["question_title"],
