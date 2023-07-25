@@ -48,9 +48,10 @@ class FunctionLLMTranslator:
 
         return INPUTS_TEMPLATE.format(inputs=inputs)
 
-    def make_output_prompt(self, return_name: str = "result") -> str:
+    def make_output_prompt(self) -> str:
         return_type = self.parsed_func.return_type
         return_doc = self.parsed_func.return_doc
+        return_name = self.parsed_func.return_name or "result"
 
         if return_doc:
             output_schema = f"{return_name}: {return_type}  # {return_doc}"

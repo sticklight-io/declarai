@@ -14,7 +14,7 @@ Usage:
     >>> reducer.compile()
 """
 
-from typing import Literal, Tuple, Set
+from typing import Literal, Set, Tuple
 
 from declarai import templates
 from declarai.tasks.base_llm_task import BaseLLMTask, LLMTaskFuture
@@ -26,7 +26,7 @@ class Sequence:
     def __init__(
         self,
         ai_future_task: LLMTaskFuture,
-        reduce_strategy: ReduceStrategies | None = 'CoT'
+        reduce_strategy: ReduceStrategies | None = "CoT",
     ):
         """
 
@@ -36,32 +36,51 @@ class Sequence:
         self.ai_future_task = ai_future_task
         self.reduce_strategy = reduce_strategy
 
-    @staticmethod
-    def reduce_cot(future_task: LLMTaskFuture, prompt: str = "", steps: int = 0, visited_tasks: Set = None) -> Tuple[str, int]:
-        if not visited_tasks:
-            visited_tasks = set()
-        kwargs = future_task.get_kwargs()
-        for param, value in kwargs.items():
-            if isinstance(value, LLMTaskFuture):
-                if value in visited_tasks:
-                    kwargs[param] = "From previous steps"
-                    continue
-                visited_tasks.add(value)
-                kwargs[param] = "From previous steps"
-                new_prompt, steps = Sequence.reduce_cot(value, prompt, steps, visited_tasks)
-                prompt += new_prompt
-        steps += 1
-        task_prompt = f"Step {steps}:\n{future_task.get_compiled_template().format(**kwargs)}"
-        prompt += task_prompt
-        return prompt, steps
-
-    def exec(self):
+    def _exec(self):
         """
         Executes the task
         :return: The result of the task
         """
         if self.reduce_strategy == "CoT":
-            return self.reduce_cot(self.ai_future_task)
-        # for k, v in self.ai_future_task.get_kwargs().items():
-        #     if isinstance(v, LLMTaskFuture):
-        #         self.ai_future_task.kwargs[k] = v()
+            prompt, num_steps = chain_of_thought_reducer(self.ai_future_task)
+            reduced_prompt = templates.ChainOfThoughtsTemplate.format(
+                steps=prompt, num_steps=num_steps
+            )
+            return self.ai_future_task.exec_func(reduced_prompt, True)
+
+    def __call__(self):
+        return self._exec()
+
+
+def chain_of_thought_reducer(
+    future_task: LLMTaskFuture,
+    prompt: str = "",
+    steps: int = 0,
+    visited_tasks: Set = None,
+) -> Tuple[str, int]:
+    """
+    Recursive resolving of future_ai_tasks
+    and compiling them into a single task with the chain of thought strategy.
+    """
+    if not visited_tasks:
+        visited_tasks = set()
+
+    kwargs = future_task.get_kwargs()
+
+    for param, value in kwargs.items():
+        if isinstance(value, LLMTaskFuture):
+            if value not in visited_tasks:
+                visited_tasks.add(value)
+                new_prompt, new_steps = chain_of_thought_reducer(
+                    value, "", steps, visited_tasks
+                )
+                prompt += new_prompt
+                steps = new_steps
+            kwargs[param] = "From previous steps"
+
+    steps += 1
+    task_prompt = (
+        f"Step {steps}:\n{future_task.get_compiled_template().format(**kwargs)}"
+    )
+    prompt += task_prompt
+    return prompt, steps

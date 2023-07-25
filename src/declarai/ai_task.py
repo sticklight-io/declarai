@@ -1,17 +1,11 @@
 from typing import Callable, overload
 
 from .llm import LLMConfig, resolve_llm_from_config
-from .llm.provider_model_mapping import (
-    AllModels,
-    ModelsAI21labs,
-    ModelsCohere,
-    ModelsGoogle,
-    ModelsOpenai,
-    ProviderAI21labs,
-    ProviderCohere,
-    ProviderGoogle,
-    ProviderOpenai,
-)
+from .llm.provider_model_mapping import (AllModels, ModelsAI21labs,
+                                         ModelsCohere, ModelsGoogle,
+                                         ModelsOpenai, ProviderAI21labs,
+                                         ProviderCohere, ProviderGoogle,
+                                         ProviderOpenai)
 from .python_parser import ParsedFunction
 from .tasks.base_llm_task import BaseLLMTask, LLMTask
 from .tasks.func_llm_translator import FunctionLLMTranslator

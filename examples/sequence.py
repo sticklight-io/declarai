@@ -12,7 +12,7 @@ def suggest_title(question: str) -> str:
     :param question: the provided question
     :return: The title suggested for the question
     """
-    return magic(question)
+    return magic("question_title", question)
 
 
 @ai_task
@@ -23,7 +23,7 @@ def route_to_department(title: str, departments: List[str]) -> str:
     :param departments: The departments to route the question to
     :return: The department that the question should be routed to
     """
-    return magic(title, departments)
+    return magic("department", title, departments)
 
 
 @ai_task
@@ -34,7 +34,7 @@ def suggest_department_answers(title: str, department: str) -> List[str]:
     :param department: The department to suggest answers from
     :return: The suggested answers
     """
-    return magic(title, department)
+    return magic("answers", title, department)
 
 
 available_departments = ["sales", "support", "billing"]
@@ -50,8 +50,7 @@ def handle_customer_question(question: str) -> Dict[str, Any]:
     )
 
     reduced_task = Sequence(suggested_answers, reduce_strategy="CoT")
-    planned = reduced_task.exec()
-    res = planned()
+    res = reduced_task()
 
     return {
         "question_title": res["question_title"],

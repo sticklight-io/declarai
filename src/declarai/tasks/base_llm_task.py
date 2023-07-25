@@ -24,10 +24,10 @@ LLMTask = TypeVar("LLMTask", bound="BaseLLMTask")
 class LLMTaskFuture:
     def __init__(
         self,
-        exec_func: Callable[[str], Any],
+        exec_func: Callable[[str, bool], Any],
         kwargs: Dict[str, Any],
         compiled_template: str,
-        populated_prompt: str
+        populated_prompt: str,
     ):
         self.exec_func = exec_func
         self.__populated_prompt = populated_prompt
@@ -83,7 +83,9 @@ class BaseLLMTask:
             for json_value in json_values:
                 serialized_json_value = json.loads(json_value)
                 serialized.update(serialized_json_value)
-            return serialized["result"]
+            if "result" in serialized:
+                return serialized["result"]
+            return serialized
 
         except json.JSONDecodeError:
             logger.warning(
@@ -115,21 +117,21 @@ class BaseLLMTask:
         """
         populated_prompt = self._plan(**kwargs)
         return LLMTaskFuture(
-            self.exec,
+            self._exec,
             kwargs=kwargs,
             compiled_template=self.compile(),
             populated_prompt=populated_prompt,
         )
 
-    def exec(self, populated_prompt: str) -> Any:
+    def _exec(self, populated_prompt: str, multiple_results: bool = False) -> Any:
         """
         Executes the task.
         """
         logger.debug("Running planned task")
         if self._prompt_config.structured:
-            return self._exec_structured(populated_prompt)
+            return self._exec_structured(populated_prompt, multiple_results)
         return self._exec_unstructured(populated_prompt)
 
     def __call__(self, **kwargs):
         populated_prompt = self._plan(**kwargs)
-        return self.exec(populated_prompt)
+        return self._exec(populated_prompt)
