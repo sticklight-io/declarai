@@ -22,11 +22,15 @@ class ReSTDocstringParser(BaseDocStringParser):
 
     @property
     def freeform(self) -> FreeFormDoc:
+        if not self.docstring:
+            return ""
         freeform = re.search(reST_FREEFORM_REGEX, self.docstring).group().strip()
         return freeform
 
     @property
     def params(self) -> Params:
+        if not self.docstring:
+            return {}
         params = [
             param.group().strip()
             for param in re.finditer(reST_PARAMS_REGEX, self.docstring)
@@ -40,6 +44,8 @@ class ReSTDocstringParser(BaseDocStringParser):
 
     @property
     def returns(self) -> Returns:
+        if not self.docstring:
+            return "", ""
         matched_returns = re.search(reST_RETURN_REGEX, self.docstring)
         if matched_returns:
             returns = matched_returns.group().strip()

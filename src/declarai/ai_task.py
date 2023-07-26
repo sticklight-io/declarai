@@ -1,4 +1,4 @@
-from typing import Callable, overload
+from typing import Callable, overload, Dict
 
 from .llm import LLMConfig, resolve_llm_from_config
 from .llm.provider_model_mapping import (AllModels, ModelsAI21labs,
@@ -94,5 +94,12 @@ def init_declarai(
     return ai_task
 
 
-def magic(*args, **kwargs):
+def magic(
+    return_name: str,
+    *,
+    task_desc: str,
+    input_desc: Dict[str, str],
+    output_desc: str,
+    **kwargs
+):
     pass

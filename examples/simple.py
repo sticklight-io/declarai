@@ -12,7 +12,6 @@ def extract_email_phonenum(email: str) -> List[str]:
     :param email: email content
     :return: The phone numbers that are used in the email
     """
-    return magic(email)
 
 
 res = extract_email_phonenum(

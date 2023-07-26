@@ -20,7 +20,7 @@ class FunctionLLMTranslator:
         self.parsed_func = parsed_function
 
     def make_input_prompt(self) -> str:
-        doc_params = self.parsed_func.params
+
         input_prompt = ""
         for signature_arg, signature_arg_type in self.parsed_func.func_args.items():
             param_doc = doc_params.get(signature_arg)
@@ -40,17 +40,22 @@ class FunctionLLMTranslator:
 
         will result in the following placeholder:
             Inputs:
-            a: {a}
-            b: {b}
-            c: {c}
+            a: {a}  # a desc
+            b: {b}  # b desc
+            c: {c}  # c desc
         """
         inputs = ""
+        doc_params = self.parsed_func.params
+        magic = self.parsed_func.magic
+        param_docs = doc_params.update(magic.input_desc)
 
         for i, param in enumerate(self.parsed_func.func_args.keys()):
-            if i == 0:
-                inputs += INPUT_LINE_TEMPLATE.format(param=param)
-                continue
-            inputs += NEW_LINE_INPUT_LINE_TEMPLATE.format(param=param)
+            inputs += INPUT_LINE_TEMPLATE.format(param=param)
+            param_doc = param_docs.get(param)
+            if param_doc:
+                inputs += f"  # {param_doc}"
+            if i != 0:
+                inputs = f"\n{inputs}"
 
         return INPUTS_TEMPLATE.format(inputs=inputs)
 
@@ -64,10 +69,11 @@ class FunctionLLMTranslator:
         )
 
     def make_output_prompt(self) -> str:
+        magic_definition = self.parsed_func.magic
         return_type = self.parsed_func.return_type
         return_name, return_doc = self.parsed_func.returns
-        magic_definition = self.parsed_func.magic
-        return_name = return_name or magic_definition or "declarai_result"
+        return_name = return_name or magic_definition.return_name or "declarai_result"
+        return_doc = return_doc or magic_definition.output_desc
 
         if not self.has_any_return_defs():
             logger.warning(

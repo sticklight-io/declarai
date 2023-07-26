@@ -25,15 +25,16 @@ import re
 from typing import Callable, Dict, Optional
 
 from .docstring_parsers.reST import ReSTDocstringParser
+from .magic_parser import extract_magic_args, Magic
 from .types import FreeFormDoc, Params, Returns
 
 
 class ParsedFunction:
     def __init__(self, func: Callable):
         self.func = func
-        self.__doc = inspect.getdoc(func)
-        self.__parsed_doc = ReSTDocstringParser(self.__doc)
-        self.__signature = inspect.signature(func)
+        self._doc = inspect.getdoc(func)
+        self._parsed_doc = ReSTDocstringParser(self._doc)
+        self._signature = inspect.signature(func)
 
     @property
     def name(self) -> str:
@@ -43,12 +44,12 @@ class ParsedFunction:
     def func_args(self) -> Dict[str, str]:
         return {
             param.name: param.annotation.__name__
-            for param in dict(self.__signature.parameters).values()
+            for param in dict(self._signature.parameters).values()
         }
 
     @property
     def return_type(self) -> Optional[str]:
-        _return_type = self.__signature.return_annotation
+        _return_type = self._signature.return_annotation
         try:
             if issubclass(_return_type, inspect._empty):
                 return None
@@ -58,15 +59,15 @@ class ParsedFunction:
 
     @property
     def doc(self) -> str:
-        return self.__doc
+        return self._doc
 
     @property
     def freeform(self) -> FreeFormDoc:
-        return self.__parsed_doc.freeform
+        return self._parsed_doc.freeform
 
     @property
     def params(self) -> Params:
-        params = self.__parsed_doc.params
+        params = self._parsed_doc.params
         parsed_params = {}
         for param in params:
             name, doc = param.split(":")
@@ -75,13 +76,11 @@ class ParsedFunction:
 
     @property
     def returns(self) -> Returns:
-        return self.__parsed_doc.returns
+        return self._parsed_doc.returns
 
     @property
-    def magic(self) -> Optional[str]:
+    def magic(self) -> Magic:
         func_str = inspect.getsource(self.func)
-        pattern = r'return magic\((["\'].*?["\']),'  # Matches the first string value in the magic function
-        matches = re.findall(pattern, func_str)
-        if not matches:
-            return None
-        return matches[0].strip("'").strip('"')
+        if "magic(" not in func_str:
+            return Magic()
+        return extract_magic_args(func_str)
