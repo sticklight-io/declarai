@@ -13,6 +13,3 @@ class BaseDocStringParser(ABC):
 
     def returns(self):
         raise NotImplementedError()
-
-
-
