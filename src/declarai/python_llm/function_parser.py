@@ -24,14 +24,15 @@ import inspect
 import re
 from typing import Callable, Dict, Optional
 
-from .method_docstring_parser import parse_method_docstring
+from .docstring_parsers.reST import ReSTDocstringParser
+from .types import FreeFormDoc, Params, Returns
 
 
 class ParsedFunction:
     def __init__(self, func: Callable):
         self.func = func
         self.__doc = inspect.getdoc(func)
-        self.__parsed_doc = parse_method_docstring(self.__doc)
+        self.__parsed_doc = ReSTDocstringParser(self.__doc)
         self.__signature = inspect.signature(func)
 
     @property
@@ -51,6 +52,7 @@ class ParsedFunction:
         try:
             if issubclass(_return_type, inspect._empty):
                 return None
+            return _return_type
         except:
             return _return_type
 
@@ -59,16 +61,12 @@ class ParsedFunction:
         return self.__doc
 
     @property
-    def doc_description(self) -> str:
-        return self.__parsed_doc["documentation"]
+    def freeform(self) -> FreeFormDoc:
+        return self.__parsed_doc.freeform
 
     @property
-    def return_doc(self) -> str:
-        return self.__parsed_doc["returns"]
-
-    @property
-    def doc_params(self) -> Dict[str, str]:
-        params = self.__parsed_doc["params"]
+    def params(self) -> Params:
+        params = self.__parsed_doc.params
         parsed_params = {}
         for param in params:
             name, doc = param.split(":")
@@ -76,7 +74,11 @@ class ParsedFunction:
         return parsed_params
 
     @property
-    def return_name(self) -> Optional[str]:
+    def returns(self) -> Returns:
+        return self.__parsed_doc.returns
+
+    @property
+    def magic(self) -> Optional[str]:
         func_str = inspect.getsource(self.func)
         pattern = r'return magic\((["\'].*?["\']),'  # Matches the first string value in the magic function
         matches = re.findall(pattern, func_str)

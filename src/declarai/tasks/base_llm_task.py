@@ -55,7 +55,7 @@ class BaseLLMTask:
         template: str,
         template_kwargs: Dict[str, str],
         llm: LLM,
-        prompt_kwargs: Dict[str, Any]
+        prompt_kwargs: Dict[str, Any],
     ):
         self._llm = llm
         self._template = template
@@ -132,8 +132,6 @@ class BaseLLMTask:
         Executes the task.
         """
         logger.debug("Running planned task")
-        print(populated_prompt)
-        print(self._prompt_config.structured)
         if self._prompt_config.structured:
             return self._exec_structured(populated_prompt, multiple_results)
         return self._exec_unstructured(populated_prompt)

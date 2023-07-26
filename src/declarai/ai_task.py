@@ -6,9 +6,8 @@ from .llm.provider_model_mapping import (AllModels, ModelsAI21labs,
                                          ModelsOpenai, ProviderAI21labs,
                                          ProviderCohere, ProviderGoogle,
                                          ProviderOpenai)
-from .python_parser import ParsedFunction
+from .python_llm import FunctionLLMTranslator, ParsedFunction
 from .tasks.base_llm_task import BaseLLMTask, LLMTask
-from .tasks.func_llm_translator import FunctionLLMTranslator
 from .templates import InstructFunctionTemplate
 
 
@@ -74,13 +73,13 @@ def init_declarai(
         llm_task = BaseLLMTask(
             template=InstructFunctionTemplate,
             template_kwargs={
-                "input_instructions": llm_translator.parsed_func.doc_description,
+                "input_instructions": llm_translator.parsed_func.freeform,
                 "input_placeholder": llm_translator.make_input_placeholder(),
                 "output_instructions": llm_translator.make_output_prompt(),
             },
             prompt_kwargs={
                 "structured": llm_translator.has_any_return_defs(),
-                "return_name": parsed_function.return_name or "declarai_result"
+                "return_name": parsed_function.returns[0] or "declarai_result",
             },
             llm=llm,
         )
