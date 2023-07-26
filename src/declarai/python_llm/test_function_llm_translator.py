@@ -1,6 +1,6 @@
 import pytest
 
-from .func_llm_translator import make_output_prompt
+from declarai.python_llm.func_llm_translator import make_output_prompt
 
 
 @pytest.mark.parametrize(

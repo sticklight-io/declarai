@@ -1,15 +1,17 @@
 from abc import ABC
 
+from declarai.python_llm.types import FreeFormDoc, Params, Returns
+
 
 class BaseDocStringParser(ABC):
-    def docstring(self):
+    @property
+    def freeform(self) -> FreeFormDoc:
         raise NotImplementedError()
 
-    def description(self):
+    @property
+    def params(self) -> Params:
         raise NotImplementedError()
 
-    def params(self):
-        raise NotImplementedError()
-
-    def returns(self):
+    @property
+    def returns(self) -> Returns:
         raise NotImplementedError()

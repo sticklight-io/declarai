@@ -1,6 +1,6 @@
 import logging
 
-from declarai.python_llm import ParsedFunction
+from declarai.python_llm.function_parser import ParsedFunction
 
 FORMAT_INSTRUCTIONS = (
     "The output should be a markdown code snippet formatted in the following schema, "
@@ -20,13 +20,14 @@ class FunctionLLMTranslator:
         self.parsed_func = parsed_function
 
     def make_input_prompt(self) -> str:
-        doc_params = self.parsed_func.doc_params
+        doc_params = self.parsed_func.params
         input_prompt = ""
-        for k, v in self.parsed_func.func_args.items():
-            if param_doc := doc_params.get(k):
-                input_prompt += f"{k}: {v},  # {param_doc}\n"
+        for signature_arg, signature_arg_type in self.parsed_func.func_args.items():
+            param_doc = doc_params.get(signature_arg)
+            if param_doc:
+                input_prompt += f"{signature_arg}: {signature_arg_type},  # {param_doc}\n"
             else:
-                input_prompt += f"{k}: {v},\n"
+                input_prompt += f"{signature_arg}: {signature_arg_type},\n"
         return input_prompt
 
     def make_input_placeholder(self) -> str:
@@ -56,15 +57,15 @@ class FunctionLLMTranslator:
     def has_any_return_defs(self) -> bool:
         return any(
             [
-                self.parsed_func.return_name,
+                self.parsed_func.returns[0],
                 self.parsed_func.return_type,
             ]
         )
 
     def make_output_prompt(self) -> str:
         return_type = self.parsed_func.return_type
-        return_doc = self.parsed_func.return_doc
-        return_name = self.parsed_func.return_name or "declarai_result"
+        return_name, return_doc = self.parsed_func.returns
+        return_name = return_name or "declarai_result"
 
         output_prompt = make_output_prompt(return_name, return_type, return_doc)
         if not output_prompt:
@@ -89,7 +90,7 @@ def make_output_prompt(return_name: str, return_type: str, return_doc: str) -> s
     output_schema = f'"{return_name or "declarai_result"}": '
 
     if return_type:
-        output_schema += return_type
+        output_schema += str(return_type)
 
     if return_doc:
         if not return_type and not return_name:
