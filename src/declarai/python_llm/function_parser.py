@@ -51,6 +51,7 @@ class ParsedFunction:
         try:
             if issubclass(_return_type, inspect._empty):
                 return None
+            return _return_type
         except:
             return _return_type
 

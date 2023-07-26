@@ -53,9 +53,12 @@ def extract_email_contacts(text: str, contact_fields: List[str]) -> Dict[str, st
     """
     return magic("contacts", text, contact_fields)
 
-print(extract_email_contacts(
-    text="I am John Doe and my phone number is 123-456-7890. ",
-    contact_fields=["phone", "name", "email"])
+
+print(
+    extract_email_contacts(
+        text="I am John Doe and my phone number is 123-456-7890. ",
+        contact_fields=["phone", "name", "email"],
+    )
 )
 
 res = extract_email_info(
@@ -85,8 +88,11 @@ def a_generate_a_poem(title: str):
     Generate a poem based on the given title
     """
     return magic(title)
+
+
 print("No return data")
 print(a_generate_a_poem(title="The cat in the hat"))
+
 
 @ai_task
 def b_generate_a_poem(title: str) -> str:
@@ -94,6 +100,8 @@ def b_generate_a_poem(title: str) -> str:
     Generate a poem based on the given title
     """
     return magic(title)
+
+
 print("only return type")
 print(b_generate_a_poem(title="The cat in the hat"))
 
@@ -105,6 +113,8 @@ def c_generate_a_poem(title: str):
     :return: The generated poem
     """
     return magic(title)
+
+
 print("only return doc")
 print(c_generate_a_poem(title="The cat in the hat"))
 
@@ -115,9 +125,10 @@ def d_generate_a_poem(title: str):
     Generate a poem based on the given title
     """
     return magic("poem", title)
+
+
 print("only return name")
 print(d_generate_a_poem(title="The cat in the hat"))
-
 
 
 @ai_task
@@ -127,6 +138,8 @@ def f_generate_a_poem(title: str) -> str:
     :return: The generated poem
     """
     return magic(title)
+
+
 print("return doc + return type")
 print(f_generate_a_poem(title="The cat in the hat"))
 
@@ -137,6 +150,8 @@ def g_generate_a_poem(title: str) -> str:
     Generate a poem based on the given title
     """
     return magic("poem", title)
+
+
 print("return name + return type")
 print(g_generate_a_poem(title="The cat in the hat"))
 
@@ -148,6 +163,8 @@ def generate_a_poem(title: str):
     :return: The generated poem
     """
     return magic("poem", title)
+
+
 print("return doc + return name")
 print(generate_a_poem(title="The cat in the hat"))
 
@@ -159,5 +176,7 @@ def h_generate_a_poem(title: str) -> str:
     :return: The generated poem
     """
     return magic("poem", title)
+
+
 print("return all")
 print(h_generate_a_poem(title="The cat in the hat"))

@@ -1,7 +1,6 @@
-import inspect
 import logging
 
-from declarai.python_parser import ParsedFunction
+from declarai.python_llm import ParsedFunction
 
 FORMAT_INSTRUCTIONS = (
     "The output should be a markdown code snippet formatted in the following schema, "
@@ -55,50 +54,49 @@ class FunctionLLMTranslator:
         return INPUTS_TEMPLATE.format(inputs=inputs)
 
     def has_any_return_defs(self) -> bool:
-        return any([
-            self.parsed_func.return_name,
-            self.parsed_func.return_type,
-        ])
+        return any(
+            [
+                self.parsed_func.return_name,
+                self.parsed_func.return_type,
+            ]
+        )
 
     def make_output_prompt(self) -> str:
         return_type = self.parsed_func.return_type
         return_doc = self.parsed_func.return_doc
-        return_name = self.parsed_func.return_name
+        return_name = self.parsed_func.return_name or "declarai_result"
 
-        output_schema = ""
-
-        if return_doc and not (return_type or return_name):
-            return f"{return_doc}:"
-
-        if return_type and not (return_doc or return_name):
-            output_schema = f"declarai_result: {return_type}"
-
-        if return_name and not (return_doc or return_type):
-            output_schema = f"{return_name}: "
-
-        if return_type and return_doc and not return_name:
-            output_schema = f"declarai_result: {return_type}  # {return_doc}"
-
-        if return_name and return_type and not return_doc:
-            output_schema = f"{return_name}: {return_type}"
-
-        if return_doc and return_name and not return_type:
-            output_schema = f"{return_name}:  # {return_doc}"
-
-        if return_type and return_doc and return_name:
-            output_schema = f"{return_name}: {return_type}  # {return_doc}"
-
-        if not output_schema:
+        output_prompt = make_output_prompt(return_name, return_type, return_doc)
+        if not output_prompt:
             logger.warning(
                 "Failed to create output schema for function %s."
-                "Please add atleast one of the following: return type, return doc, return name",
+                "Please add at least one of the following: return type, return doc, return name",
                 self.parsed_func.name,
             )
             return ""
-
         instructions = (
             FORMAT_INSTRUCTIONS
             + "\n"
-            + JSON_SNIPPET_TEMPLATE.format(format=output_schema)
+            + JSON_SNIPPET_TEMPLATE.format(format=output_prompt)
         )
         return instructions
+
+
+def make_output_prompt(return_name: str, return_type: str, return_doc: str) -> str:
+    if not any([return_name, return_type, return_doc]):
+        return ""
+
+    output_schema = f'"{return_name or "declarai_result"}": '
+
+    if return_type:
+        output_schema += return_type
+
+    if return_doc:
+        if not return_type and not return_name:
+            return f"{return_doc}: "
+        output_schema += f"  # {return_doc}"
+
+    if not output_schema:
+        return ""
+
+    return output_schema
