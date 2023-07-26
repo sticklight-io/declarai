@@ -58,6 +58,7 @@ class FunctionLLMTranslator:
         return any(
             [
                 self.parsed_func.returns[0],
+                self.parsed_func.returns[1],
                 self.parsed_func.return_type,
             ]
         )
@@ -65,16 +66,19 @@ class FunctionLLMTranslator:
     def make_output_prompt(self) -> str:
         return_type = self.parsed_func.return_type
         return_name, return_doc = self.parsed_func.returns
-        return_name = return_name or "declarai_result"
+        magic_definition = self.parsed_func.magic
+        return_name = return_name or magic_definition or "declarai_result"
 
-        output_prompt = make_output_prompt(return_name, return_type, return_doc)
-        if not output_prompt:
+        if not self.has_any_return_defs():
             logger.warning(
-                "Failed to create output schema for function %s."
+                "Couldn't create output schema for function %s."
+                "Falling back to unstructured output."
                 "Please add at least one of the following: return type, return doc, return name",
                 self.parsed_func.name,
             )
             return ""
+
+        output_prompt = make_output_prompt(return_name, return_type, return_doc)
         instructions = (
             FORMAT_INSTRUCTIONS
             + "\n"
