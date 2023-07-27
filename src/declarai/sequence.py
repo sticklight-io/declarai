@@ -14,10 +14,10 @@ Usage:
     >>> reducer.compile()
 """
 
-from typing import Literal, Set, Tuple
+from typing import Literal, Set, Tuple, Optional
 
 from declarai import templates
-from declarai.tasks.base_llm_task import BaseLLMTask, LLMTaskFuture
+from declarai.tasks.future_task import FutureLLMTask
 
 ReduceStrategies = Literal["CoT"]
 
@@ -25,8 +25,8 @@ ReduceStrategies = Literal["CoT"]
 class Sequence:
     def __init__(
         self,
-        ai_future_task: LLMTaskFuture,
-        reduce_strategy: ReduceStrategies | None = "CoT",
+        ai_future_task: FutureLLMTask,
+        reduce_strategy: Optional[ReduceStrategies] = "CoT",
     ):
         """
 
@@ -46,14 +46,15 @@ class Sequence:
             reduced_prompt = templates.ChainOfThoughtsTemplate.format(
                 steps=prompt, num_steps=num_steps
             )
-            return self.ai_future_task.exec_func(reduced_prompt, True)
+            self.ai_future_task.exec_func.__self__._prompt_config.multi_results = True
+            return self.ai_future_task.exec_func(reduced_prompt)
 
     def __call__(self):
         return self._exec()
 
 
 def chain_of_thought_reducer(
-    future_task: LLMTaskFuture,
+    future_task: FutureLLMTask,
     prompt: str = "",
     steps: int = 0,
     visited_tasks: Set = None,
@@ -65,10 +66,10 @@ def chain_of_thought_reducer(
     if not visited_tasks:
         visited_tasks = set()
 
-    kwargs = future_task.get_kwargs()
+    kwargs = future_task.task_kwargs
 
     for param, value in kwargs.items():
-        if isinstance(value, LLMTaskFuture):
+        if isinstance(value, FutureLLMTask):
             if value not in visited_tasks:
                 visited_tasks.add(value)
                 new_prompt, new_steps = chain_of_thought_reducer(
@@ -79,8 +80,6 @@ def chain_of_thought_reducer(
             kwargs[param] = "From previous steps"
 
     steps += 1
-    task_prompt = (
-        f"Step {steps}:\n{future_task.get_compiled_template().format(**kwargs)}"
-    )
+    task_prompt = f"\nStep {steps}:\n{future_task.compiled_template.format(**kwargs)}"
     prompt += task_prompt
     return prompt, steps

@@ -1,52 +1,49 @@
-from typing import Callable, overload, Dict
+from typing import Callable, overload, Optional, Dict
 
-from .llm import LLMConfig, resolve_llm_from_config
-from .llm.provider_model_mapping import (AllModels, ModelsAI21labs,
-                                         ModelsCohere, ModelsGoogle,
-                                         ModelsOpenai, ProviderAI21labs,
-                                         ProviderCohere, ProviderGoogle,
-                                         ProviderOpenai)
+from .llm import (AllModels, LLMSettings, ModelsAI21labs, ModelsCohere,
+                  ModelsGoogle, ModelsOpenai, ProviderAI21labs, ProviderCohere,
+                  ProviderGoogle, ProviderOpenai, resolve_llm_from_config)
 from .python_llm import FunctionLLMTranslator, ParsedFunction
-from .tasks.base_llm_task import BaseLLMTask, LLMTask
+from .tasks.llm_task import LLMTask, LLMTaskType
 from .templates import InstructFunctionTemplate
 
 
 # Custom function to enforce the relationship between PROVIDER and MODELS
 @overload
 def init_declarai(
-    provider: ProviderOpenai, model: ModelsOpenai, openai_token: str | None = None
-) -> Callable[[Callable], LLMTask]:
+    provider: ProviderOpenai, model: ModelsOpenai, openai_token: Optional[str] = None
+) -> Callable[[Callable], LLMTaskType]:
     ...
 
 
 @overload
 def init_declarai(
     provider: ProviderCohere, model: ModelsCohere
-) -> Callable[[Callable], LLMTask]:
+) -> Callable[[Callable], LLMTaskType]:
     ...
 
 
 @overload
 def init_declarai(
     provider: ProviderAI21labs, model: ModelsAI21labs
-) -> Callable[[Callable], LLMTask]:
+) -> Callable[[Callable], LLMTaskType]:
     ...
 
 
 @overload
 def init_declarai(
     provider: ProviderGoogle, model: ModelsGoogle
-) -> Callable[[Callable], LLMTask]:
+) -> Callable[[Callable], LLMTaskType]:
     ...
 
 
 def init_declarai(
     provider: str, model: AllModels, **kwargs
-) -> Callable[[Callable], LLMTask]:
-    llm_config = LLMConfig(provider=provider, model=model)
+) -> Callable[[Callable], LLMTaskType]:
+    llm_config = LLMSettings(provider=provider, model=model)
     llm = resolve_llm_from_config(llm_config, **kwargs)
 
-    def ai_task(func: Callable) -> LLMTask:
+    def ai_task(func: Callable) -> LLMTaskType:
         """
         This is a decorator that reads the provided function and translates it to an AI function.
         The code generates templates and configurations to apply to the call at runtime.
@@ -70,16 +67,22 @@ def init_declarai(
         parsed_function = ParsedFunction(func)
         llm_translator = FunctionLLMTranslator(parsed_function)
 
-        llm_task = BaseLLMTask(
+        return_name = (
+            parsed_function.magic
+            or parsed_function.docstring_return[0]
+            or "declarai_result"
+        )
+
+        llm_task = LLMTask(
             template=InstructFunctionTemplate,
             template_kwargs={
-                "input_instructions": llm_translator.parsed_func.freeform,
-                "input_placeholder": llm_translator.make_input_placeholder(),
-                "output_instructions": llm_translator.make_output_prompt(),
+                "input_instructions": llm_translator.parsed_func.docstring_freeform,
+                "input_placeholder": llm_translator.compile_input_placeholder(),
+                "output_instructions": llm_translator.compile_output_prompt(),
             },
             prompt_kwargs={
-                "structured": llm_translator.has_any_return_defs(),
-                "return_name": parsed_function.returns[0] or "declarai_result",
+                "structured": llm_translator.has_any_return_defs,
+                "return_name": return_name,
             },
             llm=llm,
         )
