@@ -80,7 +80,7 @@ def chain_of_thought_reducer(
 
     steps += 1
     task_prompt = (
-        f"Step {steps}:\n{future_task.get_compiled_template().format(**kwargs)}"
+        f"\nStep {steps}:\n{future_task.get_compiled_template().format(**kwargs)}"
     )
     prompt += task_prompt
     return prompt, steps

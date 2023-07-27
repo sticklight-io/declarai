@@ -12,8 +12,8 @@ import logging
 import re
 from typing import Any, Callable, Dict, TypeVar
 
-from declarai.configurations.prompt_config import PromptConfig
 from declarai.llm import LLM
+from declarai.llm.settings import PromptSettings
 
 logger = logging.getLogger("BaseFunction")
 
@@ -60,7 +60,7 @@ class BaseLLMTask:
         self._llm = llm
         self._template = template
         self._template_args = template_kwargs
-        self._prompt_config = PromptConfig(**prompt_kwargs)
+        self._prompt_config = PromptSettings(**prompt_kwargs)
 
     def _exec_unstructured(self, prompt: str) -> str | None:
         logger.debug(prompt)

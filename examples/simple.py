@@ -15,21 +15,17 @@ def extract_email_phonenum(email: str) -> List[str]:
     return magic(email)
 
 
-res = extract_email_phonenum(
+contacts_1 = extract_email_phonenum(
     email="Hey jenny,\nyou can call me at 124-3435-132.\n"
     "Thanks!, I'm also available at 123-456-7890."
 )
-
-print(extract_email_phonenum.compile())
-print(res)
-
-planned = extract_email_phonenum.plan(
+contacts_2_plan = extract_email_phonenum.plan(
     email="Hey jenny,\nyou can call me at 000999999999.\n"
     "Thanks!, I'm also available at 123-456-7890."
 )
-print(planned.get_populated_prompt())
-res_2 = planned()
-print(res_2)
+
+print(contacts_1)
+print(contacts_2_plan())
 
 
 @ai_task

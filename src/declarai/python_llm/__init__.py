@@ -1,2 +1,2 @@
-from .function_parser import ParsedFunction
-from .func_llm_translator import FunctionLLMTranslator
+from .traslators import FunctionLLMTranslator
+from .parsers import ParsedFunction

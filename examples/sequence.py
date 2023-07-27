@@ -2,7 +2,7 @@ from typing import Any, Dict, List
 
 from declarai import Sequence, init_declarai, magic
 
-ai_task = init_declarai(provider="openai", model="gpt-3.5-turbo")
+ai_task = init_declarai(provider="openai", model="gpt-3.5-turbo-0301")
 
 
 @ai_task

@@ -1,11 +1,17 @@
 from typing import Callable, overload
 
-from .llm import LLMConfig, resolve_llm_from_config
-from .llm.provider_model_mapping import (AllModels, ModelsAI21labs,
-                                         ModelsCohere, ModelsGoogle,
-                                         ModelsOpenai, ProviderAI21labs,
-                                         ProviderCohere, ProviderGoogle,
-                                         ProviderOpenai)
+from .llm import LLMSettings, resolve_llm_from_config
+from .llm.provider_model_mapping import (
+    AllModels,
+    ModelsAI21labs,
+    ModelsCohere,
+    ModelsGoogle,
+    ModelsOpenai,
+    ProviderAI21labs,
+    ProviderCohere,
+    ProviderGoogle,
+    ProviderOpenai,
+)
 from .python_llm import FunctionLLMTranslator, ParsedFunction
 from .tasks.base_llm_task import BaseLLMTask, LLMTask
 from .templates import InstructFunctionTemplate
@@ -43,7 +49,7 @@ def init_declarai(
 def init_declarai(
     provider: str, model: AllModels, **kwargs
 ) -> Callable[[Callable], LLMTask]:
-    llm_config = LLMConfig(provider=provider, model=model)
+    llm_config = LLMSettings(provider=provider, model=model)
     llm = resolve_llm_from_config(llm_config, **kwargs)
 
     def ai_task(func: Callable) -> LLMTask:
@@ -73,13 +79,13 @@ def init_declarai(
         llm_task = BaseLLMTask(
             template=InstructFunctionTemplate,
             template_kwargs={
-                "input_instructions": llm_translator.parsed_func.freeform,
-                "input_placeholder": llm_translator.make_input_placeholder(),
-                "output_instructions": llm_translator.make_output_prompt(),
+                "input_instructions": llm_translator.parsed_func.docstring_freeform,
+                "input_placeholder": llm_translator.compile_input_placeholder(),
+                "output_instructions": llm_translator.compile_output_prompt(),
             },
             prompt_kwargs={
                 "structured": llm_translator.has_any_return_defs(),
-                "return_name": parsed_function.returns[0] or "declarai_result",
+                "return_name": parsed_function.docstring_return[0] or "declarai_result",
             },
             llm=llm,
         )
