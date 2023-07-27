@@ -1,4 +1,4 @@
-from typing import Callable, overload
+from typing import Callable, overload, Optional
 
 from .llm import (AllModels, LLMSettings, ModelsAI21labs, ModelsCohere,
                   ModelsGoogle, ModelsOpenai, ProviderAI21labs, ProviderCohere,
