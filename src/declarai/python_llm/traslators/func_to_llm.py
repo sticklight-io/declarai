@@ -1,8 +1,8 @@
 import logging
 
 from declarai.python_llm.parsers.function_parser import ParsedFunction
-from compilers.output_prompt import compile_output_prompt
 
+from .compilers.output_prompt import compile_output_prompt
 
 INPUTS_TEMPLATE = "Inputs:\n{inputs}\n"
 INPUT_LINE_TEMPLATE = "{param}: {{{param}}}"

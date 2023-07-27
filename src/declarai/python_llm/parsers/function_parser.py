@@ -64,7 +64,8 @@ class ParsedFunction:
             if issubclass(_return_type, inspect._empty):
                 return None
         except:
-            print("bad return type")
+            # TODO: handle this exception
+            pass
         _return_type = str(_return_type).replace("typing.", "")
         return _return_type
 

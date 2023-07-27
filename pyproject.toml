@@ -16,6 +16,7 @@ pylint = "*"
 black = "*"
 isort = "*"
 pytest = "*"
+coverage = "^7.2.7"
 
 [build-system]
 requires = ["poetry-core"]

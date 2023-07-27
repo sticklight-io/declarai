@@ -1,11 +1,7 @@
 import re
 
 from declarai.python_llm.docstring_parsers.base_parser import (
-    BaseDocStringParser,
-    DocstringFreeform,
-    DocstringParams,
-    DocstringReturn,
-)
+    BaseDocStringParser, DocstringFreeform, DocstringParams, DocstringReturn)
 
 reST_PARAM_KEY: str = ":param"
 reST_RETURN_KEY: str = ":return"

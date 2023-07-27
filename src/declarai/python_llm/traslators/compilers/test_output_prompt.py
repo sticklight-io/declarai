@@ -1,10 +1,7 @@
 import pytest
 
-from .output_prompt import (
-    compile_output_schema_template,
-    compile_output_prompt,
-    FORMAT_INSTRUCTIONS,
-)
+from .output_prompt import (FORMAT_INSTRUCTIONS, compile_output_prompt,
+                            compile_output_schema_template)
 
 
 @pytest.mark.parametrize(
@@ -36,9 +33,10 @@ def test_compile_output_prompt():
         return_name, return_type, return_docstring
     )
     only_json_result = compiled_output_prompt.replace(FORMAT_INSTRUCTIONS, "")
-    formatted_output = \
-        '```json\n' \
-        '{{\n' \
-        '    "return_name": Dict[str, str]  # The returned value from this function\n' \
-        '}}\n```'
+    formatted_output = (
+        "```json\n"
+        "{{\n"
+        '    "return_name": Dict[str, str]  # The returned value from this function\n'
+        "}}\n```"
+    )
     assert only_json_result == formatted_output

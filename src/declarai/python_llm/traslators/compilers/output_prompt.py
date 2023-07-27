@@ -44,7 +44,7 @@ def compile_output_prompt(
     output_prompt = compile_output_schema_template(
         return_name, return_type, return_docstring
     )
-    instructions = (
-        FORMAT_INSTRUCTIONS + JSON_SNIPPET_TEMPLATE.format(format=output_prompt)
+    instructions = FORMAT_INSTRUCTIONS + JSON_SNIPPET_TEMPLATE.format(
+        format=output_prompt
     )
     return instructions

@@ -1,11 +1,12 @@
+from pprint import pprint
 from typing import Any, Dict, List
 
 from declarai import Sequence, init_declarai, magic
 
-ai_task = init_declarai(provider="openai", model="gpt-3.5-turbo-0301")
+declarai = init_declarai(provider="openai", model="gpt-3.5-turbo-0301")
 
 
-@ai_task
+@declarai
 def suggest_title(question: str) -> str:
     """
     Given a question from our customer support, suggest a title for it
@@ -15,7 +16,7 @@ def suggest_title(question: str) -> str:
     return magic("question_title", question)
 
 
-@ai_task
+@declarai
 def route_to_department(title: str, departments: List[str]) -> str:
     """
     Given a question title, route it to the relevant department
@@ -26,7 +27,7 @@ def route_to_department(title: str, departments: List[str]) -> str:
     return magic("department", title, departments)
 
 
-@ai_task
+@declarai
 def suggest_department_answers(title: str, department: str) -> List[str]:
     """
     Given a question and a department, suggest 2 answers from the department's knowledge base
@@ -60,7 +61,7 @@ def handle_customer_question(question: str) -> Dict[str, Any]:
     }
 
 
-print(
+pprint(
     handle_customer_question(
         "Hey, I'm not using my account anymore. "
         "I've already talked to customer support and am not interested in it anymore. "

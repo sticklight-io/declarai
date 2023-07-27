@@ -5,6 +5,7 @@ class PromptSettings:
     def __init__(
         self,
         structured: bool = True,
+        multi_results: bool = False,
         return_name: Optional[str] = "declarai_result",
         temperature: Optional[float] = 0.0,
         max_tokens: Optional[int] = 2000,
@@ -13,6 +14,7 @@ class PromptSettings:
         presence_penalty: Optional[int] = 0,
     ):
         self.structured = structured
+        self.multi_results = multi_results
         self.return_name = return_name
         self.temperature = temperature
         self.max_tokens = max_tokens

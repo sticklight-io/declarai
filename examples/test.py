@@ -2,10 +2,10 @@ from typing import Dict, List
 
 from declarai import Sequence, init_declarai, magic
 
-ai_task = init_declarai(provider="openai", model="gpt-3.5-turbo-0301")
+declarai = init_declarai(provider="openai", model="gpt-3.5-turbo-0301")
 
 
-@ai_task
+@declarai
 def extract_email_info(text: str, contact_fields: List[str]) -> Dict[str, str]:
     """
     Don't write python code
@@ -18,7 +18,7 @@ def extract_email_info(text: str, contact_fields: List[str]) -> Dict[str, str]:
     return magic("email_info", text, contact_fields)
 
 
-@ai_task
+@declarai
 def anonymize_data(data: Dict[str, str]) -> Dict[str, str]:
     """
     return a redacted version of the input data

@@ -1,10 +1,7 @@
 from abc import ABC
 
-from declarai.python_llm.types import (
-    DocstringFreeform,
-    DocstringParams,
-    DocstringReturn,
-)
+from declarai.python_llm.types import (DocstringFreeform, DocstringParams,
+                                       DocstringReturn)
 
 
 class BaseDocStringParser(ABC):
