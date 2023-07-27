@@ -1,5 +1,6 @@
 name: test
 
+
 on: [push, pull_request]
 
 jobs:
@@ -26,3 +27,8 @@ jobs:
       with:
         name: coverage
         path: coverage.xml
+
+  report:
+    uses: romeovs/lcov-reporter-action@v0.2.16
+    with:
+      lcov-file: ./coverage.xml
