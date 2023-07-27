@@ -1,4 +1,3 @@
-name: Code Coverage Summary Report
-uses: irongut/CodeCoverageSummary@v1.3.0
+uses: romeovs/lcov-reporter-action@v0.2.16
 with:
-  filename: coverage.xml
+  lcov-file: ./coverage.xml
