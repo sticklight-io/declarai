@@ -2,10 +2,10 @@ from typing import Dict, List
 
 from declarai import init_declarai, magic
 
-ai_task = init_declarai(provider="openai", model="gpt-3.5-turbo")
+declarai = init_declarai(provider="openai", model="gpt-3.5-turbo")
 
 
-@ai_task
+@declarai
 def extract_email_phonenum(email: str) -> List[str]:
     """
     Extract the phone number from the provided email
@@ -15,24 +15,20 @@ def extract_email_phonenum(email: str) -> List[str]:
     return magic(email)
 
 
-res = extract_email_phonenum(
+contacts_1 = extract_email_phonenum(
     email="Hey jenny,\nyou can call me at 124-3435-132.\n"
     "Thanks!, I'm also available at 123-456-7890."
 )
-
-print(extract_email_phonenum.compile())
-print(res)
-
-planned = extract_email_phonenum.plan(
+contacts_2_plan = extract_email_phonenum.plan(
     email="Hey jenny,\nyou can call me at 000999999999.\n"
     "Thanks!, I'm also available at 123-456-7890."
 )
-print(planned.get_populated_prompt())
-res_2 = planned()
-print(res_2)
+
+print(contacts_1)
+print(contacts_2_plan())
 
 
-@ai_task
+@declarai
 def extract_email_info(text: str, contact_fields: List[str]) -> Dict[str, str]:
     """
     Extract the provided contact fields from the given text
@@ -43,7 +39,7 @@ def extract_email_info(text: str, contact_fields: List[str]) -> Dict[str, str]:
     return magic(text, contact_fields)
 
 
-@ai_task
+@declarai
 def extract_email_contacts(text: str, contact_fields: List[str]) -> Dict[str, str]:
     """
     Extract the provided contact fields from the given text
@@ -69,7 +65,7 @@ res = extract_email_info(
 print(res)
 
 
-@ai_task
+@declarai
 def get_tables(query: str) -> List[str]:
     """
     Extract the tables used in the given query
@@ -82,7 +78,7 @@ def get_tables(query: str) -> List[str]:
 print(get_tables(query="SELECT * FROM table_1 JOIN table_2"))
 
 
-@ai_task
+@declarai
 def a_generate_a_poem(title: str):
     """
     Generate a poem based on the given title
@@ -94,7 +90,7 @@ print("No return data")
 print(a_generate_a_poem(title="The cat in the hat"))
 
 
-@ai_task
+@declarai
 def b_generate_a_poem(title: str) -> str:
     """
     Generate a poem based on the given title
@@ -106,7 +102,7 @@ print("only return type")
 print(b_generate_a_poem(title="The cat in the hat"))
 
 
-@ai_task
+@declarai
 def c_generate_a_poem(title: str):
     """
     Generate a poem based on the given title
@@ -119,7 +115,7 @@ print("only return doc")
 print(c_generate_a_poem(title="The cat in the hat"))
 
 
-@ai_task
+@declarai
 def d_generate_a_poem(title: str):
     """
     Generate a poem based on the given title
@@ -131,7 +127,7 @@ print("only return name")
 print(d_generate_a_poem(title="The cat in the hat"))
 
 
-@ai_task
+@declarai
 def f_generate_a_poem(title: str) -> str:
     """
     Generate a poem based on the given title
@@ -144,7 +140,7 @@ print("return doc + return type")
 print(f_generate_a_poem(title="The cat in the hat"))
 
 
-@ai_task
+@declarai
 def g_generate_a_poem(title: str) -> str:
     """
     Generate a poem based on the given title
@@ -156,7 +152,7 @@ print("return name + return type")
 print(g_generate_a_poem(title="The cat in the hat"))
 
 
-@ai_task
+@declarai
 def generate_a_poem(title: str):
     """
     Generate a poem based on the given title
@@ -169,7 +165,7 @@ print("return doc + return name")
 print(generate_a_poem(title="The cat in the hat"))
 
 
-@ai_task
+@declarai
 def h_generate_a_poem(title: str) -> str:
     """
     Generate a poem based on the given title

@@ -1,13 +1,21 @@
 import pytest
 
-from declarai.python_llm.docstring_parsers.reST.parser import ReSTDocstringParser
+from .parser import ReSTDocstringParser
+
+multiline_docstring = """This is the documentation\nwith multiple lines
+:param param1: This is the first parameter
+    with additional description
+:param param2: This is the second parameter
+    with more details
+:return: This is the return value\n    with multiple lines
+"""
 
 
 @pytest.mark.parametrize(
     "docstring, freeform, params, returns",
     [
         (
-            """This is the documentation\nwith multiple lines\n:param param1: This is the first parameter\n    with additional description\n:param param2: This is the second parameter\n    with more details\n:return: This is the return value\n    with multiple lines""",
+            multiline_docstring,
             "This is the documentation\nwith multiple lines",
             {
                 "param1": "This is the first parameter\n    with additional description",

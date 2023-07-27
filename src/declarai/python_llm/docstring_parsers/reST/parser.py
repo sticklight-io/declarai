@@ -1,7 +1,7 @@
 import re
 
 from declarai.python_llm.docstring_parsers.base_parser import (
-    BaseDocStringParser, FreeFormDoc, Params, Returns)
+    BaseDocStringParser, DocstringFreeform, DocstringParams, DocstringReturn)
 
 reST_PARAM_KEY: str = ":param"
 reST_RETURN_KEY: str = ":return"
@@ -17,16 +17,17 @@ class ReSTDocstringParser(BaseDocStringParser):
     As recommended by (PEP 287)[https://peps.python.org/pep-0287/],
     the recommended docstring format is the reStructuredText format (shortform - reST).
     """
+
     def __init__(self, docstring: str):
         self.docstring = docstring
 
     @property
-    def freeform(self) -> FreeFormDoc:
+    def freeform(self) -> DocstringFreeform:
         freeform = re.search(reST_FREEFORM_REGEX, self.docstring).group().strip()
         return freeform
 
     @property
-    def params(self) -> Params:
+    def params(self) -> DocstringParams:
         params = [
             param.group().strip()
             for param in re.finditer(reST_PARAMS_REGEX, self.docstring)
@@ -39,7 +40,7 @@ class ReSTDocstringParser(BaseDocStringParser):
         return params_dict
 
     @property
-    def returns(self) -> Returns:
+    def returns(self) -> DocstringReturn:
         matched_returns = re.search(reST_RETURN_REGEX, self.docstring)
         if matched_returns:
             returns = matched_returns.group().strip()
