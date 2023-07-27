@@ -9,6 +9,7 @@ packages = [{include = "declarai", from = "src"}]
 [tool.poetry.dependencies]
 python = "^3.7.1"
 openai = "^0.27.8"
+pytest-cov = "^4.1.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -16,7 +17,6 @@ pylint = "*"
 black = "*"
 isort = "*"
 pytest = "*"
-coverage = "^7.2.7"
 
 [build-system]
 requires = ["poetry-core"]
