@@ -14,7 +14,7 @@ Usage:
     >>> reducer.compile()
 """
 
-from typing import Literal, Set, Tuple
+from typing import Literal, Set, Tuple, Optional
 
 from declarai import templates
 from declarai.tasks.future_task import FutureLLMTask
@@ -26,7 +26,7 @@ class Sequence:
     def __init__(
         self,
         ai_future_task: FutureLLMTask,
-        reduce_strategy: ReduceStrategies | None = "CoT",
+        reduce_strategy: Optional[ReduceStrategies] = "CoT",
     ):
         """
 
