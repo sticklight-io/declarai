@@ -26,7 +26,7 @@ class Sequence:
     def __init__(
         self,
         ai_future_task: FutureLLMTask,
-        reduce_strategy: ReduceStrategies | None = "CoT",
+        reduce_strategy: Optional[ReduceStrategies] = "CoT",
     ):
         """
 

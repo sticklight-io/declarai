@@ -38,7 +38,7 @@ class LLMTask:
         self._template_args = template_kwargs
         self._prompt_config = PromptSettings(**prompt_kwargs)
 
-    def _exec_unstructured(self, prompt: str) -> str | None:
+    def _exec_unstructured(self, prompt: str) -> Optional[str]:
         logger.debug(prompt)
         result = self._llm.predict(prompt)
         return result

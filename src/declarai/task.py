@@ -11,7 +11,7 @@ from .templates import InstructFunctionTemplate
 # Custom function to enforce the relationship between PROVIDER and MODELS
 @overload
 def init_declarai(
-    provider: ProviderOpenai, model: ModelsOpenai, openai_token: str | None = None
+    provider: ProviderOpenai, model: ModelsOpenai, openai_token: Optional[str] = None
 ) -> Callable[[Callable], LLMTaskType]:
     ...
 
