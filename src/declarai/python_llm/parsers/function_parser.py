@@ -8,6 +8,7 @@ from typing import Callable, Dict, Optional
 
 from ..docstring_parsers.reST import ReSTDocstringParser
 from ..types import DocstringFreeform, DocstringParams, DocstringReturn
+from .type_hint_resolver import resolve_type_hints
 
 
 class ParsedFunction:
@@ -41,9 +42,9 @@ class ParsedFunction:
 
     def __init__(self, func: Callable):
         self.func = func
-        self.__doc = inspect.getdoc(func)
-        self.__parsed_doc = ReSTDocstringParser(self.__doc)
-        self.__signature = inspect.signature(func)
+        self._doc = inspect.getdoc(func)
+        self._parsed_doc = ReSTDocstringParser(self._doc)
+        self._signature = inspect.signature(func)
 
     @property
     def name(self) -> str:
@@ -53,37 +54,29 @@ class ParsedFunction:
     def signature_kwargs(self) -> Dict[str, str]:
         return {
             param.name: param.annotation.__name__
-            for param in dict(self.__signature.parameters).values()
+            for param in dict(self._signature.parameters).values()
         }
 
     @property
     def signature_return_type(self) -> Optional[str]:
-        # TODO: This return type handling is shit...
-        _return_type = self.__signature.return_annotation
-        try:
-            if issubclass(_return_type, inspect._empty):
-                return None
-        except:
-            # TODO: handle this exception
-            pass
-        _return_type = str(_return_type).replace("typing.", "")
+        _return_type = resolve_type_hints(self._signature.return_annotation)
         return _return_type
 
     @property
     def docstring(self) -> str:
-        return self.__doc
+        return self._doc
 
     @property
     def docstring_freeform(self) -> DocstringFreeform:
-        return self.__parsed_doc.freeform
+        return self._parsed_doc.freeform
 
     @property
     def docstring_params(self) -> DocstringParams:
-        return self.__parsed_doc.params
+        return self._parsed_doc.params
 
     @property
     def docstring_return(self) -> DocstringReturn:
-        return self.__parsed_doc.returns
+        return self._parsed_doc.returns
 
     @property
     def magic(self) -> Optional[str]:

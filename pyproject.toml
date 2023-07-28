@@ -9,7 +9,8 @@ packages = [{include = "declarai", from = "src"}]
 [tool.poetry.dependencies]
 python = "^3.7.1"
 openai = "^0.27.8"
-pytest-cov = "^4.1.0"
+pydantic = {version = "^1.8.2", optional = true}
+jsonref = {version = "^1.1.0", optional = true}
 
 
 [tool.poetry.group.dev.dependencies]
@@ -17,6 +18,11 @@ pylint = "*"
 black = "*"
 isort = "*"
 pytest = "*"
+pytest-cov = "^4.1.0"
+rich = "^13.4.2"
+
+[tool.poetry.extras]
+pydantic = ["pydantic", "jsonref"]
 
 [build-system]
 requires = ["poetry-core"]
