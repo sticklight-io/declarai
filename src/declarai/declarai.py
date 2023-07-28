@@ -21,6 +21,7 @@ class Declarai:
     A root interface to declarai.
     This class allows creating tasks and other declarai provided tools.
     """
+
     # *-------------------------------------------------------------------------- *
     # * Custom overloads to enforce the relationship between PROVIDER and MODELS *
     # *-------------------------------------------------------------------------- *
@@ -29,6 +30,7 @@ class Declarai:
         self,
         provider: ProviderOpenai,
         model: ModelsOpenai,
+        version: Optional[str] = None,
         openai_token: Optional[str] = None,
     ):
         ...
@@ -48,8 +50,8 @@ class Declarai:
     # *-------------------------------------------------------------------------- *
     # * Actual implementation of Declarai *
     # *-------------------------------------------------------------------------- *
-    def __init__(self, provider, model, **kwargs):
-        self.llm_config = LLMSettings(provider=provider, model=model)
+    def __init__(self, **kwargs):
+        self.llm_config = LLMSettings(**kwargs)
         self.llm = resolve_llm_from_config(self.llm_config, **kwargs)
 
     @property

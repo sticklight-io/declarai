@@ -25,11 +25,12 @@ class FunctionLLMTranslator:
 
     @property
     def template(self):
-        return (
-            InstructFunctionTemplate
-            if not self.has_any_return_defs
-            else APIJsonRoleInstructionTemplate
-        )
+        # return (
+        #     InstructFunctionTemplate
+        #     if not self.has_any_return_defs
+        #     else APIJsonRoleInstructionTemplate
+        # )
+        return InstructFunctionTemplate
 
     @property
     def has_any_return_defs(self) -> bool:
