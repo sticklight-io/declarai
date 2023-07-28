@@ -1,4 +1,5 @@
 import ast
+
 from pydantic import BaseModel
 
 
@@ -22,7 +23,7 @@ def extract_magic_args(code) -> Magic:
 
     # Find the magic function call
     for node in ast.walk(function_node):
-        if isinstance(node, ast.Call) and getattr(node.func, 'id', None) == 'magic':
+        if isinstance(node, ast.Call) and getattr(node.func, "id", None) == "magic":
             magic_call = node
             break
     else:
@@ -38,18 +39,18 @@ def extract_magic_args(code) -> Magic:
     input_desc = {}
     output_desc = ""
     for kwarg in magic_call.keywords:
-        if kwarg.arg == 'task_desc':
+        if kwarg.arg == "task_desc":
             task_desc = kwarg.value.value
-        elif kwarg.arg == 'input_desc':
+        elif kwarg.arg == "input_desc":
             zipped = zip(kwarg.value.keys, kwarg.value.values)
             for k, v in zipped:
                 input_desc[k.value] = v.value
-        elif kwarg.arg == 'output_desc':
+        elif kwarg.arg == "output_desc":
             output_desc = kwarg.value.value
 
     return Magic(
         return_name=return_name,
         task_desc=task_desc,
         input_desc=input_desc,
-        output_desc=output_desc
+        output_desc=output_desc,
     )

@@ -1,11 +1,11 @@
 from typing import Dict, List
 
-from declarai import init_declarai, magic
+from declarai import Declarai
 
-declarai = init_declarai(provider="openai", model="gpt-3.5-turbo")
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
 
-@declarai
+@declarai.task
 def extract_email_phonenum(email: str) -> List[str]:
     """
     Extract the phone number from the provided email
@@ -27,7 +27,7 @@ print(contacts_1)
 print(contacts_2_plan())
 
 
-@declarai
+@declarai.task
 def extract_email_info(text: str, contact_fields: List[str]) -> Dict[str, str]:
     """
     Extract the provided contact fields from the given text
@@ -35,10 +35,10 @@ def extract_email_info(text: str, contact_fields: List[str]) -> Dict[str, str]:
     :param contact_fields: The contact fields to extract
     :return: A mapping of the contact fields to their values
     """
-    return magic(text, contact_fields)
+    return declarai.magic(text, contact_fields)
 
 
-@declarai
+@declarai.task
 def extract_email_contacts(text: str, contact_fields: List[str]) -> Dict[str, str]:
     """
     Extract the provided contact fields from the given text
@@ -46,7 +46,7 @@ def extract_email_contacts(text: str, contact_fields: List[str]) -> Dict[str, st
     :param contact_fields: The contact fields to extract
     :return: A mapping of the contact fields to their values
     """
-    return magic("contacts", text, contact_fields)
+    return declarai.magic("contacts", text, contact_fields)
 
 
 print(
@@ -64,113 +64,113 @@ res = extract_email_info(
 print(res)
 
 
-@declarai
+@declarai.task
 def get_tables(query: str) -> List[str]:
     """
     Extract the tables used in the given query
     :param query: sql query
     :return: The tables that are used in the query
     """
-    return magic(query)
+    return declarai.magic(query)
 
 
 print(get_tables(query="SELECT * FROM table_1 JOIN table_2"))
 
 
-@declarai
+@declarai.task
 def a_generate_a_poem(title: str):
     """
     Generate a poem based on the given title
     """
-    return magic(title)
+    return declarai.magic(title)
 
 
 print("No return data")
 print(a_generate_a_poem(title="The cat in the hat"))
 
 
-@declarai
+@declarai.task
 def b_generate_a_poem(title: str) -> str:
     """
     Generate a poem based on the given title
     """
-    return magic(title)
+    return declarai.magic(title)
 
 
 print("only return type")
 print(b_generate_a_poem(title="The cat in the hat"))
 
 
-@declarai
+@declarai.task
 def c_generate_a_poem(title: str):
     """
     Generate a poem based on the given title
     :return: The generated poem
     """
-    return magic(title)
+    return declarai.magic(title)
 
 
 print("only return doc")
 print(c_generate_a_poem(title="The cat in the hat"))
 
 
-@declarai
+@declarai.task
 def d_generate_a_poem(title: str):
     """
     Generate a poem based on the given title
     """
-    return magic("poem", title)
+    return declarai.magic("poem", title)
 
 
 print("only return name")
 print(d_generate_a_poem(title="The cat in the hat"))
 
 
-@declarai
+@declarai.task
 def f_generate_a_poem(title: str) -> str:
     """
     Generate a poem based on the given title
     :return: The generated poem
     """
-    return magic(title)
+    return declarai.magic(title)
 
 
 print("return doc + return type")
 print(f_generate_a_poem(title="The cat in the hat"))
 
 
-@declarai
+@declarai.task
 def g_generate_a_poem(title: str) -> str:
     """
     Generate a poem based on the given title
     """
-    return magic("poem", title)
+    return declarai.magic("poem", title)
 
 
 print("return name + return type")
 print(g_generate_a_poem(title="The cat in the hat"))
 
 
-@declarai
+@declarai.task
 def generate_a_poem(title: str):
     """
     Generate a poem based on the given title
     :return: The generated poem
     """
-    return magic("poem", title)
+    return declarai.magic("poem", title)
 
 
 print("return doc + return name")
 print(generate_a_poem(title="The cat in the hat"))
 
 
-@declarai
+@declarai.task
 def h_generate_a_poem(title: str) -> str:
     """
     Generate a poem based on the given title
     :return: The generated poem
     """
-    return magic("poem", title)
+    return declarai.magic("poem", title)
 
 
 print("return all")

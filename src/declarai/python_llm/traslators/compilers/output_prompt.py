@@ -4,6 +4,10 @@ These methods accept all "return" related properties of the python function and 
 output prompt from them.
 """
 
+STRUCTURED_SYSTEM_PROMPT = (
+    "You are a REST api endpoint. " "You only answer in JSON structures, nothing else."
+)
+
 FORMAT_INSTRUCTIONS = (
     "The output should be a markdown code snippet formatted in the following schema, "
     "including the leading and trailing '```json' and '```':\n"
@@ -44,7 +48,8 @@ def compile_output_prompt(
     output_prompt = compile_output_schema_template(
         return_name, return_type, return_docstring
     )
-    instructions = FORMAT_INSTRUCTIONS + JSON_SNIPPET_TEMPLATE.format(
-        format=output_prompt
-    )
-    return instructions
+    return output_prompt
+    # instructions = FORMAT_INSTRUCTIONS + JSON_SNIPPET_TEMPLATE.format(
+    #     format=output_prompt
+    # )
+    # return instructions
