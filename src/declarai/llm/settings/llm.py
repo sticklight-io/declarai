@@ -6,11 +6,11 @@ class LLMSettings:
         self,
         provider: str,
         model: str,
-        sub_model: Optional[str] = None,
+        version: Optional[str] = None,
     ):
         self.provider = provider
         self._model = model
-        self._sub_model = sub_model
+        self._version = version
 
     def get_model_name(self, delimiter: Optional[str] = "-") -> str:
         """
@@ -37,6 +37,6 @@ class LLMSettings:
         In any case you can always pass the full model name in the model parameter and leave the
         sub_model parameter empty if you prefer.
         """
-        if self._sub_model:
-            return f"{self._model}{delimiter}{self._sub_model}"
+        if self._version:
+            return f"{self._model}{delimiter}{self._version}"
         return self._model

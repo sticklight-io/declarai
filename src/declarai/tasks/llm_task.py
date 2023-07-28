@@ -31,11 +31,13 @@ class LLMTask:
         template: str,
         template_kwargs: Dict[str, str],
         llm: LLM,
-        prompt_kwargs: Optional[Dict[str, Any]] = {},
+        prompt_kwargs: Optional[Dict[str, Any]] = None,
     ):
         self._llm = llm
         self._template = template
         self._template_args = template_kwargs
+        if not prompt_kwargs:
+            prompt_kwargs = {}
         self._prompt_config = PromptSettings(**prompt_kwargs)
 
     def _exec_unstructured(self, prompt: str) -> Optional[str]:

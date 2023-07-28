@@ -1,13 +1,13 @@
 import logging
 
 from declarai.python_llm.parsers.function_parser import ParsedFunction
+from declarai.templates import APIJsonRoleInstructionTemplate, InstructFunctionTemplate
 
 from .compilers.output_prompt import compile_output_prompt
 
 INPUTS_TEMPLATE = "Inputs:\n{inputs}\n"
 INPUT_LINE_TEMPLATE = "{param}: {{{param}}}"
 NEW_LINE_INPUT_LINE_TEMPLATE = "\n{param}: {{{param}}}"
-
 
 logger = logging.getLogger("generator")
 
@@ -22,6 +22,15 @@ class FunctionLLMTranslator:
 
     def __init__(self, parsed_function: ParsedFunction):
         self.parsed_func = parsed_function
+
+    @property
+    def template(self):
+        # return (
+        #     InstructFunctionTemplate
+        #     if not self.has_any_return_defs
+        #     else APIJsonRoleInstructionTemplate
+        # )
+        return InstructFunctionTemplate
 
     @property
     def has_any_return_defs(self) -> bool:
@@ -76,7 +85,7 @@ class FunctionLLMTranslator:
     def compile_output_prompt(self) -> str:
         return_type = self.parsed_func.signature_return_type
         return_name, return_doc = self.parsed_func.docstring_return
-        magic_definition = self.parsed_func.magic
+        magic_definition = self.parsed_func.magic.return_name
         return_name = return_name or magic_definition or "declarai_result"
 
         if not self.has_any_return_defs:
@@ -93,4 +102,12 @@ class FunctionLLMTranslator:
             return_name=return_name,
             return_docstring=return_doc,
             return_magic=magic_definition,
+        )
+
+    @property
+    def return_name(self):
+        return (
+            self.parsed_func.magic.return_name
+            or self.parsed_func.docstring_return[0]
+            or "declarai_result"
         )
