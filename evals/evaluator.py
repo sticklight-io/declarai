@@ -39,58 +39,58 @@ if __name__ == "__main__":
     # TODO: Add a performance
 
     console.print("[green]Running Evals:")
-    # console.print("[green]Running Extraction scenarios...")
-    # evaluate_single_task_scenario(
-    #     "single_value_extraction",
-    #     single_value_extraction,
-    #     single_value_extraction_kwargs,
-    #     openai_models,
-    #     table,
-    # )
-    # evaluate_single_task_scenario(
-    #     "multi_value_extraction",
-    #     multi_value_extraction,
-    #     multi_value_extraction_kwargs,
-    #     openai_models,
-    #     table,
-    # )
-    # evaluate_single_task_scenario(
-    #     "multi_value_multi_type_extraction",
-    #     multi_value_multi_type_extraction,
-    #     multi_value_multi_type_extraction_kwargs,
-    #     openai_models,
-    #     table,
-    # )
-    #
-    # console.print("[green]Running Generation scenarios...")
-    # evaluate_single_task_scenario(
-    #     "unstructured_short_form",
-    #     unstructured_short_form,
-    #     unstructured_short_form_kwargs,
-    #     openai_models,
-    #     table,
-    # )
-    # evaluate_single_task_scenario(
-    #     "unstructured_long_form",
-    #     unstructured_long_form,
-    #     unstructured_long_form_kwargs,
-    #     openai_models,
-    #     table,
-    # )
-    # evaluate_single_task_scenario(
-    #     "structured_open_ended",
-    #     structured_open_ended,
-    #     structured_open_ended_kwargs,
-    #     openai_models,
-    #     table,
-    # )
-    # evaluate_single_task_scenario(
-    #     "structured_strict_complex",
-    #     structured_strict_complex,
-    #     structured_strict_complex_kwargs,
-    #     openai_models,
-    #     table,
-    # )
+    console.print("[green]Running Extraction scenarios...")
+    evaluate_single_task_scenario(
+        "single_value_extraction",
+        single_value_extraction,
+        single_value_extraction_kwargs,
+        openai_models,
+        table,
+    )
+    evaluate_single_task_scenario(
+        "multi_value_extraction",
+        multi_value_extraction,
+        multi_value_extraction_kwargs,
+        openai_models,
+        table,
+    )
+    evaluate_single_task_scenario(
+        "multi_value_multi_type_extraction",
+        multi_value_multi_type_extraction,
+        multi_value_multi_type_extraction_kwargs,
+        openai_models,
+        table,
+    )
+
+    console.print("[green]Running Generation scenarios...")
+    evaluate_single_task_scenario(
+        "unstructured_short_form",
+        unstructured_short_form,
+        unstructured_short_form_kwargs,
+        openai_models,
+        table,
+    )
+    evaluate_single_task_scenario(
+        "unstructured_long_form",
+        unstructured_long_form,
+        unstructured_long_form_kwargs,
+        openai_models,
+        table,
+    )
+    evaluate_single_task_scenario(
+        "structured_open_ended",
+        structured_open_ended,
+        structured_open_ended_kwargs,
+        openai_models,
+        table,
+    )
+    evaluate_single_task_scenario(
+        "structured_strict_complex",
+        structured_strict_complex,
+        structured_strict_complex_kwargs,
+        openai_models,
+        table,
+    )
 
     console.print("[green]Running Logical scenarios...")
     evaluate_sequence_task_scenario(
