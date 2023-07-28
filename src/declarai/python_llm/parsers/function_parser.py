@@ -7,6 +7,7 @@ import re
 from typing import Callable, Dict, Optional
 
 from ..docstring_parsers.reST import ReSTDocstringParser
+from ..magic_parser import Magic, extract_magic_args
 from ..types import DocstringFreeform, DocstringParams, DocstringReturn
 from .type_hint_resolver import resolve_type_hints
 
@@ -79,11 +80,8 @@ class ParsedFunction:
         return self._parsed_doc.returns
 
     @property
-    def magic(self) -> Optional[str]:
+    def magic(self) -> Magic:
         func_str = inspect.getsource(self.func)
-        # Matches the first string value in the magic function
-        pattern = r'return magic\((["\'].*?["\']),'
-        matches = re.findall(pattern, func_str)
-        if not matches:
-            return None
-        return matches[0].strip("'").strip('"')
+        if "magic(" not in func_str:
+            return Magic()
+        return extract_magic_args(func_str)

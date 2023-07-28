@@ -1,4 +1,5 @@
 import ast
+import textwrap
 
 from pydantic import BaseModel
 
@@ -12,6 +13,7 @@ class Magic(BaseModel):
 
 def extract_magic_args(code) -> Magic:
     # Parse the code into an abstract syntax tree
+    code = textwrap.dedent(code)
     tree = ast.parse(code)
 
     for node in ast.walk(tree):
@@ -23,9 +25,13 @@ def extract_magic_args(code) -> Magic:
 
     # Find the magic function call
     for node in ast.walk(function_node):
-        if isinstance(node, ast.Call) and getattr(node.func, "id", None) == "magic":
-            magic_call = node
-            break
+        if isinstance(node, ast.Call):
+            if getattr(node.func, "id", None) == "magic":
+                magic_call = node
+                break
+            if getattr(node.func, "attr", None) == "magic":
+                magic_call = node
+                break
     else:
         raise ValueError("magic function call not found")
 
