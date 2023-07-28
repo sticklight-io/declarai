@@ -1,14 +1,18 @@
 import ast
 import textwrap
 
-from pydantic import BaseModel
-
-
-class Magic(BaseModel):
-    return_name: str = None
-    task_desc: str = ""
-    input_desc: dict = {}
-    output_desc: str = ""
+class Magic:
+    def __init__(
+        self,
+        return_name: str = None,
+        task_desc: str = "",
+        input_desc: dict = {},
+        output_desc: str = "",
+    ):
+        self.return_name = return_name
+        self.task_desc = task_desc
+        self.input_desc = input_desc
+        self.output_desc = output_desc
 
 
 def extract_magic_args(code) -> Magic:
