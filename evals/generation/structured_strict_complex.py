@@ -1,5 +1,4 @@
-from pprint import pprint
-from typing import Dict, List
+from typing import List
 
 from pydantic import BaseModel
 
@@ -30,31 +29,25 @@ class BusinessProfile(BaseModel):
     recommendations: List[Recommendation]
 
 
-def run_strict_complex_structured_generation(models: Dict[str, Declarai]):
-    for model, declarai in models.items():
+def structured_strict_complex(name: str, skills: List[str]) -> BusinessProfile:
+    """
+    Generate a business profile based on the given name and skills
+    Produce a short bio and a mapping of the skills and where they can be used
+    for fields with missing data, you can make up data to fill in the gaps
+    :param name: The name of the person
+    :param skills: The skills of the person
+    :return: The generated business profile
+    """
+    return Declarai.magic(name=name, skills=skills)
 
-        @declarai.task
-        def generate_business_profile(name: str, skills: List[str]) -> BusinessProfile:
-            """
-            Generate a business profile based on the given name and skills
-            Produce a short bio and a mapping of the skills and where they can be used
-            for fields with missing data, you can make up data to fill in the gaps
-            :param name: The name of the person
-            :param skills: The skills of the person
-            :return: The generated business profile
-            """
-            return declarai.magic(name=name, skills=skills)
 
-        res = generate_business_profile(
-            name="Bob grapes",
-            skills=[
-                "Management",
-                "entrepreneurship",
-                "programming",
-                "investing",
-                "Machine Learning",
-            ],
-        )
-
-        print(model + " generate profile:")
-        pprint(res)
+structured_strict_complex_kwargs = {
+    "name": "Bob grapes",
+    "skills": [
+        "Management",
+        "entrepreneurship",
+        "programming",
+        "investing",
+        "Machine Learning",
+    ],
+}
