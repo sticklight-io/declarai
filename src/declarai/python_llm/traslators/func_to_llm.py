@@ -85,7 +85,7 @@ class FunctionLLMTranslator:
     def compile_output_prompt(self) -> str:
         return_type = self.parsed_func.signature_return_type
         return_name, return_doc = self.parsed_func.docstring_return
-        magic_definition = self.parsed_func.magic
+        magic_definition = self.parsed_func.magic.return_name
         return_name = return_name or magic_definition or "declarai_result"
 
         if not self.has_any_return_defs:
@@ -107,7 +107,7 @@ class FunctionLLMTranslator:
     @property
     def return_name(self):
         return (
-            self.parsed_func.magic
+            self.parsed_func.magic.return_name
             or self.parsed_func.docstring_return[0]
             or "declarai_result"
         )
