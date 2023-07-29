@@ -10,7 +10,6 @@ from .unstructured_short_form import (
     unstructured_short_form_kwargs,
 )
 
-
 if importlib.util.find_spec("pydantic"):
     from .structured_strict_complex import (
         structured_strict_complex,
