@@ -19,14 +19,14 @@ from typing import Literal, Optional, Set, Tuple
 from declarai import templates
 from declarai.tasks.future_task import FutureLLMTask
 
-ReduceStrategies = Literal["CoT"]
+ReduceStrategies = Literal["ChainOfThought"]
 
 
 class Sequence:
     def __init__(
         self,
         ai_future_task: FutureLLMTask,
-        reduce_strategy: Optional[ReduceStrategies] = "CoT",
+        reduce_strategy: Optional[ReduceStrategies] = "ChainOfThought",
     ):
         """
 
@@ -41,7 +41,7 @@ class Sequence:
         Executes the task
         :return: The result of the task
         """
-        if self.reduce_strategy == "CoT":
+        if self.reduce_strategy == "ChainOfThought":
             prompt, num_steps = chain_of_thought_reducer(self.ai_future_task)
             reduced_prompt = templates.ChainOfThoughtsTemplate.format(
                 steps=prompt, num_steps=num_steps
