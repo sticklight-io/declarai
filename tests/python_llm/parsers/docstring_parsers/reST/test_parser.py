@@ -1,6 +1,6 @@
 import pytest
 
-from .parser import ReSTDocstringParser
+from declarai.python_llm.parsers.docstring_parsers.reST.parser import ReSTDocstringParser
 
 multiline_docstring = """This is the documentation\nwith multiple lines
 :param param1: This is the first parameter

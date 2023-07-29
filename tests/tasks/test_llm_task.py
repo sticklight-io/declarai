@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 
-from .future_task import FutureLLMTask
-from .llm_task import LLMTask
+from declarai.tasks.future_task import FutureLLMTask
+from declarai.tasks.llm_task import LLMTask
 
 TEST_TASK_TEMPLATE = "{input} | {output}"
 TEMPLATE_KWARGS = {
