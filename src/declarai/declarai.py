@@ -1,4 +1,4 @@
-from typing import Callable, Dict, Optional, overload
+from typing import Callable, Dict, Optional, overload, Any, List
 
 from .llm import (
     LLMSettings,
@@ -14,6 +14,68 @@ from .llm import (
 )
 from .python_llm import FunctionLLMTranslator, ParsedFunction
 from .tasks.llm_task import LLMTask, LLMTaskType
+
+
+class TaskMethod:
+    def __init__(self, declarai_instance):
+        self.declarai_instance = declarai_instance
+        self.middlewares = None
+        self.before_hooks = None
+        self.after_hooks = None
+
+    def __call__(
+        self,
+        func=None,
+        *,
+        middlewares=None,
+        before_hooks: Optional[List[Callable]] = None,
+        after_hooks: Optional[List[Callable]] = None,
+    ):
+        # When arguments are passed
+        if func is None:
+            self.middlewares = middlewares
+            self.before_hooks = before_hooks
+            self.after_hooks = after_hooks
+            return self
+        else:
+            # When no arguments are passed
+            return self._task(
+                func,
+                middlewares,
+                before_hooks,
+                after_hooks
+            )
+
+    def _task(self, func, middlewares, before_hooks, after_hooks):
+        parsed_function = ParsedFunction(func)
+        llm_translator = FunctionLLMTranslator(parsed_function)
+
+        llm_task = LLMTask(
+            template=llm_translator.template,
+            template_kwargs={
+                "input_instructions": llm_translator.parsed_func.docstring_freeform,
+                "input_placeholder": llm_translator.compile_input_placeholder(),
+                "output_instructions": llm_translator.compile_output_prompt(),
+            },
+            prompt_kwargs={
+                "structured": llm_translator.has_any_return_defs,
+                "return_name": llm_translator.return_name,
+            },
+            llm=self.declarai_instance.llm,
+            before_hooks=self.before_hooks,
+            after_hooks=self.after_hooks,
+        )
+
+        llm_task.__name__ = func.__name__
+
+        llm_task.parsed_function = parsed_function
+        llm_task.llm_translator = llm_translator
+
+        if self.middlewares is not None:
+            for middleware in self.middlewares:
+                llm_task = middleware(llm_task)
+
+        return llm_task
 
 
 class Declarai:
@@ -53,58 +115,7 @@ class Declarai:
     def __init__(self, **kwargs):
         self.llm_config = LLMSettings(**kwargs)
         self.llm = resolve_llm_from_config(self.llm_config, **kwargs)
-
-    @property
-    def task(self) -> Callable[[Callable], LLMTaskType]:
-        """
-        This is a decorator that reads the provided function and translates it to an AI function.
-        The code generates templates and configurations to apply to the call at runtime.
-
-        :param func: The function to translate
-        :return: An LLM function
-
-        usage:
-        ```
-        declarai = Declarai(provider="openai", model="gpt-3")
-
-        @declarai.task
-        def add(a: int, b: int) -> int:
-            '''
-            Add two numbers
-            :param a: The first number
-            :param b: The second number
-            :return: The sum of the two numbers
-            '''
-            return magic(a, b)
-        ```
-        """
-
-        def ai_task(func: Callable) -> LLMTaskType:
-            parsed_function = ParsedFunction(func)
-            llm_translator = FunctionLLMTranslator(parsed_function)
-
-            llm_task = LLMTask(
-                template=llm_translator.template,
-                template_kwargs={
-                    "input_instructions": llm_translator.parsed_func.docstring_freeform,
-                    "input_placeholder": llm_translator.compile_input_placeholder(),
-                    "output_instructions": llm_translator.compile_output_prompt(),
-                },
-                prompt_kwargs={
-                    "structured": llm_translator.has_any_return_defs,
-                    "return_name": llm_translator.return_name,
-                },
-                llm=self.llm,
-            )
-
-            llm_task.__name__ = func.__name__
-
-            llm_task.parsed_function = parsed_function
-            llm_task.llm_translator = llm_translator
-
-            return llm_task
-
-        return ai_task
+        self.task = TaskMethod(self)
 
     @staticmethod
     def magic(
@@ -114,7 +125,7 @@ class Declarai:
         input_desc: Optional[Dict[str, str]] = None,
         output_desc: Optional[str] = None,
         **kwargs
-    ):
+    ) -> Any:
         """
         This is an empty method used as a potential replacement for using the docstring for passing
         parameters to the LLM builder. It can also serve as a fake use of arguments in the defined

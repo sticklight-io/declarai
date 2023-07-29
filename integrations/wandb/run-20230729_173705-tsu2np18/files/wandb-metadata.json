@@ -1,0 +1,34 @@
+{
+    "os": "macOS-13.4.1-arm64-arm-64bit",
+    "python": "3.10.9",
+    "heartbeatAt": "2023-07-29T14:37:06.804970",
+    "startedAt": "2023-07-29T14:37:05.877996",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/Users/avivalmashanu/dev/declarai/integrations/wandb_prompt_logger.py",
+    "codePath": "integrations/wandb_prompt_logger.py",
+    "git": {
+        "remote": "git@github.com:vendi-ai/declarai.git",
+        "commit": "39ba2b124ff26145a73bc454a16622b67248c43f"
+    },
+    "email": "avivex1000@gmail.com",
+    "root": "/Users/avivalmashanu/dev/declarai",
+    "host": "Pec-Aviv-Almashanu.local",
+    "username": "avivalmashanu",
+    "executable": "/Users/avivalmashanu/dev/declarai/.venv/bin/python",
+    "cpu_count": 10,
+    "cpu_count_logical": 10,
+    "disk": {
+        "total": 460.4317207336426,
+        "used": 8.439552307128906
+    },
+    "gpuapple": {
+        "type": "arm",
+        "vendor": "Apple"
+    },
+    "memory": {
+        "total": 16.0
+    }
+}

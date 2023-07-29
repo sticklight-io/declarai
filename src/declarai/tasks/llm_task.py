@@ -10,7 +10,7 @@ we will need to create the following:
 import json
 import logging
 import re
-from typing import Any, Dict, Optional, TypeVar
+from typing import Any, Dict, Optional, TypeVar, Callable, List
 
 from declarai.llm import LLM
 from declarai.llm.settings import PromptSettings
@@ -32,6 +32,8 @@ class LLMTask:
         template_kwargs: Dict[str, str],
         llm: LLM,
         prompt_kwargs: Optional[Dict[str, Any]] = None,
+        before_hooks: Optional[List[Callable]] = None,
+        after_hooks: Optional[List[Callable]] = None,
     ):
         self._llm = llm
         self._template = template
@@ -39,6 +41,9 @@ class LLMTask:
         if not prompt_kwargs:
             prompt_kwargs = {}
         self._prompt_config = PromptSettings(**prompt_kwargs)
+        self._result = None
+        self._before_hooks = before_hooks or []
+        self._after_hooks = after_hooks or []
 
     def _exec_unstructured(self, prompt: str) -> Optional[str]:
         logger.debug(prompt)
@@ -53,10 +58,11 @@ class LLMTask:
         raw_result = self._llm.predict(prompt)
         try:
             if self._prompt_config.multi_results:
-                json_values = re.findall(r"{.*?}", raw_result, re.DOTALL)
+                json_values = re.findall(r"```json.*?```", raw_result, re.DOTALL)
                 serialized = {}
                 for json_value in json_values:
-                    serialized_json_value = json.loads(json_value)
+                    clean_value = json_value.replace("```json", "").replace("```", "")
+                    serialized_json_value = json.loads(clean_value)
                     serialized.update(serialized_json_value)
                 return serialized
             else:
@@ -105,14 +111,25 @@ class LLMTask:
             populated_prompt=populated_prompt,
         )
 
+    def _before_exec(self) -> None:
+        for _before_hooks in self._before_hooks:
+            _before_hooks(self)
+
+    def _after_exec(self) -> None:
+        for _after_hooks in self._after_hooks:
+            _after_hooks(self)
+
     def _exec(self, populated_prompt: str) -> Any:
         """
         Executes the task.
         """
         logger.debug("Running planned task")
+        self._before_exec()
         if self._prompt_config.structured:
-            return self._exec_structured(populated_prompt)
-        return self._exec_unstructured(populated_prompt)
+            self._result = self._exec_structured(populated_prompt)
+        self._result = self._exec_unstructured(populated_prompt)
+        self._after_exec()
+        return self._result
 
     def __call__(self, **kwargs):
         populated_prompt = self._plan(**kwargs)
