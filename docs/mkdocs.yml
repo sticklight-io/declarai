@@ -7,6 +7,8 @@ nav:
   - Providers:
     - tutorial/providers/index.md
     - tutorial/providers/openai.md
+- Evals:
+  - evals/index.md
 - Changelog: changelog.md
 - Contribute : contribute.md
 
@@ -18,14 +20,15 @@ theme:
       - content.code.annotate
       - navigation.indexes
     name: material
-    icon:
-      logo: material/cloud
+    logo: img/Vendi-logo.svg
 extra_css:
 - css/extra.css
 - css/termynal.css
 extra_javascript:
 - js/termynal.js
 - js/custom.js
+- js/tablesort.js
+- https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
 repo_url: https://github.com/vendi-ai/declarai
 repo_name: vendi-ai/declarai
 markdown_extensions:

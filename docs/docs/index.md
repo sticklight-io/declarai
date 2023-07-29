@@ -2,57 +2,64 @@
   <a href="https://vendi-ai.github.io/declarai/"><img src="./img/Logo-declarai.svg" alt="FastAPI"></a>
 </p>
 <p align="center">
-    <em>Declarai, turning Python functions into LLM tasks, easy to use, and production-ready.</em>
+    <em>Declarai, turning Python code into LLM tasks, easy to use, and production-ready.</em>
 </p>
 
 ---
 
 ## Introduction
 
-Declarai turns your Python functions into LLM tasks, utilizing your function's details, like type hints and docstrings,
+Declarai turns your Python code into LLM tasks, utilizing python's native syntax, like type hints and docstrings,
 to instruct an AI model on what to do.
 
 Designed with a clear focus on developer experience, you simply write Python code as you normally would, and Declarai
 handles the rest.
 
-  ```py title="Declarai Example"
-  from declarai import init_declarai, magic
+  ```py title="poem_generator.py"
+  from declarai import Declarai
   
-  task = init_declarai(provider="openai", model="gpt-3.5-turbo")
+  declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
   
-  
-  @task
-  def generate_a_joke(title: str) -> str:
+  @declarai.task
+  def generate_poem(title: str) -> str:
       """
-      Generate a joke based on the given title 
-      :param title: the title of the joke
-      :return: A joke made up based on the title
+      Write a 4 line poem on the provided title
       """
-      return magic(title) 
   
   
-  print(generate_a_joke(title="Spongebob Squarepants"))
-  > "Why did Spongebob Squarepants bring a ladder to the Krusty Krab? Because he wanted to reach new heights in his career as a fry cook!"
+  res = generate_poem(
+      title="Declarai, the declarative framework for LLMs"
+  )
+  print(res)
   ```
-
+  ```console
+  >>> Declarai, the AI framework,
+  ... Empowers LLMs with declarative power,
+  ... Efficiently transforming data and knowledge,
+  ... Unlocking insights in every hour.
+  ```
 
 ---
 
 ## Why use Declarai?
 
-- **Pythonic Interface to LLM:** - Leverage python expertise instead of working hard crafting prompts.
+- **Pythonic Interface to LLM:** - Leverage your existing Python skills instead of spending unnecessary time creating complex prompts.
 
-- **Type-Guided Prompt Engineering:** - Using Python's type annotations, Declarai crafts precise prompts that guide
-  LLMs towards the expected output type. This reduces potential misunderstandings and boosts the consistency of AI
-  outputs.
+- **Lightweight:** - Declarai is written almost solely in python 3.6 with optional SDKs, 
+  so there's no need to worry about dependencies.
 
-- **Contextual Prompts through Docstrings:** - Use function docstrings to provide contextual information to LLMs,
-  enhancing their understanding of the task at hand and improving their performance.
+- **Extendable:** - Declarai is designed to be easily extendable, the interface is simple and accessible by design so
+  you can easily override or customize the behavior of the framework to your specific needs.
 
-- **Automated LLM Task Execution:** - Abstracts away the exeuction code, allowing you to focus on the business
-  logic.
+- **Type-Driven Prompt Design:** - Through the application of Python's type annotations, 
+  Declarai constructs detailed prompts that guide Large Language Models (LLMs) to generate the desired output type.
 
-This approach enhances code readability, maintainability, and predictability
+- **Context-Informed Prompts via Docstrings:** - Implement function docstrings to supply contextual data to LLMs, 
+  augmenting their comprehension of the designated task and thereby boosting their performance.
+
+- **Automated Execution of LLM Tasks:** - Declarai takes care of the execution code, letting you concentrate on the core business logic.
+
+Utilizing Declarai leads to improved code readability, maintainability, and predictability.
 
 ---
 
@@ -72,123 +79,142 @@ Done!
 
 ---
 
-## Declarai Examples
+## Feature highlight
 
-To see Declarai in action, we should:
+### Python native syntax
+Integrating deeply into python's native syntax, declarai understands your code and generates the prompt accordingly.
 
-* Decorate a function with the `@task` decorator
-* Fill in the `docstrings`
-* Make sure to set `type hints` for the function's parameters and return type.
+```py title="Simple Syntax" 
 
-<br>
-
-#### Extract Phone Numbers
-
-In this example, we define a task to extract phone numbers from a given email content.
-
-```py title="extract_phone_number.py" 
-from declarai import init_declarai, magic
-from typing import List
-
-task = init_declarai(provider="openai", model="gpt-3.5-turbo")
-
-
-@task # (1)!
+@declarai.task # (1)!
 def extract_phone_number(email_content: str) -> List[str]: # (2)!
     """
     Extract the phone numbers from the provided email_content
-    :param email_content: Text represents the email content
+    :param email_content: Text represents the email content 
     :return: The phone numbers that are used in the email
-    """ # (3)!
-    return magic(email_content)
+    """# (3)!
+    return declarai.magic(email_content) # (4)!
 
-
-res = extract_phone_number(
-    email="Hello, my phone number is 123456789. What's yours?"
-)
-
-print(f"Phone numbers: {res}")
 ```
 
-1. The `@task` decorator marks the function as a Declarai prompt task.
-2. The type hints `List[str]` is used to aprse the output of the llm into a list of strings.
+1. The `@declarai.task` decorator marks the function as a Declarai prompt task.
+2. The type hints `List[str]` is used to parse the output of the llm into a list of strings.
 3. The docstring represents the task's description which is used to generate the prompt.
-
     - `description` - the context of the task
     - `:param` - The function's parameters and their description
     - `:return` - The output description
-    
-
-You can run the python script:
-
-<div class="termy">
-
-    ```console
-    $ python extract_phone_number.py
-    
-    Phone numbers: [123456789]
-    ```
-
-</div>
+4. The `magic` method is an optional placeholder for typing, and can be used as a replacement for the docstring interface when needed.
 
 <br>
 
-#### Search blog posts
+#### Complex Schema handling using pydantic
 
-In this example, we define a semantic search for relevant blog posts based on a given query.
+In this example, we provide pydantic schemas to create meaningful objects for our application
 
-```Python title="search_blog_posts.py"
-from declarai import init_declarai, magic, VectorStore
-from typing import List
-
-search = init_declarai(provider="openai", model="text-embedding-ada-002")
-
-
-@search # (1)!
-def get_relevant_blog_posts(query: str, data: VectorStore) -> List[str]:
-  """
-  Find the relevant blog posts
-  :param query: A user provided query to search with
-  :param data: A vector store data object that contains the blog posts
-  :return: The relevant blog posts
-  """
-  return magic(query, data)
+```python title="Schema"
+class TimeFrame(BaseModel):
+    start: int
+    end: int
 
 
-blogs_posts = get_relevant_blog_posts(
-  "What can I do with Declarai?",
-  VectorStore.from_csv("blog_posts.csv")
-)
+class BusinessExperience(BaseModel):
+    time_frame: TimeFrame
+    title: str
+    description: str
+    company: str
 
-print(f"Blog posts: {blogs_posts}")
-#> Blog posts: ['How to use Declarai?', 'How to use Declarai in production?']
+
+class Recommendation(BaseModel):
+    recommender: str
+    recommendation: str
+
+
+class BusinessProfile(BaseModel):
+    bio: str
+    experience: List[BusinessExperience]
+    previous_jobs: List[str]
+    recommendations: List[Recommendation]
 ```
-
-1. The `@search` decorator marks the function as a Declarai semantic search task.
-2. 
+All we need to do is provide the desired schema as the return type of the function
+```py title="Complex Schema"
+@declarai.task
+def generate_business_profile(name: str, skills: List[str]) -> BusinessProfile:
+    """
+    Generate a business profile based on the given name and skills
+    Produce a short bio and a mapping of the skills and where they can be used
+    for fields with missing data, you can make up data to fill in the gaps
+    :param name: The name of the person
+    :param skills: The skills of the person
+    :return: The generated business profile
+    """
+    return declarai.magic(name=name, skills=skills)
+```
+Usage:
+```python title="Business Profile"
+profile = generate_business_profile(
+    name="Bob grapes",
+    skills=[
+        "Management", "entrepreneurship", "programming", "investing", "Machine Learning"
+    ],
+)
+print(profile)
+```
+Shortened to fit the page:
+```console
+{
+    'bio': 'Bob Grapes is a highly skilled professional with expertise in management, 
+    entrepreneurship, programming, investing, and machine learning. 
+    With a strong background in ... ",
+    'experience': [
+        {
+            'time_frame': {
+                'start': 2010, 
+                'end': 2015
+            }, 
+            'title': 'Manager', 
+            'description': 'Managed a team of 20 employees and oversaw daily operations', 
+            'company': 'ABC Company'
+        },
+            ... 
+        ], 
+    'previous_jobs': [
+        'ABC Company', 
+        'XYZ Startup', 
+        'DEF Tech', 
+        'GHI Corporation'
+    ], 
+    'recommendations': [
+        {
+            'recommender': 'John Smith', 
+            'recommendation': 'Bob is an exceptional leader with ..."
+        },
+        ...
+    ]
+}
+```
+ 
 <br>
 
-### Multitask flow
+### Complex flow optimization
 
-We can execute multiple tasks in a single flow by leveraging techniques like Chain-of-Thought
-```Python title="sequence_of_tasks.py"
+For more complex scenarios,  we may not want to cram too much into a single task. 
+This is a classic case of abstraction and separation of concerns.
 
-from declarai import Sequence, init_declarai, magic
+In order to achieve this, declarai provides a `Sequence` class that allows you to chain multiple tasks together.
+These tasks will be reduced to a single prompt that will be executed in a **single call to the llm**.
 
-task = init_declarai(provider="openai", model="gpt-3.5-turbo")
-
-
-@task
+```python title="Sequence"
+@declarai.task
 def suggest_title(question: str) -> str:
   """
   Given a question from our customer support, suggest a title for it
   :param question: the provided question
   :return: The title suggested for the question
   """
-  return magic(question)
+  return declarai.magic(question)
 
 
-@task
+@declarai.task
 def route_to_department(title: str, departments: List[str]) -> str:
   """
   Given a question title, route it to the relevant department
@@ -196,10 +222,10 @@ def route_to_department(title: str, departments: List[str]) -> str:
   :param departments: The departments to route the question to
   :return: The department that the question should be routed to
   """
-  return magic(title, departments)
+  return declarai.magic(title, departments)
 
 
-@task
+@declarai.task
 def suggest_department_answers(question: str, department: str) -> List[str]:
   """
   Given a question and a department, suggest 2 answers from the department's knowledge base
@@ -207,32 +233,37 @@ def suggest_department_answers(question: str, department: str) -> List[str]:
   :param department: The department to suggest answers from
   :return: The suggested answers
   """
-  return magic(question, department)
+  return declarai.magic(question, department)
 
-  
-available_departments = ["sales", "support", "billing"]
-question = "I have a feature request for your product. Who should I talk to?"
 
-suggested_title = suggest_title.plan(question=question)
-selected_department = route_to_department.plan(
-  title=suggested_title, departments=available_departments
+# In the following we chain the tasks together to create a single prompt
+# The result will:
+# - Suggest a title for the question
+# - Route the question to the relevant department
+# - Suggest 2 answers from the department's knowledge base
+
+def suggest_answers(question: str, available_departments: List[str]) -> Dict[str, Any]:
+    suggested_title = suggest_title.plan(question=question)
+    selected_department = route_to_department.plan(
+      title=suggested_title, departments=available_departments
+    )
+    suggested_answers = suggest_department_answers.plan(
+      question=question, department=selected_department
+    )
+    return suggested_answers(reduce_strategy="ChainOfThought")    
+
+print(suggest_answers(
+    question="I want to be able to click on that button but I can't. Is this currently possible?", 
+    available_departments=["sales", "support"])
 )
-suggested_answers = suggest_department_answers.plan(
-  question=question, department=selected_department
-)
-
-res = suggested_answers(reduce="CoT")
-
-print(res)
-"""
+```
+```console
 {
-    "suggested_answers": ["You can talk to our sales team", "You can talk to our support team"],
-    "selected_department": "sales",
+    "suggested_answers": [
+        "This isn't supported at the moment, you are welcome to open a feature request on our website!", 
+        "We have accepted you request and will check if this behavior is currently possible. We will get back to you shortly."
+    ],
+    "selected_department": "support",
     "suggested_title": "Feature request"
 }
-"""
 ```
-
-
-
-

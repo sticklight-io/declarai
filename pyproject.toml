@@ -20,6 +20,7 @@ isort = "*"
 pytest = "*"
 pytest-cov = "^4.1.0"
 rich = "^13.4.2"
+mkdocs-material = "^9.1.21"
 
 [tool.poetry.extras]
 pydantic = ["pydantic", "jsonref"]
