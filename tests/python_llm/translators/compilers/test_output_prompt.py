@@ -1,6 +1,6 @@
 import pytest
 
-from .output_prompt import (
+from declarai.python_llm.traslators.compilers.output_prompt import (
     FORMAT_INSTRUCTIONS,
     compile_output_prompt,
     compile_output_schema_template,

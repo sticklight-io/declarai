@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-from .future_llm_task import FutureLLMTask
+from declarai.tasks.future_task.future_llm_task import FutureLLMTask
 
 
 def test_future_llm_task():

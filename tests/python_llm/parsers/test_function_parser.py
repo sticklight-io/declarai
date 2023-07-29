@@ -1,6 +1,6 @@
 from typing import List
 
-from .function_parser import ParsedFunction
+from declarai.python_llm.parsers.function_parser import ParsedFunction
 
 
 def test_output_prompt():
