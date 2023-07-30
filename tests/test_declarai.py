@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 from declarai import Declarai
 
 
-@patch("declarai.declarai.LLMTask")
+@patch("declarai.task_decorator.LLMTask")
 @patch("declarai.declarai.resolve_llm_from_config")
 def test_task(mock_llm, mock_llm_task):
     mock_llm_task.return_value = MagicMock()

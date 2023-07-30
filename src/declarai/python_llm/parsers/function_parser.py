@@ -6,9 +6,9 @@ import inspect
 import re
 from typing import Callable, Dict, Optional
 
-from .docstring_parsers.reST import ReSTDocstringParser
 from ..magic_parser import Magic, extract_magic_args
 from ..types import DocstringFreeform, DocstringParams, DocstringReturn
+from .docstring_parsers.reST import ReSTDocstringParser
 from .type_hint_resolver import resolve_type_hints
 
 

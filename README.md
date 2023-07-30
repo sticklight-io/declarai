@@ -97,7 +97,7 @@ def handle_customer_question(question: str) -> Dict[str, Any]:
         question=question, department=selected_department
     )
 
-    sequence_task = Sequence(suggested_answers, reduce_strategy="CoT")
+    sequence_task = Sequence(suggested_answers, reduce_strategy="ChainOfThought")
 
     res = sequence_task()
 

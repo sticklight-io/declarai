@@ -11,8 +11,6 @@ python = "^3.7.1"
 openai = "^0.27.8"
 pydantic = {version = "^1.8.2", optional = true}
 jsonref = {version = "^1.1.0", optional = true}
-wandb = {version = "^0.15.7", optional = true}
-wandb-addons = {version = "^0.0.1", optional = true}
 
 
 [tool.poetry.group.dev.dependencies]
@@ -22,10 +20,10 @@ isort = "*"
 pytest = "*"
 pytest-cov = "^4.1.0"
 rich = "^13.4.2"
+mkdocs-material = "^9.1.21"
 
 [tool.poetry.extras]
 pydantic = ["pydantic", "jsonref"]
-wandb = ["wandb", "wandb-addons"]
 
 [build-system]
 requires = ["poetry-core"]

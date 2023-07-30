@@ -1,6 +1,7 @@
 import ast
 import textwrap
 
+
 class Magic:
     def __init__(
         self,
