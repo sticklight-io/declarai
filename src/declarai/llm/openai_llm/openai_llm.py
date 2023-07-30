@@ -41,9 +41,9 @@ class OpenAILLM(BaseLLM):
             presence_penalty=presence_penalty,
         )
         return LLMResponse(
-            response=res.choices[0]['message']['content'],
+            response=res.choices[0]["message"]["content"],
             model=res.model,
-            prompt_tokens=res['usage']['prompt_tokens'],
-            completion_tokens=res['usage']['completion_tokens'],
-            total_tokens=res['usage']['total_tokens'],
+            prompt_tokens=res["usage"]["prompt_tokens"],
+            completion_tokens=res["usage"]["completion_tokens"],
+            total_tokens=res["usage"]["total_tokens"],
         )

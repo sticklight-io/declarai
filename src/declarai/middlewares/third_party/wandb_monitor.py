@@ -7,8 +7,9 @@ from declarai.middlewares.base import TaskMiddleware
 class WandDBMonitorCreator:
     def __new__(cls, name: str, project: str, key: str) -> "WandDBMonitor":
         if importlib.util.find_spec("wandb"):
-            import wandb
             from wandb.sdk.data_types.trace_tree import Trace
+
+            import wandb
 
             wandb.login(key=key)
             wandb.init(id=name, name=name, project=project, resume="allow")

@@ -1,3 +1,6 @@
+from rich.console import Console
+from rich.table import Table
+
 from declarai.evals.extraction import (
     multi_value_extraction,
     multi_value_extraction_kwargs,
@@ -30,9 +33,10 @@ from declarai.evals.metadata_significance import (
     simple_task_significance_kwargs,
 )
 from declarai.evals.providers.openai import openai_models
-from declarai.evals.runner import evaluate_sequence_task_scenario, evaluate_single_task_scenario
-from rich.console import Console
-from rich.table import Table
+from declarai.evals.runner import (
+    evaluate_sequence_task_scenario,
+    evaluate_single_task_scenario,
+)
 
 if __name__ == "__main__":
     console = Console()

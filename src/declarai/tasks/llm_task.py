@@ -10,12 +10,12 @@ we will need to create the following:
 import json
 import logging
 import re
-from typing import Any, Dict, List, Optional, Callable
+from typing import Any, Callable, Dict, List, Optional
 
 from declarai.llm import LLM
 from declarai.llm.settings import PromptSettings
-from ..llm.base_llm import LLMResponse
 
+from ..llm.base_llm import LLMResponse
 from ..middlewares.base import TaskMiddleware
 from .future_task import FutureLLMTask
 
@@ -47,8 +47,8 @@ class LLMTask:
 
     def _exec_unstructured(self, prompt: str) -> Optional[str]:
         logger.debug(prompt)
-        result = self.llm.predict(prompt)
-        return result
+        llm_result = self.llm.predict(prompt)
+        return llm_result.response
 
     def _exec_structured(self, prompt) -> Any:
         """
@@ -59,7 +59,7 @@ class LLMTask:
         raw_result = self.llm_response.response
         try:
             if self.prompt_config.multi_results:
-                json_values = re.findall(r"```json.*?```", raw_result, re.DOTALL)
+                json_values = re.findall(r"{.*?}", raw_result, re.DOTALL)
                 serialized = {}
                 for json_value in json_values:
                     clean_value = json_value.replace("```json", "").replace("```", "")
@@ -119,7 +119,8 @@ class LLMTask:
         logger.debug("Running planned task")
         if self.prompt_config.structured:
             self.result = self._exec_structured(populated_prompt)
-        self.result = self._exec_unstructured(populated_prompt)
+        else:
+            self.result = self._exec_unstructured(populated_prompt)
         return self.result
 
     def _exec(self, populated_prompt: str) -> Any:

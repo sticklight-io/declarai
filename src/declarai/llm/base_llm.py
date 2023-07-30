@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import TypeVar, Optional
+from typing import Optional, TypeVar
 
 
 class LLMResponse:
