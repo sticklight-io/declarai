@@ -1,1 +1,1 @@
-from .logging import LoggingMiddleware
+from .log_middleware import LoggingMiddleware

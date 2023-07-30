@@ -64,6 +64,10 @@ Utilizing Declarai leads to improved code readability, maintainability, and pred
 ---
 
 ## Installation
+!!! info
+     
+     Following is the basic installatoin which comes with no integrations of dependencies except for openai sdk, 
+     for a full list of supported extnesions, please view the [integrations](/src/integrations/) page.
 
 <div class="termy">
 
@@ -104,6 +108,37 @@ def extract_phone_number(email_content: str) -> List[str]: # (2)!
     - `:param` - The function's parameters and their description
     - `:return` - The output description
 4. The `magic` method is an optional placeholder for typing, and can be used as a replacement for the docstring interface when needed.
+
+<br>
+
+#### Task Middlewares
+Easy to use middlewares provided out of the box as well as the ability to easily create your own.
+
+```py title="Simple Middleware"
+
+```python
+@declarai.task(middlewares=[LoggingMiddleware])
+def extract_info(text: str) -> Dict[str, str]:
+    """
+    Extract the phone number, name and email from the provided text
+    :param text: content to extract the info from
+    :return: The info extracted from the text
+    """
+    return Declarai.magic(text=text)
+
+res = extract_info(
+    text="Hey jenny,"
+    "you can call me at 124-3435-132."
+    "You can also email me at georgia@coolmail.com"
+    "Have a great week!"
+)
+print(res)
+``` 
+Result:
+```console
+{'task_name': 'extract_info', 'llm_model': 'gpt-3.5-turbo-0301', 'template': '{input_instructions}\n{input_placeholder}\n{output_instructions}', 'template_args': {'input_instructions': 'Extract the phone number, name and email from the provided text', 'input_placeholder': 'Inputs:\ntext: {text}\n', 'output_instructions': 'The output should be a markdown code snippet formatted in the following schema, including the leading and trailing \'```json\' and \'```\':\n```json\n{{\n    "declarai_result": Dict[str, str]  # The info extracted from the text\n}}\n```'}, 'prompt_config': {'structured': True, 'multi_results': False, 'return_name': 'declarai_result', 'temperature': 0.0, 'max_tokens': 2000, 'top_p': 1.0, 'frequency_penalty': 0, 'presence_penalty': 0}, 'call_kwargs': {'text': 'Hey jenny,you can call me at 124-3435-132.You can also email me at georgia@coolmail.comHave a great week!'}, 'result': {'phone_number': '124-3435-132', 'name': 'jenny', 'email': 'georgia@coolmail.com'}, 'time': 2.192906141281128}
+{'phone_number': '124-3435-132', 'name': 'jenny', 'email': 'georgia@coolmail.com'}
+```
 
 <br>
 
@@ -250,12 +285,15 @@ def suggest_answers(question: str, available_departments: List[str]) -> Dict[str
     suggested_answers = suggest_department_answers.plan(
       question=question, department=selected_department
     )
-    return suggested_answers(reduce_strategy="ChainOfThought")    
-
-print(suggest_answers(
+    return suggested_answers(reduce_strategy="ChainOfThought")
+```
+Usage:
+```python
+suggested_answers = suggest_answers(
     question="I want to be able to click on that button but I can't. Is this currently possible?", 
     available_departments=["sales", "support"])
 )
+print(suggested_answers)
 ```
 ```console
 {

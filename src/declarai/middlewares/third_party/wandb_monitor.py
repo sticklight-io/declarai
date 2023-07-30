@@ -59,7 +59,7 @@ class WandDBMonitorCreator:
                         "frequency_penalty": task.prompt_config.frequency_penalty,
                         "presence_penalty": task.prompt_config.presence_penalty,
                         "response": task.llm_response.response,
-                        "model": task.llm_response,
+                        "model": task.llm.model,
                         "prompt_tokens": task.llm_response.prompt_tokens,
                         "completion_tokens": task.llm_response.completion_tokens,
                         "total_tokens": task.llm_response.total_tokens,
