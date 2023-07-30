@@ -7,24 +7,12 @@ We understand that a major challenge in the field of prompt engineering is the l
 along with the continuously evolving nature of the field. As such, we have designed the `evals` library to be a lean
 wrapper over the `declarai` library that allows users to easily track and benchmark changes in prompts and models.
 
-## Installation
-
-<div class="termy">
-
-```console
-$ pip install declarai[evals]
----> 100%
-Done!
-```
-
-</div>
-
 ### Usage
 
 <div class="termy">
 
 ```console
-$ declarai evals --scenario Extraction --providers openai
+$ python -m declarai.evals.evaluator
 Running Extraction scenarios...
 single_value_extraction... 
 ---> 100%
@@ -32,13 +20,15 @@ multi_value_extraction...
 ---> 100%
 multi_value_multi_type_extraction...
 ---> 100%
-
+...
 Done!
 ```
 
 </div>
 
 ### Evaluations
+The output table will allow you to review the performance of your task across models and provides and make an informed
+decision on which model and provider to use for your task.
 
 | Provider | Model         | version | Scenario                         | runtime | <div style="width:290px">output</div>                                                                                                                                                        |
 |:---------|:--------------|:--------|:---------------------------------|:--------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

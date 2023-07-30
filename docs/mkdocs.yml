@@ -10,12 +10,11 @@ nav:
 - Advanced:
   - src/advanced/index.md
   - magic: src/advanced/magic.md
-  - multiple provides: src/advanced/multiple_provides.md
+  - multi models and providers: src/advanced/multi-model-multi-provider.md
   - middlewares:
     - src/advanced/middlewares/index.md
-    - monitoring: src/advanced/middlewares/monitoring.md
   - Evals:
-      - src/advanced/evals/index.md
+    - src/advanced/evals/index.md
 - Providers:
   - src/providers/index.md
   - src/providers/openai.md

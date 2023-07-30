@@ -18,19 +18,17 @@ To obtain an OpenAI API key, follow these steps:
 You can set your API key at runtime like this:
 
 ```python
-import declarai
+from declarai import Declarai
 
-declarai.settings.openai.api_key = YOUR_API_KEY
-
-declarai.settings.openai_api_key = YOUR_API_KEY
+declarai = Declarai(provide="openai", model="gpt4", openai_token="<your API key>")
 ```
 
-However, it is preferable to pass sensitive settings as an environment variable: `OPENAI_API_KEY`. 
+However, it is preferable to pass sensitive settings as an environment variable: `DECLARAI_OPENAI_API_KEY`. 
 
 To establish your OpenAI API key as an environment variable, launch your terminal and execute the following command, substituting <your API key> with your actual key:
 
 ```shell
-export OPENAI_API_KEY=<your API key>
+export DECLARAI_OPENAI_API_KEY=<your API key>
 ```
 
 This action will maintain the key for the duration of your terminal session. To ensure a longer retention, modify your terminal's settings or corresponding environment files.

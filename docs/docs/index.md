@@ -64,6 +64,10 @@ Utilizing Declarai leads to improved code readability, maintainability, and pred
 ---
 
 ## Installation
+!!! info
+     
+     Following is the basic installatoin which comes with no integrations of dependencies except for openai sdk, 
+     for a full list of supported extnesions, please view the [integrations](/src/integrations/) page.
 
 <div class="termy">
 
