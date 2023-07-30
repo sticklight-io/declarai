@@ -27,8 +27,8 @@ def evaluate_single_task_scenario(
 
             table.add_row(
                 declarai.llm_config.provider,
-                declarai.llm_config._model,
-                declarai.llm_config._version or "latest",
+                declarai.llm_config.model,
+                declarai.llm_config.version or "latest",
                 scenario_name,
                 f"{round(total_time, 3)}s",
                 str(res),
@@ -54,8 +54,8 @@ def evaluate_sequence_task_scenario(
 
             table.add_row(
                 declarai.llm_config.provider,
-                declarai.llm_config._model,
-                declarai.llm_config._version or "latest",
+                declarai.llm_config.model,
+                declarai.llm_config.version or "latest",
                 scenario_name,
                 f"{round(total_time, 3)}s",
                 str(res),

@@ -1,6 +1,6 @@
 import openai
 
-from ..base_llm import BaseLLM
+from ..base_llm import BaseLLM, LLMResponse
 from .settings import OPENAI_API_KEY, OPENAI_MODEL
 
 
@@ -30,7 +30,7 @@ class OpenAILLM(BaseLLM):
         top_p: float = 1,
         frequency_penalty: int = 0,
         presence_penalty: int = 0,
-    ):
+    ) -> LLMResponse:
         res = self.openai.ChatCompletion.create(
             model=model or self.model,
             messages=[{"role": "user", "content": prompt}],
@@ -40,4 +40,10 @@ class OpenAILLM(BaseLLM):
             frequency_penalty=frequency_penalty,
             presence_penalty=presence_penalty,
         )
-        return res["choices"][0]["message"]["content"]
+        return LLMResponse(
+            response=res.choices[0]['message']['content'],
+            model=res.model,
+            prompt_tokens=res['usage']['prompt_tokens'],
+            completion_tokens=res['usage']['completion_tokens'],
+            total_tokens=res['usage']['total_tokens'],
+        )

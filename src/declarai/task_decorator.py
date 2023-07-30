@@ -5,13 +5,17 @@ from declarai.tasks.llm_task import LLMTask
 class LLMTaskDecorator:
     def __init__(self, declarai_instance):
         self.declarai_instance = declarai_instance
+        self.middlewares = []
 
     def __call__(
         self,
         func=None,
+        *,
+        middlewares: str = None,
     ):
         # When arguments are passed
         if func is None:
+            self.middlewares = middlewares
             return self
         else:
             # When no arguments are passed
@@ -33,6 +37,7 @@ class LLMTaskDecorator:
                 "return_name": llm_translator.return_name,
             },
             llm=self.declarai_instance.llm,
+            middlewares=self.middlewares,
         )
 
         llm_task.__name__ = func.__name__

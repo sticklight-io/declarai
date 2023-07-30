@@ -1,6 +1,3 @@
-from rich.console import Console
-from rich.table import Table
-
 from evals.extraction import (
     multi_value_extraction,
     multi_value_extraction_kwargs,
@@ -34,6 +31,8 @@ from evals.metadata_significance import (
 )
 from evals.providers.openai import openai_models
 from evals.runner import evaluate_sequence_task_scenario, evaluate_single_task_scenario
+from rich.console import Console
+from rich.table import Table
 
 if __name__ == "__main__":
     console = Console()

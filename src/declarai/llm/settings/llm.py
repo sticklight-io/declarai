@@ -10,9 +10,10 @@ class LLMSettings:
     ):
         self.provider = provider
         self._model = model
-        self._version = version
+        self.version = version
 
-    def get_model_name(self, delimiter: Optional[str] = "-") -> str:
+    @property
+    def model(self, delimiter: Optional[str] = "-") -> str:
         """
         Some model providers allow defining a base model as well as a sub-model.
         Often the base model is an alias to latest model served on that model.
@@ -37,6 +38,6 @@ class LLMSettings:
         In any case you can always pass the full model name in the model parameter and leave the
         sub_model parameter empty if you prefer.
         """
-        if self._version:
-            return f"{self._model}{delimiter}{self._version}"
+        if self.version:
+            return f"{self._model}{delimiter}{self.version}"
         return self._model
