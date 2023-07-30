@@ -46,7 +46,7 @@ class Sequence:
             reduced_prompt = templates.ChainOfThoughtsTemplate.format(
                 steps=prompt, num_steps=num_steps
             )
-            self.ai_future_task.exec_func.__self__._prompt_config.multi_results = True
+            self.ai_future_task.exec_func.__self__.prompt_config.multi_results = True
             return self.ai_future_task.exec_func(reduced_prompt)
 
     def __call__(self):

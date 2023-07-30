@@ -16,7 +16,8 @@ TASK_KWARGS = {
 
 def test_llm_task():
     test_llm = MagicMock()
-    test_llm.predict.return_value = '{"declarai_result": "output-value"}'
+    test_llm.predict.return_value = MagicMock()
+    test_llm.predict.return_value.response = '{"declarai_result": "output-value"}'
 
     llm_task = LLMTask(
         template=TEST_TASK_TEMPLATE,
@@ -37,7 +38,8 @@ def test_llm_task():
 
 def test_llm_task_result_name_override():
     test_llm = MagicMock()
-    test_llm.predict.return_value = '{"result": "output-value"}'
+    test_llm.predict.return_value = MagicMock()
+    test_llm.predict.return_value.response = '{"result": "output-value"}'
 
     llm_task = LLMTask(
         template=TEST_TASK_TEMPLATE,
@@ -57,7 +59,8 @@ def test_llm_task_result_name_override():
 
 def test_llm_task_unstructured_result():
     test_llm = MagicMock()
-    test_llm.predict.return_value = "output-value"
+    test_llm.predict.return_value = MagicMock()
+    test_llm.predict.return_value.response = "output-value"
 
     llm_task = LLMTask(
         template=TEST_TASK_TEMPLATE,
@@ -72,7 +75,8 @@ def test_llm_task_unstructured_result():
 
 def test_llm_task_multiple_results():
     test_llm = MagicMock()
-    test_llm.predict.return_value = (
+    test_llm.predict.return_value = MagicMock()
+    test_llm.predict.return_value.response = (
         '{"result1": "output-value1"}\n\n\n{"result2": "output-value2"}'
     )
 
@@ -89,7 +93,8 @@ def test_llm_task_multiple_results():
 
 def test_future_llm_task():
     test_llm = MagicMock()
-    test_llm.predict.return_value = '{"declarai_result": "output-value"}'
+    test_llm.predict.return_value = MagicMock()
+    test_llm.predict.return_value.response = '{"declarai_result": "output-value"}'
 
     llm_task = LLMTask(
         template=TEST_TASK_TEMPLATE,

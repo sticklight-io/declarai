@@ -10,17 +10,16 @@ we will need to create the following:
 import json
 import logging
 import re
-from typing import Any, Dict, Optional, TypeVar
+from typing import Any, Dict, List, Optional
 
 from declarai.llm import LLM
 from declarai.llm.settings import PromptSettings
 
+from declarai.llm.base_llm import LLMResponse
+from declarai.middlewares.base import TaskMiddleware
 from .future_task import FutureLLMTask
 
 logger = logging.getLogger("BaseFunction")
-
-
-LLMTaskType = TypeVar("LLMTaskType", bound="LLMTask")
 
 
 class LLMTask:
@@ -32,31 +31,39 @@ class LLMTask:
         template_kwargs: Dict[str, str],
         llm: LLM,
         prompt_kwargs: Optional[Dict[str, Any]] = None,
+        middlewares: Optional[List[TaskMiddleware]] = None,
     ):
-        self._llm = llm
-        self._template = template
-        self._template_args = template_kwargs
+        self.llm = llm
+        self.template = template
+        self.template_args = template_kwargs
         if not prompt_kwargs:
             prompt_kwargs = {}
-        self._prompt_config = PromptSettings(**prompt_kwargs)
+        self.prompt_config = PromptSettings(**prompt_kwargs)
+        self.middlewares = middlewares or []
+
+        self.llm_response: Optional[LLMResponse] = None
+        self.result: Any = None
+        self.call_kwargs: Dict[str, Any] = {}
 
     def _exec_unstructured(self, prompt: str) -> Optional[str]:
         logger.debug(prompt)
-        result = self._llm.predict(prompt)
-        return result
+        llm_result = self.llm.predict(prompt)
+        return llm_result.response
 
     def _exec_structured(self, prompt) -> Any:
         """
         Parses the generated data and returns the result.
         """
         logger.debug(prompt)
-        raw_result = self._llm.predict(prompt)
+        self.llm_response = self.llm.predict(prompt)
+        raw_result = self.llm_response.response
         try:
-            if self._prompt_config.multi_results:
+            if self.prompt_config.multi_results:
                 json_values = re.findall(r"{.*?}", raw_result, re.DOTALL)
                 serialized = {}
                 for json_value in json_values:
-                    serialized_json_value = json.loads(json_value)
+                    clean_value = json_value.replace("```json", "").replace("```", "")
+                    serialized_json_value = json.loads(clean_value)
                     serialized.update(serialized_json_value)
                 return serialized
             else:
@@ -65,8 +72,8 @@ class LLMTask:
                 for json_value in json_values:
                     serialized_json_value = json.loads(json_value)
                     serialized.update(serialized_json_value)
-                if self._prompt_config.return_name in serialized:
-                    return serialized[self._prompt_config.return_name]
+                if self.prompt_config.return_name in serialized:
+                    return serialized[self.prompt_config.return_name]
                 return serialized
 
         except json.JSONDecodeError:
@@ -83,7 +90,7 @@ class LLMTask:
         Optionally passing kwargs will also inject the data into the compiled template.
         """
         logger.debug("Compiling task template")
-        template = self._template.format(**self._template_args)
+        template = self.template.format(**self.template_args)
         if kwargs:
             template = template.format(**kwargs)
         return template
@@ -105,15 +112,25 @@ class LLMTask:
             populated_prompt=populated_prompt,
         )
 
-    def _exec(self, populated_prompt: str) -> Any:
+    def _exec_task(self, populated_prompt: str) -> Any:
         """
         Executes the task.
         """
         logger.debug("Running planned task")
-        if self._prompt_config.structured:
-            return self._exec_structured(populated_prompt)
-        return self._exec_unstructured(populated_prompt)
+        if self.prompt_config.structured:
+            self.result = self._exec_structured(populated_prompt)
+        else:
+            self.result = self._exec_unstructured(populated_prompt)
+        return self.result
 
-    def __call__(self, **kwargs):
+    def _exec(self, populated_prompt: str) -> Any:
+        if self.middlewares:
+            for middleware in self.middlewares:
+                exec_with_middlewares = middleware(self, populated_prompt)
+            return exec_with_middlewares()
+        return self._exec_task(populated_prompt)
+
+    def __call__(self, **kwargs) -> Any:
+        self.call_kwargs = kwargs
         populated_prompt = self._plan(**kwargs)
         return self._exec(populated_prompt)

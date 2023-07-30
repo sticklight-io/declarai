@@ -3,7 +3,6 @@ An interface to extract different parts of the provided function into python obj
 """
 
 import inspect
-import re
 from typing import Callable, Dict, Optional
 
 from ..magic_parser import Magic, extract_magic_args
