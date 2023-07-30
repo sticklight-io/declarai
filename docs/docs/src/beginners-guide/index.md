@@ -15,7 +15,7 @@ $ pip install declarai
 !!! info
 
     For this tutorial you will need an openai token. This token is completely your's and is not shared, stored or managed
-    anywhere but on your machine! you can see more information about obtaining a token here: [openai](/src/providers/openai/)
+    anywhere but on your machine! you can see more information about obtaining a token here: [openai](/declarai/src/providers/openai/)
 
 After installation, open a python file and start with setting up your declarai app:
 
@@ -35,14 +35,14 @@ declarai = Declarai(provider="openai", model="gpt-3.5-turbo", openai_token="<you
      Do your best to copy, run and edit the code in your editor to really understand how powerful Declarai is.
 
 <div style="text-align: center">
-    <a href="/src/beginners-guide/simple-task/" class="md-button">
+    <a href="/declarai/src/beginners-guide/simple-task/" class="md-button">
         Lets go! <i class="fas fa-arrow-left"></i>
     </a>
 </div>
 
 ## Advanced User Guide
 
-If you feel this tutorial is too easy, feel free to jump to our [**Advanced**](/src/advanced/) section, which covers more complex 
+If you feel this tutorial is too easy, feel free to jump to our [**Advanced**](/declarai/src/advanced/) section, which covers more complex 
 topics like middlewares, running evaluations and building multi provider flows.
 
 We recommend you to read the tutorial first, and then the advanced guide if you want to learn more.
