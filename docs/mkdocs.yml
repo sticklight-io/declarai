@@ -1,16 +1,28 @@
 site_name: Declarai
 nav:
 - Declarai: index.md
-- Tutorial - User Guide:
-  - tutorial/index.md
-  - First Steps: tutorial/first_steps.md
-  - Providers:
-    - tutorial/providers/index.md
-    - tutorial/providers/openai.md
-- Evals:
-  - evals/index.md
-- Changelog: changelog.md
-- Contribute : contribute.md
+- Beginners guide:
+  - src/beginners-guide/index.md
+  - Simple task: src/beginners-guide/simple-task.md
+  - Controlling task behavior: src/beginners-guide/controlling-task-behavior.md
+  - Debugging tasks: src/beginners-guide/debugging-tasks.md
+  - Recap: src/beginners-guide/recap.md
+- Advanced:
+  - src/advanced/index.md
+  - magic: src/advanced/magic.md
+  - multiple provides: src/advanced/multiple_provides.md
+  - middlewares:
+    - src/advanced/middlewares/index.md
+    - monitoring: src/advanced/middlewares/monitoring.md
+  - Evals:
+      - src/advanced/evals/index.md
+- Providers:
+  - src/providers/index.md
+  - src/providers/openai.md
+- integrations:
+  - src/integrations/index.md
+- Changelog: src/changelog.md
+- Contribute : src/contribute.md
 
 theme:
     features:
@@ -48,4 +60,3 @@ markdown_extensions:
     emoji_generator: !!python/name:materialx.emoji.to_svg
 - pymdownx.tabbed:
     alternate_style: true
-
