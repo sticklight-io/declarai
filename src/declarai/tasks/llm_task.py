@@ -10,13 +10,13 @@ we will need to create the following:
 import json
 import logging
 import re
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from declarai.llm import LLM
 from declarai.llm.settings import PromptSettings
 
-from ..llm.base_llm import LLMResponse
-from ..middlewares.base import TaskMiddleware
+from declarai.llm.base_llm import LLMResponse
+from declarai.middlewares.base import TaskMiddleware
 from .future_task import FutureLLMTask
 
 logger = logging.getLogger("BaseFunction")

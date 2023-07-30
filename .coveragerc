@@ -5,6 +5,7 @@ omit =
     src/declarai/llm/openai_llm/**
     src/declarai/llm/settings/**
     src/declarai/llm/providers.py
+    src/declarai/evals/**
      **/test_*
 
 [report]
