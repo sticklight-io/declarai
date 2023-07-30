@@ -8,6 +8,17 @@ logger = logging.getLogger("PromptLogger")
 
 
 class LoggingMiddleware(TaskMiddleware):
+    """
+    Creates a Simple logging middleware for a given task.
+    Usage:
+    >>> @declarai.task(middlewares=[LoggingMiddleware])
+    ... def generate_a_poem(title: str):
+    ...     '''
+    ...     Generate a poem based on the given title
+    ...     :return: The generated poem
+    ...     '''
+    ...     return declarai.magic("poem", title)
+    """
     start_time: time = None
 
     def before(self, _):

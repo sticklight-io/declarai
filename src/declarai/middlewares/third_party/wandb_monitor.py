@@ -5,6 +5,24 @@ from declarai.middlewares.base import TaskMiddleware
 
 
 class WandDBMonitorCreator:
+    """
+    Creates a WandDBMonitor middleware for a given task.
+    Usage:
+
+    >>> WandDBMonitor = WandDBMonitorCreator(
+    ...     name="<task name>",
+    ...     project="<project name>",
+    ...     key="<api-key>",
+    ... )
+    ...
+    >>> @declarai.task(middlewares=[WandDBMonitor])
+    ... def generate_a_poem(title: str):
+    ...     '''
+    ...     Generate a poem based on the given title
+    ...     :return: The generated poem
+    ...     '''
+    ...     return declarai.magic("poem", title)
+    """
     def __new__(cls, name: str, project: str, key: str) -> "WandDBMonitor":
         if importlib.util.find_spec("wandb"):
             from wandb.sdk.data_types.trace_tree import Trace
