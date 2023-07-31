@@ -73,8 +73,7 @@ def test_chat_with_send_override(mock_llm_chat):
     assert chat.__name__ == "TestChat"
     assert chat.parsed_function
     assert chat.llm_translator
-    # TODO: Uncomment after structuring bug is fixed
-    # assert chat._system_message == Message(
-    #     message="This is a test chat\n", role="system"
-    # )
-    # assert chat.prompt_config.structured is True
+    assert chat._system_message == Message(
+        message="This is a test chat.\nrespond only with the value of type List[string]:", role="system"
+    )
+    assert chat.prompt_config.structured is True

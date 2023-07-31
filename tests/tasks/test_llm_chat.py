@@ -47,10 +47,10 @@ def test_llm_compile(llm_chat):
         role='user',
     )
     assert llm_chat.compile() == [SYSTEM_MESSAGE]
-    assert llm_chat.compile(return_prompt=False) == f"{repr(SYSTEM_MESSAGE)}\n"
+    assert llm_chat.compile(return_prompt=True) == f"{repr(SYSTEM_MESSAGE)}\n"
     assert llm_chat.compile(message=user_message.message) == [SYSTEM_MESSAGE, user_message]
-    assert llm_chat.compile(message='Hallo', return_prompt=False) == f"{repr(SYSTEM_MESSAGE)}\n{repr(user_message)}\n"
-    assert llm_chat.compile(message='Hallo', return_prompt=True) == [SYSTEM_MESSAGE, user_message]
+    assert llm_chat.compile(message='Hallo', return_prompt=True) == f"{repr(SYSTEM_MESSAGE)}\n{repr(user_message)}\n"
+    assert llm_chat.compile(message='Hallo', return_prompt=False) == [SYSTEM_MESSAGE, user_message]
 
 
 def test_llm_compile_with_kwargs():
@@ -73,8 +73,8 @@ def test_llm_compile_with_kwargs():
         role='system'
     )]
     assert llm_chat.compile(language="french",
-                            return_prompt=False) == f"{repr(Message(message='You are a translator from english to french', role='system'))}\n"
-    assert llm_chat.compile(language="french", return_prompt=True) == [Message(
+                            return_prompt=True) == f"{repr(Message(message='You are a translator from english to french', role='system'))}\n"
+    assert llm_chat.compile(language="french", return_prompt=False) == [Message(
         message="You are a translator from english to french",
         role='system'
     )]
@@ -101,14 +101,13 @@ def test_llm_chat(llm_chat):
     )
     assert llm_chat.llm.predict.called
     assert res == "Helloululu"
-    assert llm_chat.conversation_history == [user_message, assistant_message]
-    assert llm_chat.system_template == repr(SYSTEM_MESSAGE)
+    assert llm_chat.conversation == [user_message, assistant_message]
+    assert llm_chat.system == repr(SYSTEM_MESSAGE)
     assert llm_chat._system_message == SYSTEM_MESSAGE
     assert llm_chat.llm_response.response == 'Helloululu'
     assert llm_chat.compile() == [SYSTEM_MESSAGE, user_message, assistant_message]
-    # assert llm_chat.compile(return_prompt=False) ==
     assert llm_chat.compile(
-        return_prompt=False) == f"{repr(SYSTEM_MESSAGE)}\n{repr(user_message)}\n{repr(assistant_message)}\n"
+        return_prompt=True) == f"{repr(SYSTEM_MESSAGE)}\n{repr(user_message)}\n{repr(assistant_message)}\n"
     llm_chat.llm.predict.return_value.response = 'Halloululu'
     second_user_message = Message(
         message='Hallo',
@@ -123,7 +122,7 @@ def test_llm_chat(llm_chat):
         message='Halloululu',
         role='assistant',
     )
-    assert llm_chat.conversation_history == [user_message, assistant_message, second_user_message,
+    assert llm_chat.conversation == [user_message, assistant_message, second_user_message,
                                              second_assistant_message]
 
 
@@ -151,7 +150,7 @@ def test_llm_chat_system():
     assert llm_chat.compile() == [SYSTEM_MESSAGE, greeting_message]
 
 
-def test_llm_chat_system_template_with_kwargs():
+def test_llm_chat_system_with_kwargs():
     test_llm = MagicMock()
     test_llm.predict.return_value = MagicMock()
     system_message = Message(
