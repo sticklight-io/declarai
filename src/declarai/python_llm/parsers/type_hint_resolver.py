@@ -37,10 +37,13 @@ def resolve_type_hints(type_) -> Optional[str]:
             for sub_type in type_.__args__:
                 if isinstance(sub_type, ModelMetaclass):
                     resolved_schema = jsonref.loads(schema_json_of(type_))
-                    if "items" in resolved_schema:
-                        schema_def = resolved_schema["items"]["properties"]
-                    else:
-                        schema_def = resolved_schema["properties"]
+                    try:
+                        if "items" in resolved_schema:
+                            schema_def = resolved_schema["items"]["properties"]
+                        else:
+                            schema_def = resolved_schema["properties"]
+                    except:
+                        schema_def = jsonref.loads(sub_type.schema_json())["properties"]
                     resolved_schema = resolve_pydantic_schema(schema_def)
                     string_schema = json.dumps(resolved_schema, indent=4)
                     string_schema = string_schema.replace("{", "{{").replace("}", "}}")
