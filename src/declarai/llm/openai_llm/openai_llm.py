@@ -1,9 +1,10 @@
-from typing import Optional
+from typing import List
 
 import openai
 
 from ..base_llm import BaseLLM, LLMResponse
 from .settings import OPENAI_API_KEY, OPENAI_MODEL
+from ...tasks.chat.message import Message
 
 
 class OpenAIError(Exception):
@@ -25,8 +26,7 @@ class OpenAILLM(BaseLLM):
 
     def predict(
         self,
-        prompt,
-        system_prompt: Optional[str] = None,
+        messages: List[Message],
         model: str = None,
         temperature: float = 0,
         max_tokens: int = 3000,
@@ -34,13 +34,10 @@ class OpenAILLM(BaseLLM):
         frequency_penalty: int = 0,
         presence_penalty: int = 0,
     ) -> LLMResponse:
-        messages = []
-        if system_prompt:
-            messages.append({"role": "system", "content": system_prompt})
-        messages.append({"role": "user", "content": prompt})
+        openai_messages = [{"role": m.role, "content": m.message} for m in messages]
         res = self.openai.ChatCompletion.create(
             model=model or self.model,
-            messages=messages,
+            messages=openai_messages,
             temperature=temperature,
             max_tokens=max_tokens,
             top_p=top_p,

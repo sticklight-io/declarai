@@ -48,6 +48,7 @@ class FunctionLLMTranslator:
                 self.parsed_func.signature_return,
             ]
         )
+        # return False
 
     @property
     def has_structured_return_type(self) -> bool:
