@@ -33,8 +33,10 @@ class LLMTaskDecorator:
                 "output_instructions": llm_translator.compile_output_prompt(),
             },
             prompt_kwargs={
-                "structured": llm_translator.has_any_return_defs,
+                "structured": llm_translator.has_structured_return_type,
                 "return_name": llm_translator.return_name,
+                "return_schema": llm_translator.return_type,
+                "return_type": llm_translator.return_type,
             },
             llm=self.declarai_instance.llm,
             middlewares=self.middlewares,

@@ -10,6 +10,7 @@ we will need to create the following:
 import json
 import logging
 import re
+from json import JSONDecodeError
 from typing import Any, Dict, List, Optional
 
 from declarai.llm import LLM
@@ -18,6 +19,7 @@ from declarai.llm.settings import PromptSettings
 from declarai.llm.base_llm import LLMResponse
 from declarai.middlewares.base import TaskMiddleware
 from .future_task import FutureLLMTask
+from pydantic.tools import parse_raw_as, parse_obj_as
 
 logger = logging.getLogger("BaseFunction")
 
@@ -45,17 +47,22 @@ class LLMTask:
         self.result: Any = None
         self.call_kwargs: Dict[str, Any] = {}
 
-    def _exec_unstructured(self, prompt: str) -> Optional[str]:
+    def _exec_unstructured(self, prompt: str) -> Optional[Any]:
         logger.debug(prompt)
         llm_result = self.llm.predict(prompt)
-        return llm_result.response
+        try:
+            return parse_raw_as(self.prompt_config.return_type, llm_result.response)
+        except JSONDecodeError:
+            return parse_obj_as(self.prompt_config.return_type, llm_result.response)
 
     def _exec_structured(self, prompt) -> Any:
         """
         Parses the generated data and returns the result.
         """
         logger.debug(prompt)
-        self.llm_response = self.llm.predict(prompt)
+        self.llm_response = self.llm.predict(
+            prompt, system_prompt="You are a REST api endpoint.You only answer in JSON structures with a sindle key named 'declarai_result', nothing else."
+        )
         raw_result = self.llm_response.response
         try:
             if self.prompt_config.multi_results:
@@ -67,14 +74,16 @@ class LLMTask:
                     serialized.update(serialized_json_value)
                 return serialized
             else:
-                json_values = re.findall(r"{.*}", raw_result, re.DOTALL)
-                serialized = {}
-                for json_value in json_values:
-                    serialized_json_value = json.loads(json_value)
-                    serialized.update(serialized_json_value)
-                if self.prompt_config.return_name in serialized:
-                    return serialized[self.prompt_config.return_name]
-                return serialized
+                parsed_result = parse_raw_as(dict, raw_result)['declarai_result']
+                return parse_obj_as(self.prompt_config.return_type, parsed_result)
+                # json_values = re.findall(r"{.*}", raw_result, re.DOTALL)
+                # serialized = {}
+                # for json_value in json_values:
+                #     serialized_json_value = json.loads(json_value)
+                #     serialized.update(serialized_json_value)
+                # if self.prompt_config.return_name in serialized:
+                #     return serialized[self.prompt_config.return_name]
+                # return serialized
 
         except json.JSONDecodeError:
             logger.warning(

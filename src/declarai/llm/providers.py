@@ -1,4 +1,4 @@
-from typing import Literal, Union
+from typing_extensions import Literal, Union
 
 from .base_llm import LLM
 from .openai_llm import OpenAILLM

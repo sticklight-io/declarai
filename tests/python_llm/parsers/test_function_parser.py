@@ -15,7 +15,7 @@ def test_output_prompt():
     parsed_func = ParsedFunction(my_func)
     assert parsed_func.name == "my_func"
     assert parsed_func.signature_kwargs == {"a_param": "str", "b_param": "int"}
-    assert parsed_func.signature_return_type == "List[str]"
+    assert parsed_func.signature_return == "List[str]"
     assert parsed_func.docstring_freeform == "This is the method docstring"
     assert parsed_func.docstring_params == {
         "a_param": "ths param is a string",

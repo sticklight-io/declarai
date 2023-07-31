@@ -96,13 +96,13 @@ if __name__ == "__main__":
         openai_models,
         table,
     )
-    evaluate_single_task_scenario(
-        "structured_strict_complex",
-        structured_strict_complex,
-        structured_strict_complex_kwargs,
-        openai_models,
-        table,
-    )
+    # evaluate_single_task_scenario(
+    #     "structured_strict_complex",
+    #     structured_strict_complex,
+    #     structured_strict_complex_kwargs,
+    #     openai_models,
+    #     table,
+    # )
 
     console.print("[green]Running Logical scenarios...")
     evaluate_sequence_task_scenario(

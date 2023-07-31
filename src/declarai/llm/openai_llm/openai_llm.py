@@ -1,3 +1,5 @@
+from typing import Optional
+
 import openai
 
 from ..base_llm import BaseLLM, LLMResponse
@@ -24,6 +26,7 @@ class OpenAILLM(BaseLLM):
     def predict(
         self,
         prompt,
+        system_prompt: Optional[str] = None,
         model: str = None,
         temperature: float = 0,
         max_tokens: int = 3000,
@@ -31,9 +34,13 @@ class OpenAILLM(BaseLLM):
         frequency_penalty: int = 0,
         presence_penalty: int = 0,
     ) -> LLMResponse:
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
         res = self.openai.ChatCompletion.create(
             model=model or self.model,
-            messages=[{"role": "user", "content": prompt}],
+            messages=messages,
             temperature=temperature,
             max_tokens=max_tokens,
             top_p=top_p,

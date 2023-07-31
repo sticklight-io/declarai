@@ -42,7 +42,10 @@ def extract_magic_args(code) -> Magic:
 
     # Extract the arguments
     if len(magic_call.args) > 0:
-        return_name = magic_call.args[0].value
+        try:
+            return_name = magic_call.args[0].s
+        except:
+            return_name = magic_call.args[0].id
     else:
         return_name = None
 

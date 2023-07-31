@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from declarai.python_llm.parsers.function_parser import ParsedFunction
 from declarai.templates import APIJsonRoleInstructionTemplate, InstructFunctionTemplate
@@ -9,7 +10,7 @@ INPUTS_TEMPLATE = "Inputs:\n{inputs}\n"
 INPUT_LINE_TEMPLATE = "{param}: {{{param}}}"
 NEW_LINE_INPUT_LINE_TEMPLATE = "\n{param}: {{{param}}}"
 
-logger = logging.getLogger("generator")
+logger = logging.getLogger("FunctionLLMTranslator")
 
 
 class FunctionLLMTranslator:
@@ -34,12 +35,35 @@ class FunctionLLMTranslator:
 
     @property
     def has_any_return_defs(self) -> bool:
+        """
+        A return definition is any of the following:
+        - return type annotation
+        - return reference in docstring
+        - return referenced in magic placeholder  # TODO: Address magic reference as well.
+        """
         return any(
             [
                 self.parsed_func.docstring_return[0],
                 self.parsed_func.docstring_return[1],
-                self.parsed_func.signature_return_type,
+                self.parsed_func.signature_return,
             ]
+        )
+
+    @property
+    def has_structured_return_type(self) -> bool:
+        """
+        Except for the following types, a dedicated output parsing
+        behavior is required to return the expected return type of the task.
+        """
+        return (
+            self.parsed_func.signature_return.name
+            and self.parsed_func.signature_return.name
+            not in (
+                "str",
+                "int",
+                "float",
+                "bool",
+            )
         )
 
     def compile_input_prompt(self) -> str:
@@ -74,6 +98,9 @@ class FunctionLLMTranslator:
         """
         inputs = ""
 
+        if not self.parsed_func.signature_kwargs.keys():
+            return inputs
+
         for i, param in enumerate(self.parsed_func.signature_kwargs.keys()):
             if i == 0:
                 inputs += INPUT_LINE_TEMPLATE.format(param=param)
@@ -83,11 +110,6 @@ class FunctionLLMTranslator:
         return INPUTS_TEMPLATE.format(inputs=inputs)
 
     def compile_output_prompt(self) -> str:
-        return_type = self.parsed_func.signature_return_type
-        return_name, return_doc = self.parsed_func.docstring_return
-        magic_definition = self.parsed_func.magic.return_name
-        return_name = return_name or magic_definition or "declarai_result"
-
         if not self.has_any_return_defs:
             logger.warning(
                 "Couldn't create output schema for function %s."
@@ -97,11 +119,14 @@ class FunctionLLMTranslator:
             )
             return ""
 
+        signature_return = self.parsed_func.signature_return
+        return_name, return_doc = self.parsed_func.docstring_return
         return compile_output_prompt(
-            return_type=return_type,
-            return_name=return_name,
+            return_type=signature_return.str_schema,
+            str_schema=return_name,
             return_docstring=return_doc,
-            return_magic=magic_definition,
+            return_magic=self.parsed_func.magic.return_name,
+            structured=self.has_structured_return_type,
         )
 
     @property
@@ -111,3 +136,7 @@ class FunctionLLMTranslator:
             or self.parsed_func.docstring_return[0]
             or "declarai_result"
         )
+
+    @property
+    def return_type(self) -> Any:
+        return self.parsed_func.signature_return.type_
