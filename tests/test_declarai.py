@@ -16,7 +16,7 @@ def test_task(mock_llm, mock_llm_task):
         This is a test task
         :param a: this is a string
         :param b: this is an integer
-        :return: returns an string
+        :return: returns a string
         """
         return declarai.magic("return_name", a=a, b=b)
 

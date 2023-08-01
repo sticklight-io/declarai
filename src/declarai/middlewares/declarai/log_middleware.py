@@ -19,6 +19,7 @@ class LoggingMiddleware(TaskMiddleware):
     ...     '''
     ...     return declarai.magic("poem", title)
     """
+
     start_time: time = None
 
     def before(self, _):

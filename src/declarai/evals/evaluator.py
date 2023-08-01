@@ -47,6 +47,8 @@ if __name__ == "__main__":
     table.add_column("version", width=15)
     table.add_column("Scenario", width=40)
     table.add_column("runtime", width=10)
+    table.add_column("input_tokens", width=10)
+    table.add_column("output_tokens", width=10)
     table.add_column("output", width=100)
     # TODO: Add a performance
 

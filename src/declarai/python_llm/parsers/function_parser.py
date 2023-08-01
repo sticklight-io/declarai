@@ -3,12 +3,26 @@ An interface to extract different parts of the provided function into python obj
 """
 
 import inspect
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, Optional, TypeVar
 
 from ..magic_parser import Magic, extract_magic_args
 from ..types import DocstringFreeform, DocstringParams, DocstringReturn
 from .docstring_parsers.reST import ReSTDocstringParser
-from .type_hint_resolver import resolve_type_hints
+from .type_hint_resolver import type_annotation_to_str_schema
+
+T = TypeVar("T")
+
+
+class SignatureReturn:
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        str_schema: Optional[str] = None,
+        type_: Optional[T] = None,
+    ):
+        self.name = name
+        self.str_schema = str_schema
+        self.type_ = type_
 
 
 class ParsedFunction:
@@ -53,14 +67,21 @@ class ParsedFunction:
     @property
     def signature_kwargs(self) -> Dict[str, str]:
         return {
-            param.name: param.annotation.__name__
+            param.name: param.annotation
             for param in dict(self._signature.parameters).values()
         }
 
     @property
-    def signature_return_type(self) -> Optional[str]:
-        _return_type = resolve_type_hints(self._signature.return_annotation)
-        return _return_type
+    def signature_return(self) -> Optional[SignatureReturn]:
+        return_annotation = self._signature.return_annotation
+        if return_annotation == inspect._empty:
+            return SignatureReturn()
+        string_schema = type_annotation_to_str_schema(self._signature.return_annotation)
+        return SignatureReturn(
+            name=str(self._signature.return_annotation),
+            str_schema=string_schema,
+            type_=self._signature.return_annotation,
+        )
 
     @property
     def docstring(self) -> str:

@@ -14,7 +14,7 @@ Usage:
     >>> reducer.compile()
 """
 
-from typing import Literal, Optional, Set, Tuple
+from typing_extensions import Literal, Optional, Set, Tuple
 
 from declarai import templates
 from declarai.tasks.future_task import FutureLLMTask

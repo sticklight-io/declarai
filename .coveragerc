@@ -2,17 +2,21 @@
 
 [run]
 omit =
-    src/declarai/llm/openai_llm/**
-    src/declarai/llm/settings/**
-    src/declarai/llm/providers.py
-    src/declarai/evals/**
+    src/declarai/llm/**
      **/test_*
+
+     # TODO: This is currently in experimental and not properly covered with tests yet
+     src/declarai/evals/**
+     src/declarai/middlewares/**
+     src/declarai/sequence.py
 
 [report]
 # Regexes for lines to exclude from consideration
 exclude_lines =
     # Have to re-enable the standard pragma
     pragma: no cover
+    @overload
+    pass
 
     # Don't complain about missing debug-only code:
     def __repr__

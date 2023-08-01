@@ -1,7 +1,6 @@
 import pytest
 
 from declarai.python_llm.traslators.compilers.output_prompt import (
-    FORMAT_INSTRUCTIONS,
     compile_output_prompt,
     compile_output_schema_template,
 )
@@ -35,11 +34,7 @@ def test_compile_output_prompt():
     compiled_output_prompt = compile_output_prompt(
         return_name, return_type, return_docstring
     )
-    only_json_result = compiled_output_prompt.replace(FORMAT_INSTRUCTIONS, "")
     formatted_output = (
-        "```json\n"
-        "{{\n"
-        '    "return_name": Dict[str, str]  # The returned value from this function\n'
-        "}}\n```"
+        '"return_name": Dict[str, str]  # The returned value from this function'
     )
-    assert only_json_result == formatted_output
+    assert compiled_output_prompt == formatted_output

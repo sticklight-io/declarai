@@ -1,17 +1,6 @@
 from typing import Any, Dict, Optional, overload
 
-from .llm import (
-    LLMSettings,
-    ModelsAI21labs,
-    ModelsCohere,
-    ModelsGoogle,
-    ModelsOpenai,
-    ProviderAI21labs,
-    ProviderCohere,
-    ProviderGoogle,
-    ProviderOpenai,
-    resolve_llm_from_config,
-)
+from .llm import LLMSettings, ModelsOpenai, ProviderOpenai, resolve_llm_from_config
 from .task_decorator import LLMTaskDecorator
 
 
@@ -22,7 +11,9 @@ class Declarai:
     """
 
     # *-------------------------------------------------------------------------- *
-    # * Custom overloads to enforce the relationship between PROVIDER and MODELS *
+    # * Custom overloads to enforce the relationship between PROVIDER and MODELS  *
+    # * Additionally supported providers should be exposed via the Declarai class *
+    # * here:                                                                     *
     # *-------------------------------------------------------------------------- *
     @overload
     def __init__(
@@ -34,20 +25,8 @@ class Declarai:
     ):
         ...
 
-    @overload
-    def __init__(self, provider: ProviderCohere, model: ModelsCohere):
-        ...
-
-    @overload
-    def __init__(self, provider: ProviderAI21labs, model: ModelsAI21labs):
-        ...
-
-    @overload
-    def __init__(self, provider: ProviderGoogle, model: ModelsGoogle):
-        ...
-
     # *-------------------------------------------------------------------------- *
-    # * Actual implementation of Declarai *
+    # * Actual implementation of Declarai                                         *
     # *-------------------------------------------------------------------------- *
     def __init__(self, **kwargs):
         self.llm_config = LLMSettings(**kwargs)

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 
 class PromptSettings:
@@ -7,6 +7,8 @@ class PromptSettings:
         structured: bool = True,
         multi_results: bool = False,
         return_name: Optional[str] = "declarai_result",
+        return_schema: Optional[str] = "",
+        return_type: Optional[Any] = None,
         temperature: Optional[float] = 0.0,
         max_tokens: Optional[int] = 2000,
         top_p: Optional[float] = 1.0,
@@ -16,6 +18,7 @@ class PromptSettings:
         self.structured = structured
         self.multi_results = multi_results
         self.return_name = return_name
+        self.return_type = return_type
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.top_p = top_p

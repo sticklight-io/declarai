@@ -23,11 +23,11 @@ class WandDBMonitorCreator:
     ...     '''
     ...     return declarai.magic("poem", title)
     """
+
     def __new__(cls, name: str, project: str, key: str) -> "WandDBMonitor":
         if importlib.util.find_spec("wandb"):
-            from wandb.sdk.data_types.trace_tree import Trace
-
             import wandb
+            from wandb.sdk.data_types.trace_tree import Trace
 
             wandb.login(key=key)
             wandb.init(id=name, name=name, project=project, resume="allow")

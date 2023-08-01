@@ -1,4 +1,6 @@
-from typing import Literal, Union
+from typing import Union
+
+from typing_extensions import Literal
 
 from .base_llm import LLM
 from .openai_llm import OpenAILLM
@@ -15,28 +17,7 @@ ModelsOpenai = Literal[
 ]
 
 
-# Based on documentation from https://docs.cohere.com/reference/generate
-ProviderCohere = Literal["Cohere"]
-ModelsCohere = Literal[
-    "command", "command-nightly", "command-light", "command-light-nightly"
-]
-
-
-ProviderAI21labs = Literal["AI21Labs"]
-ModelsAI21labs = Literal["curie", "babbage"]
-
-# Based on documentation from https://cloud.google.com/vertex-ai/docs/generative-ai/learn/models
-ProviderGoogle = Literal["google"]
-ModelsGoogle = Literal[
-    "text-bison",
-    "textembedding-gecko",
-    "chat-bison",
-    "code-bison",
-    "codechat-bison",
-    "code-gecko",
-]
-
-AllModels = Union[ModelsOpenai, ModelsCohere, ModelsAI21labs, ModelsGoogle]
+AllModels = Union[ModelsOpenai]
 
 
 def resolve_llm_from_config(llm_config: LLMSettings, **kwargs) -> LLM:

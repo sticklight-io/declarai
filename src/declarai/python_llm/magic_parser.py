@@ -26,7 +26,7 @@ def extract_magic_args(code) -> Magic:
             function_node = node
             break
     else:
-        raise ValueError("extract_email_contacts function not found")
+        raise ValueError("function not found")
 
     # Find the magic function call
     for node in ast.walk(function_node):
@@ -42,7 +42,10 @@ def extract_magic_args(code) -> Magic:
 
     # Extract the arguments
     if len(magic_call.args) > 0:
-        return_name = magic_call.args[0].value
+        try:
+            return_name = magic_call.args[0].s
+        except:
+            return_name = magic_call.args[0].id
     else:
         return_name = None
 
@@ -51,13 +54,13 @@ def extract_magic_args(code) -> Magic:
     output_desc = ""
     for kwarg in magic_call.keywords:
         if kwarg.arg == "task_desc":
-            task_desc = kwarg.value.value
+            task_desc = kwarg.value.s
         elif kwarg.arg == "input_desc":
             zipped = zip(kwarg.value.keys, kwarg.value.values)
             for k, v in zipped:
-                input_desc[k.value] = v.value
+                input_desc[k.s] = v.s
         elif kwarg.arg == "output_desc":
-            output_desc = kwarg.value.value
+            output_desc = kwarg.value.s
 
     return Magic(
         return_name=return_name,

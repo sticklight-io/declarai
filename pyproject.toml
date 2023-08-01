@@ -9,8 +9,8 @@ packages = [{include = "declarai", from = "src"}]
 [tool.poetry.dependencies]
 python = "^3.7.1"
 openai = "^0.27.8"
-pydantic = {version = "^1.8.2", optional = true}
-jsonref = {version = "^1.1.0", optional = true}
+pydantic = "^1.8.2"
+jsonref = "^1.1.0"
 wandb = {version = "^0.10.32", optional = true}
 
 
@@ -24,7 +24,6 @@ rich = "^13.4.2"
 mkdocs-material = "^9.1.21"
 
 [tool.poetry.extras]
-pydantic = ["pydantic", "jsonref"]
 wandb = ["wandb"]
 
 [build-system]

@@ -14,7 +14,7 @@ pip install declarai
 
 ## Setup
 ```bash
-export USE_AI_OPENAI_TOKEN= <your openai token>
+export DECLARAI_OPENAI_API_KEY= <your openai token>
 ```
 
 ## Usage:
@@ -22,7 +22,8 @@ The most basic functionality. Just add the `@task` decorator to your function, a
 ```python
 from declarai import Declarai
 
-declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
+# Optionally provide the API key to declarai on initialization
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo", openai_token="<your-api-key>")
 
 @declarai.task
 def generate_poem(title: str) -> str:

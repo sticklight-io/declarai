@@ -18,21 +18,44 @@ def evaluate_single_task_scenario(
         evaluator = progress.add_task(f"[red]{scenario_name}...", total=len(models))
 
         for model, declarai in models.items():
-            initialized_scenario = declarai.task(scenario)
+            try:
+                initialized_scenario = declarai.task(scenario)
 
-            start_time = time()
-            res = initialized_scenario(**scenario_kwargs)
-            total_time = time() - start_time
-            progress.update(evaluator, advance=1)
+                start_time = time()
+                res = initialized_scenario(**scenario_kwargs)
+                total_time = time() - start_time
+                progress.update(evaluator, advance=1)
 
-            table.add_row(
-                declarai.llm_config.provider,
-                declarai.llm_config.model,
-                declarai.llm_config.version or "latest",
-                scenario_name,
-                f"{round(total_time, 3)}s",
-                str(res),
-            )
+                try:
+                    input_tokens = str(initialized_scenario.llm_response.prompt_tokens)
+                    output_tokens = str(
+                        initialized_scenario.llm_response.completion_tokens
+                    )
+                except:
+                    input_tokens = "error"
+                    output_tokens = "error"
+
+                table.add_row(
+                    declarai.llm_config.provider,
+                    declarai.llm_config.model,
+                    declarai.llm_config.version or "latest",
+                    scenario_name,
+                    f"{round(total_time, 3)}s",
+                    input_tokens,
+                    output_tokens,
+                    str(res),
+                )
+            except:
+                table.add_row(
+                    declarai.llm_config.provider,
+                    declarai.llm_config.model,
+                    declarai.llm_config.version or "latest",
+                    scenario_name,
+                    "error",
+                    "error",
+                    "error",
+                    "error",
+                )
 
 
 def evaluate_sequence_task_scenario(
@@ -46,17 +69,40 @@ def evaluate_sequence_task_scenario(
         evaluator = progress.add_task(f"[red]{scenario_name}...", total=len(models))
 
         for model, declarai in models.items():
-            initialized_scenario = scenario(declarai, **scenario_kwargs)
-            start_time = time()
-            res = initialized_scenario()
-            total_time = time() - start_time
-            progress.update(evaluator, advance=1)
+            try:
+                initialized_scenario = scenario(declarai, **scenario_kwargs)
+                start_time = time()
+                res = initialized_scenario()
+                total_time = time() - start_time
+                progress.update(evaluator, advance=1)
 
-            table.add_row(
-                declarai.llm_config.provider,
-                declarai.llm_config.model,
-                declarai.llm_config.version or "latest",
-                scenario_name,
-                f"{round(total_time, 3)}s",
-                str(res),
-            )
+                try:
+                    input_tokens = str(initialized_scenario.llm_response.prompt_tokens)
+                    output_tokens = str(
+                        initialized_scenario.llm_response.completion_tokens
+                    )
+                except:
+                    input_tokens = "error"
+                    output_tokens = "error"
+
+                table.add_row(
+                    declarai.llm_config.provider,
+                    declarai.llm_config.model,
+                    declarai.llm_config.version or "latest",
+                    scenario_name,
+                    f"{round(total_time, 3)}s",
+                    input_tokens,
+                    output_tokens,
+                    str(res),
+                )
+            except:
+                table.add_row(
+                    declarai.llm_config.provider,
+                    declarai.llm_config.model,
+                    declarai.llm_config.version or "latest",
+                    scenario_name,
+                    "error",
+                    "error",
+                    "error",
+                    "error",
+                )

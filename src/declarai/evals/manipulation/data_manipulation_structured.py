@@ -10,7 +10,7 @@ def data_manipulation(data: Dict[str, str]) -> Dict[str, str]:
     :param data: The data to anonymize
     :return: The anonymized data
     """
-    return Declarai.magic("redacted_info", data)
+    return Declarai.magic("redacted_info", data=data)
 
 
 data_manipulation_kwargs = {
