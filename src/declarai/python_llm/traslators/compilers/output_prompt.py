@@ -33,12 +33,8 @@ def compile_output_schema_template(
     return output_schema
 
 
-def compile_unstructured_template(
-    return_name: str, return_type: str, return_docstring: str
-) -> str:
+def compile_unstructured_template(return_type: str, return_docstring: str) -> str:
     output_prompt = "respond only with the value "
-    # if return_name:
-    #     output_prompt += return_name
     if return_type:
         output_prompt += "of type " + return_type + ":"
     else:
@@ -59,6 +55,6 @@ def compile_output_prompt(
     str_schema = str_schema or return_magic
 
     if not structured:
-        return compile_unstructured_template(str_schema, return_type, return_docstring)
+        return compile_unstructured_template(return_type, return_docstring)
 
     return compile_output_schema_template(str_schema, return_type, return_docstring)
