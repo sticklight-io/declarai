@@ -41,9 +41,7 @@ def test_llm_task():
 def test_llm_task_result_name_override():
     test_llm = MagicMock()
     test_llm.predict.return_value = MagicMock()
-    test_llm.predict.return_value.response = (
-        '{"declarai_result": {"result": "output-value"}}'
-    )
+    test_llm.predict.return_value.response = '{"result": "output-value"}'
 
     llm_task = LLMTask(
         template=TEST_TASK_TEMPLATE,
