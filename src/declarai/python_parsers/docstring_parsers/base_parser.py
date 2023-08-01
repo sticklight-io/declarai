@@ -1,6 +1,6 @@
 from abc import ABC
 
-from declarai.python_llm.types import (
+from declarai.python_parsers.types import (
     DocstringFreeform,
     DocstringParams,
     DocstringReturn,

@@ -1,5 +1,5 @@
-from declarai.python_llm import FunctionLLMTranslator, ParsedFunction
-from declarai.templates import StructuredOutputInstructionPrompt
+from declarai.python_parsers.function_parser import PythonParser
+from declarai.operators.templates import StructuredOutputInstructionPrompt
 from declarai.tasks.llm_task import LLMTask
 
 
@@ -23,8 +23,10 @@ class LLMTaskDecorator:
             return self._task(func)
 
     def _task(self, func):
-        parsed_function = ParsedFunction(func)
-        llm_translator = FunctionLLMTranslator(parsed_function, StructuredOutputInstructionPrompt)
+        parsed_function = PythonParser(func)
+        llm_translator = FunctionLLMTranslator(
+            parsed_function, StructuredOutputInstructionPrompt
+        )
 
         llm_task = LLMTask(
             template=llm_translator.template,

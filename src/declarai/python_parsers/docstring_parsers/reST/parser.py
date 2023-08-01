@@ -1,7 +1,9 @@
 import re
 
-from declarai.python_llm.parsers.docstring_parsers.base_parser import (
+from declarai.python_parsers.docstring_parsers.base_parser import (
     BaseDocStringParser,
+)
+from declarai.python_parsers.types import (
     DocstringFreeform,
     DocstringParams,
     DocstringReturn,

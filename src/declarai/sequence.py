@@ -16,7 +16,7 @@ Usage:
 
 from typing_extensions import Literal, Optional, Set, Tuple
 
-from declarai import templates
+from declarai.operators import templates
 from declarai.tasks.future_task import FutureLLMTask
 
 ReduceStrategies = Literal["ChainOfThought"]

@@ -1,10 +1,10 @@
 import pytest
 
-from declarai.python_llm.traslators.compilers.output_prompt import (
+from declarai.operators.traslators.compilers import (
     compile_output_prompt,
-    compile_output_schema_template
+    compile_output_schema_template,
 )
-from declarai.templates import StructuredOutputInstructionPrompt
+from declarai.operators.templates import StructuredOutputInstructionPrompt
 
 
 @pytest.mark.parametrize(
@@ -23,7 +23,9 @@ from declarai.templates import StructuredOutputInstructionPrompt
 def test_output_prompt(
     return_name: str, return_type: str, return_doc: str, result: str
 ):
-    output_schema = compile_output_schema_template(return_name, return_type, return_doc, StructuredOutputInstructionPrompt)
+    output_schema = compile_output_schema_template(
+        return_name, return_type, return_doc, StructuredOutputInstructionPrompt
+    )
     replacement_prompt = StructuredOutputInstructionPrompt.format(
         return_name=return_name or "declarai_result", output_schema=""
     )
@@ -36,7 +38,10 @@ def test_compile_output_prompt():
     return_docstring = "The returned value from this function"
 
     compiled_output_prompt = compile_output_prompt(
-        return_name, return_type, return_docstring, structured_template=StructuredOutputInstructionPrompt
+        return_name,
+        return_type,
+        return_docstring,
+        structured_template=StructuredOutputInstructionPrompt,
     )
     formatted_output = (
         '"return_name": Dict[str, str]  # The returned value from this function'

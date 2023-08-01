@@ -1,4 +1,3 @@
-import copy
 import json
 import logging
 import re
@@ -7,9 +6,9 @@ from typing import Dict, Optional, Any, List, Union
 
 from pydantic.tools import parse_raw_as, parse_obj_as
 
-from declarai.llm import LLM
-from declarai.llm.base_llm import LLMResponse
-from declarai.llm.settings import PromptSettings
+from declarai.operators.llm import LLM
+from declarai.operators.llm import LLMResponse
+from declarai.operators.llm import PromptSettings
 from declarai.middlewares.base import TaskMiddleware
 from declarai.tasks.chat.message import Message
 

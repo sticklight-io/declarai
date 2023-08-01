@@ -1,8 +1,13 @@
 from typing import Any, Dict, Optional, overload
 
-from .chat_decorator import LLMChatDecorator
-from .llm import LLMSettings, ModelsOpenai, ProviderOpenai, resolve_llm_from_config
-from .task_decorator import LLMTaskDecorator
+from declarai.decorators.chat_decorator import LLMChatDecorator
+from declarai.operators.llm import (
+    LLMSettings,
+    ModelsOpenai,
+    ProviderOpenai,
+    resolve_llm_from_config,
+)
+from declarai.decorators.task_decorator import LLMTaskDecorator
 
 
 class Declarai:

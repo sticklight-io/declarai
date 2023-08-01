@@ -15,9 +15,9 @@ from typing import Any, Dict, List, Optional
 
 from pydantic.tools import parse_obj_as, parse_raw_as
 
-from declarai.llm import LLM
-from declarai.llm.base_llm import LLMResponse
-from declarai.llm.settings import PromptSettings
+from declarai.operators.llm import LLM
+from declarai.operators.llm import LLMResponse
+from declarai.operators.llm import PromptSettings
 from declarai.middlewares.base import TaskMiddleware
 from .chat.message import Message
 
@@ -34,7 +34,7 @@ class LLMTask:
         template: str,
         template_kwargs: Dict[str, str],
         llm: LLM,
-        prompt_kwargs: Optional[Dict[str, Any]] = None,
+
         middlewares: Optional[List[TaskMiddleware]] = None,
     ):
         self.llm = llm

@@ -4,7 +4,7 @@ import openai
 
 from ..base_llm import BaseLLM, LLMResponse
 from .settings import OPENAI_API_KEY, OPENAI_MODEL
-from ...tasks.chat.message import Message
+from declarai.tasks.chat.message import Message
 
 
 class OpenAIError(Exception):

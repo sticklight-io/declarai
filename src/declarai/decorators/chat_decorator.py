@@ -1,8 +1,8 @@
 import logging
 from declarai.python_llm import ParsedFunction, FunctionLLMTranslator
-from declarai.templates import StructuredOutputChatPrompt
+from declarai.operators.templates import StructuredOutputChatPrompt
 from declarai.tasks.llm_chat import LLMChat
-from declarai.templates.chat_template import CHAT_TEMPLATE
+from declarai.operators.templates import CHAT_TEMPLATE
 
 logger = logging.getLogger("LLMChatDecorator")
 
@@ -31,10 +31,14 @@ class LLMChatDecorator:
         send_function = getattr(cls, "send", None)
         if send_function:
             send_parsed_function = ParsedFunction(send_function)
-            llm_translator = FunctionLLMTranslator(send_parsed_function, StructuredOutputChatPrompt)
+            llm_translator = FunctionLLMTranslator(
+                send_parsed_function, StructuredOutputChatPrompt
+            )
         else:
             logger.debug("No send function found. Using default LLMTranslator")
-            llm_translator = FunctionLLMTranslator(parsed_function, StructuredOutputChatPrompt)
+            llm_translator = FunctionLLMTranslator(
+                parsed_function, StructuredOutputChatPrompt
+            )
 
         greeting_prompt = getattr(cls, "greeting", None)
 
