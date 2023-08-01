@@ -11,5 +11,3 @@ class Message:
 
     def __eq__(self, other):
         return self.message == other.message and self.role == other.role
-
-print(Message("hello", "system"))

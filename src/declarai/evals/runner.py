@@ -45,7 +45,8 @@ def evaluate_single_task_scenario(
                     output_tokens,
                     str(res),
                 )
-            except:
+            except Exception as e:
+                print(f"Error: {e}")
                 table.add_row(
                     declarai.llm_config.provider,
                     declarai.llm_config.model,
@@ -54,7 +55,7 @@ def evaluate_single_task_scenario(
                     "error",
                     "error",
                     "error",
-                    "error",
+                    repr(e),
                 )
 
 
@@ -95,7 +96,8 @@ def evaluate_sequence_task_scenario(
                     output_tokens,
                     str(res),
                 )
-            except:
+            except Exception as e:
+                print(f"Error: {e}")
                 table.add_row(
                     declarai.llm_config.provider,
                     declarai.llm_config.model,
@@ -104,5 +106,5 @@ def evaluate_sequence_task_scenario(
                     "error",
                     "error",
                     "error",
-                    "error",
+                    repr(e),
                 )

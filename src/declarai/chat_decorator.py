@@ -40,7 +40,6 @@ class LLMChatDecorator:
         system_prompt = parsed_function.docstring_freeform
 
         def llm_chat_factory(*args, **kwargs):
-
             system = kwargs.pop("system", system_prompt)
             greeting = kwargs.pop("greeting", greeting_prompt)
 
@@ -51,13 +50,14 @@ class LLMChatDecorator:
                     "output_instructions": llm_translator.compile_output_prompt(),
                 },
                 prompt_kwargs={
-                    "structured": llm_translator.has_any_return_defs,
+                    "structured": llm_translator.has_structured_return_type,
                     "return_name": llm_translator.return_name,
                 },
                 llm=self.declarai_instance.llm,
                 middlewares=self.middlewares,
                 greeting=greeting,
-                *args, **kwargs
+                *args,
+                **kwargs,
             )
             llm_chat.__name__ = cls.__name__
             llm_chat.parsed_function = parsed_function

@@ -19,6 +19,7 @@ from declarai.llm import LLM
 from declarai.llm.base_llm import LLMResponse
 from declarai.llm.settings import PromptSettings
 from declarai.middlewares.base import TaskMiddleware
+from .chat.message import Message
 
 from ..python_llm.traslators.compilers.output_prompt import STRUCTURED_SYSTEM_PROMPT
 from .future_task import FutureLLMTask
@@ -49,9 +50,25 @@ class LLMTask:
         self.result: Any = None
         self.call_kwargs: Dict[str, Any] = {}
 
+    def _predict(self, prompt, system_prompt: Optional[str] = None) -> LLMResponse:
+        messages = []
+        if system_prompt:
+            messages.append(Message(
+                message=system_prompt,
+                role="system",
+            ))
+        messages.append(Message(
+            message=prompt,
+            role="user",
+        ))
+        return self.llm.predict(messages)
+
     def _exec_unstructured(self, prompt: str) -> Optional[Any]:
         logger.debug(prompt)
-        llm_result = self.llm.predict(prompt)
+        if self.prompt_config.return_schema:
+            llm_result = self._predict(prompt, self.prompt_config.return_schema)
+        else:
+            llm_result = self._predict(prompt)
         if self.prompt_config.return_type:
             try:
                 return parse_raw_as(self.prompt_config.return_type, llm_result.response)
@@ -64,8 +81,8 @@ class LLMTask:
         Parses the generated data and returns the result.
         """
         logger.debug(prompt)
-        self.llm_response = self.llm.predict(
-            prompt, system_prompt=STRUCTURED_SYSTEM_PROMPT
+        self.llm_response = self._predict(
+            prompt, system_prompt=self.prompt_config.return_schema
         )
         raw_result = self.llm_response.response
         try:
@@ -78,12 +95,10 @@ class LLMTask:
                     serialized.update(serialized_json_value)
                 return serialized
             else:
-                parsed_result = parse_raw_as(dict, raw_result)["declarai_result"]
-                if (
-                    isinstance(parsed_result, dict)
-                    and self.prompt_config.return_name != "declarai_result"
-                ):
-                    parsed_result = parsed_result[self.prompt_config.return_name]
+                parsed_result = parse_raw_as(dict, raw_result)
+                root_key = self.prompt_config.return_name or "declarai_result"
+                parsed_result = parsed_result[root_key]
+
                 return parse_obj_as(self.prompt_config.return_type, parsed_result)
 
         except json.JSONDecodeError:

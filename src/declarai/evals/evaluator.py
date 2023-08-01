@@ -6,6 +6,8 @@ from declarai.evals.extraction import (
     multi_value_extraction_kwargs,
     multi_value_multi_type_extraction,
     multi_value_multi_type_extraction_kwargs,
+    single_value_multi_type_extraction_kwargs,
+    single_value_multi_type_extraction,
     single_value_extraction,
     single_value_extraction_kwargs,
 )
@@ -75,6 +77,13 @@ if __name__ == "__main__":
         openai_models,
         table,
     )
+    evaluate_single_task_scenario(
+        "single_value_multi_type_extraction",
+        single_value_multi_type_extraction,
+        single_value_multi_type_extraction_kwargs,
+        openai_models,
+        table,
+    )
 
     console.print("[green]Running Generation scenarios...")
     evaluate_single_task_scenario(
@@ -106,14 +115,15 @@ if __name__ == "__main__":
         table,
     )
 
-    console.print("[green]Running Logical scenarios...")
-    evaluate_sequence_task_scenario(
-        "chain_of_thought",
-        chain_of_thought,
-        chain_of_thought_kwargs,
-        openai_models,
-        table,
-    )
+    # TODO: Chain of thought is hard...
+    # console.print("[green]Running Logical scenarios...")
+    # evaluate_sequence_task_scenario(
+    #     "chain_of_thought",
+    #     chain_of_thought,
+    #     chain_of_thought_kwargs,
+    #     openai_models,
+    #     table,
+    # )
 
     console.print("[green]Running Manipulation scenarios...")
     evaluate_single_task_scenario(

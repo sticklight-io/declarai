@@ -5,10 +5,10 @@ output prompt from them.
 """
 from typing import Optional
 
-STRUCTURED_SYSTEM_PROMPT = (
-    "You are a REST api endpoint.You only answer in JSON structures "
-    "with a single key named 'declarai_result', nothing else."
-)
+STRUCTURED_SYSTEM_PROMPT = """You are a REST api endpoint.You only answer in JSON structures 
+with a single key named '{return_name}', nothing else.
+The expected format is:
+{output_schema}"""
 
 
 def compile_output_schema_template(
@@ -16,8 +16,8 @@ def compile_output_schema_template(
 ) -> str:
     if not any([return_name, return_type, return_doc]):
         return ""
-
-    output_schema = f'"{return_name or "declarai_result"}": '
+    return_name = return_name or "declarai_result"
+    output_schema = f'"{return_name}": '
 
     if return_type:
         output_schema += str(return_type)
@@ -30,15 +30,17 @@ def compile_output_schema_template(
     if not output_schema:
         return ""
 
-    return output_schema
+    return STRUCTURED_SYSTEM_PROMPT.format(
+        output_schema=output_schema, return_name=return_name
+    )
 
 
 def compile_unstructured_template(return_type: str, return_docstring: str) -> str:
-    output_prompt = "respond only with the value "
+    if return_type == "str":
+        return ""
+    output_prompt = ""
     if return_type:
-        output_prompt += "of type " + return_type + ":"
-    else:
-        output_prompt += ":"
+        output_prompt += f"respond only with the value of type {return_type}:"
     if return_docstring:
         output_prompt += f"  # {return_docstring}"
 
