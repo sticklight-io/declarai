@@ -46,7 +46,7 @@ class WandDBMonitorCreator:
                 end_time_ms = int(time() / 1000)  # logged in milliseconds
                 root_span = Trace(
                     name=task.__name__,
-                    kind="llm",
+                    kind="llms",
                     status_code=status,
                     status_message=status_message,
                     metadata={

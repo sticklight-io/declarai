@@ -1,6 +1,6 @@
 from typing import List
 
-from declarai.python_llm.parsers.function_parser import ParsedFunction, SignatureReturn
+from declarai.python_parsers.function_parser import PythonParser, SignatureReturn
 
 
 def test_output_prompt():
@@ -12,7 +12,7 @@ def test_output_prompt():
         :return: This returns a list of strings
         """
 
-    parsed_func = ParsedFunction(my_func)
+    parsed_func = PythonParser(my_func)
     assert parsed_func.name == "my_func"
     assert parsed_func.signature_kwargs == {"a_param": str, "b_param": int}
     return_signature = SignatureReturn(

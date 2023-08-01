@@ -19,6 +19,9 @@ class LLMResponse:
 
 
 class BaseLLM:
+    provider: str
+    model: str
+
     @abstractmethod
     def predict(self, *args, **kwargs) -> LLMResponse:
         raise NotImplementedError()

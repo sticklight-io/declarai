@@ -1,25 +1,28 @@
-import os
 from typing import List
 
-from declarai.operators.base import Operator
-from declarai.operators.llm import OpenAILLM
-from declarai.operators.output_prompt import compile_output_prompt
-from declarai.operators.templates import InstructFunctionTemplate, StructuredOutputInstructionPrompt
-from declarai.orchestrator.orchestrator import INPUT_LINE_TEMPLATE, NEW_LINE_INPUT_LINE_TEMPLATE, INPUTS_TEMPLATE, \
-    logger, CompiledTemplate
+from declarai.operators.base_operator import BaseOperator, CompiledTemplate
+from declarai.operators.llms import OpenAILLM
+from declarai.operators.constructors.output_prompt import compile_output_prompt
+from declarai.operators.templates import (
+    InstructFunctionTemplate,
+    StructuredOutputInstructionPrompt,
+)
+from declarai.orchestrator.orchestrator import (
+    INPUT_LINE_TEMPLATE,
+    NEW_LINE_INPUT_LINE_TEMPLATE,
+    INPUTS_TEMPLATE,
+    logger,
+)
 from declarai.python_parsers.function_parser import PythonParser
-from declarai.tasks.chat.message import Message
+from declarai.operators.openai_operators.message import Message
 
 
-class OpenAIOperator(Operator):
+class OpenAIOperator(BaseOperator):
     llm: OpenAILLM
     compiled_template: List[Message]
 
     def __init__(self, parsed: PythonParser):
         super().__init__(parsed)
-        self.llm = OpenAILLM(
-            openai_token=os.getenv("DECLARAI_OPENAI_API_KEY"), model="gpt-3.5-turbo"
-        )
 
     def _compile_input_placeholder(self) -> str:
         """
@@ -76,10 +79,13 @@ class OpenAIOperator(Operator):
 
         messages = []
         if output_schema:
-            system_prompt = structured_template.format(
-                output_schema=output_schema,
-                return_name=self.parsed.return_name,
-            )
+            if self.parsed.has_structured_return_type:
+                system_prompt = structured_template.format(
+                    output_schema=output_schema,
+                    return_name=self.parsed.return_name,
+                )
+            else:
+                system_prompt = output_schema
             messages.append(Message(message=system_prompt, role="system"))
 
         populated_instruction = instruction_template.format(

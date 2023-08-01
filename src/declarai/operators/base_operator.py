@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, TypeVar
 
-from declarai.operators.llm import LLM
-from declarai.orchestrator.orchestrator import CompiledTemplate
+from declarai.operators.llms import LLM
 from declarai.python_parsers.function_parser import PythonParser
 
 
-class Operator(ABC):
+CompiledTemplate = TypeVar("CompiledTemplate")
+
+
+class BaseOperator(ABC):
     llm: LLM
     llm_params: Optional[Dict[str, Any]] = {}
 

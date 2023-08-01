@@ -1,6 +1,6 @@
 import pytest
 
-from declarai.python_llm.parsers.docstring_parsers.reST.parser import (
+from declarai.python_parsers.docstring_parsers.reST.parser import (
     ReSTDocstringParser,
 )
 

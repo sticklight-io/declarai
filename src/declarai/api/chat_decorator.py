@@ -1,5 +1,5 @@
 import logging
-from declarai.python_llm import ParsedFunction, FunctionLLMTranslator
+from declarai.python_parsers import ParsedFunction, FunctionLLMTranslator
 from declarai.operators.templates import StructuredOutputChatPrompt
 from declarai.tasks.llm_chat import LLMChat
 from declarai.operators.templates import CHAT_TEMPLATE

@@ -1,9 +1,7 @@
 import pytest
 
-from declarai.operators.traslators.compilers import (
-    compile_output_prompt,
-    compile_output_schema_template,
-)
+from declarai.operators.openai_operators.openai_operator import compile_output_prompt
+from declarai.operators.constructors.output_prompt import compile_output_schema_template
 from declarai.operators.templates import StructuredOutputInstructionPrompt
 
 

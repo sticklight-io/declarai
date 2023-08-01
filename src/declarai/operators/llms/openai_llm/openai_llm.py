@@ -4,7 +4,7 @@ import openai
 
 from ..base_llm import BaseLLM, LLMResponse
 from .settings import OPENAI_API_KEY, OPENAI_MODEL
-from declarai.tasks.chat.message import Message
+from declarai.operators.openai_operators.message import Message
 
 
 class OpenAIError(Exception):
@@ -12,6 +12,8 @@ class OpenAIError(Exception):
 
 
 class OpenAILLM(BaseLLM):
+    provider = "openai"
+
     def __init__(self, openai_token: str = None, model: str = None, **kwargs):
         self.openai = openai
         self.openai.api_key = openai_token or OPENAI_API_KEY

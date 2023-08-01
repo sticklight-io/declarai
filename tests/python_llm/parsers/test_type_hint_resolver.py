@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 import pytest
 from pydantic import BaseModel
 
-from declarai.python_llm.parsers.type_hint_resolver import type_annotation_to_str_schema
+from declarai.python_parsers.type_hint_resolver import type_annotation_to_str_schema
 
 
 class MockSimpleModel(BaseModel):

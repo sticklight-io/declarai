@@ -1,7 +1,7 @@
 from typing import Dict
 from unittest.mock import MagicMock
 
-from declarai.tasks.future_task import FutureLLMTask
+from declarai.orchestrator.future_llm_task import FutureLLMTask
 from declarai.tasks.llm_task import LLMTask
 
 TEST_TASK_TEMPLATE = "{input} | {output}"

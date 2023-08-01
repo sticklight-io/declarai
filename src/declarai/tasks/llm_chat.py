@@ -6,11 +6,11 @@ from typing import Dict, Optional, Any, List, Union
 
 from pydantic.tools import parse_raw_as, parse_obj_as
 
-from declarai.operators.llm import LLM
-from declarai.operators.llm import LLMResponse
-from declarai.operators.llm import PromptSettings
+from declarai.operators.llms import LLM
 from declarai.middlewares.base import TaskMiddleware
-from declarai.tasks.chat.message import Message
+from declarai.operators.llms.base_llm import LLMResponse
+from declarai.operators.llms.settings import PromptSettings
+from declarai.operators.openai_operators.message import Message
 
 logger = logging.getLogger("LLMChat")
 
