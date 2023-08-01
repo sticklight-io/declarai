@@ -8,8 +8,7 @@ from typing import Callable, Dict, Optional, TypeVar
 from ..magic_parser import Magic, extract_magic_args
 from ..types import DocstringFreeform, DocstringParams, DocstringReturn
 from .docstring_parsers.reST import ReSTDocstringParser
-from .type_hint_resolver import resolve_type_hints
-
+from .type_hint_resolver import type_annotation_to_str_schema
 
 T = TypeVar("T")
 
@@ -21,7 +20,7 @@ class SignatureReturn:
         str_schema: Optional[str] = None,
         type_: Optional[T] = None,
     ):
-        self.name = str(name) if name else name
+        self.name = name
         self.str_schema = str_schema
         self.type_ = type_
 
@@ -77,10 +76,10 @@ class ParsedFunction:
         return_annotation = self._signature.return_annotation
         if return_annotation == inspect._empty:
             return SignatureReturn()
-        _return_type = resolve_type_hints(self._signature.return_annotation)
+        string_schema = type_annotation_to_str_schema(self._signature.return_annotation)
         return SignatureReturn(
-            name=self._signature.return_annotation,
-            str_schema=_return_type,
+            name=str(self._signature.return_annotation),
+            str_schema=string_schema,
             type_=self._signature.return_annotation,
         )
 

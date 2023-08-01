@@ -6,14 +6,9 @@ output prompt from them.
 from typing import Optional
 
 STRUCTURED_SYSTEM_PROMPT = (
-    "You are a REST api endpoint. " "You only answer in JSON structures, nothing else."
+    "You are a REST api endpoint.You only answer in JSON structures "
+    "with a single key named 'declarai_result', nothing else."
 )
-
-FORMAT_INSTRUCTIONS = (
-    "The output should be a markdown code snippet formatted in the following schema, "
-    "including the leading and trailing '```json' and '```':\n"
-)
-JSON_SNIPPET_TEMPLATE = "```json\n{{{{\n    {format}\n}}}}\n```"
 
 
 def compile_output_schema_template(
@@ -67,8 +62,3 @@ def compile_output_prompt(
         return compile_unstructured_template(str_schema, return_type, return_docstring)
 
     return compile_output_schema_template(str_schema, return_type, return_docstring)
-    # # return output_prompt
-    # instructions = FORMAT_INSTRUCTIONS + JSON_SNIPPET_TEMPLATE.format(
-    #     format=output_prompt
-    # )
-    # return instructions

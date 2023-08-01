@@ -13,13 +13,15 @@ import re
 from json import JSONDecodeError
 from typing import Any, Dict, List, Optional
 
-from declarai.llm import LLM
-from declarai.llm.settings import PromptSettings
+from pydantic.tools import parse_obj_as, parse_raw_as
 
+from declarai.llm import LLM
 from declarai.llm.base_llm import LLMResponse
+from declarai.llm.settings import PromptSettings
 from declarai.middlewares.base import TaskMiddleware
+
+from ..python_llm.traslators.compilers.output_prompt import STRUCTURED_SYSTEM_PROMPT
 from .future_task import FutureLLMTask
-from pydantic.tools import parse_raw_as, parse_obj_as
 
 logger = logging.getLogger("BaseFunction")
 
@@ -63,7 +65,7 @@ class LLMTask:
         """
         logger.debug(prompt)
         self.llm_response = self.llm.predict(
-            prompt, system_prompt="You are a REST api endpoint.You only answer in JSON structures with a sindle key named 'declarai_result', nothing else."
+            prompt, system_prompt=STRUCTURED_SYSTEM_PROMPT
         )
         raw_result = self.llm_response.response
         try:
@@ -76,8 +78,11 @@ class LLMTask:
                     serialized.update(serialized_json_value)
                 return serialized
             else:
-                parsed_result = parse_raw_as(dict, raw_result)['declarai_result']
-                if isinstance(parsed_result, dict) and self.prompt_config.return_name != 'declarai_result':
+                parsed_result = parse_raw_as(dict, raw_result)["declarai_result"]
+                if (
+                    isinstance(parsed_result, dict)
+                    and self.prompt_config.return_name != "declarai_result"
+                ):
                     parsed_result = parsed_result[self.prompt_config.return_name]
                 return parse_obj_as(self.prompt_config.return_type, parsed_result)
 

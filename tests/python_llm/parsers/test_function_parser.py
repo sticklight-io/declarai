@@ -17,7 +17,7 @@ def test_output_prompt():
     assert parsed_func.signature_kwargs == {"a_param": str, "b_param": int}
     return_signature = SignatureReturn(
         name="typing.List[str]",
-        str_schema="List[str]",
+        str_schema="List[string]",
         type_=List[str],
     )
     assert parsed_func.signature_return.name == return_signature.name

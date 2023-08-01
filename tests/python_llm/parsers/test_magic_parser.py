@@ -1,8 +1,7 @@
 import inspect
 from unittest.mock import MagicMock
 
-from declarai.python_llm.magic_parser import extract_magic_args, Magic
-
+from declarai.python_llm.magic_parser import Magic, extract_magic_args
 
 magic = MagicMock()
 
