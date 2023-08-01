@@ -19,6 +19,7 @@ class PromptSettings:
         self.multi_results = multi_results
         self.return_name = return_name
         self.return_type = return_type
+        self.return_schema = return_schema
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.top_p = top_p

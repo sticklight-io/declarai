@@ -48,6 +48,7 @@ class FunctionLLMTranslator:
                 self.parsed_func.signature_return,
             ]
         )
+        # return False
 
     @property
     def has_structured_return_type(self) -> bool:
@@ -55,15 +56,18 @@ class FunctionLLMTranslator:
         Except for the following types, a dedicated output parsing
         behavior is required to return the expected return type of the task.
         """
-        return (
-            self.parsed_func.signature_return.name
-            and self.parsed_func.signature_return.name
-            not in (
-                "str",
-                "int",
-                "float",
-                "bool",
-            )
+        return any(
+            [
+                self.parsed_func.docstring_return[0],
+                self.parsed_func.signature_return.name
+                not in (
+                    None,
+                    "<class 'str'>",
+                    "<class 'int'>",
+                    "<class 'float'>",
+                    "<class 'bool'>",
+                ),
+            ]
         )
 
     def compile_input_prompt(self) -> str:

@@ -5,9 +5,9 @@ from declarai import Declarai
 
 def multi_value_extraction(text: str) -> List[str]:
     """
-    Extract the phone number from the provided text
+    Extract the phone numbers from the provided text
     :param text: content to extract phone number from
-    :return: The phone numbers that are used in the email
+    :return: The phone numbers that where identified in the input text
     """
     return Declarai.magic(text=text)
 

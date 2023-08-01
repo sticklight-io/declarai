@@ -1,5 +1,6 @@
 from typing import Any, Dict, Optional, overload
 
+from .chat_decorator import LLMChatDecorator
 from .llm import LLMSettings, ModelsOpenai, ProviderOpenai, resolve_llm_from_config
 from .task_decorator import LLMTaskDecorator
 
@@ -32,6 +33,7 @@ class Declarai:
         self.llm_config = LLMSettings(**kwargs)
         self.llm = resolve_llm_from_config(self.llm_config, **kwargs)
         self.task = LLMTaskDecorator(self)
+        self.chat = LLMChatDecorator(self)
 
     @staticmethod
     def magic(

@@ -20,7 +20,7 @@ class LLMResponse:
 
 class BaseLLM:
     @abstractmethod
-    def predict(self, prompt, *args, **kwargs) -> LLMResponse:
+    def predict(self, *args, **kwargs) -> LLMResponse:
         raise NotImplementedError()
 
 

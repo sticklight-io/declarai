@@ -6,6 +6,12 @@ nav:
   - Simple task: src/beginners-guide/simple-task.md
   - Controlling task behavior: src/beginners-guide/controlling-task-behavior.md
   - Debugging tasks: src/beginners-guide/debugging-tasks.md
+  - Chat task:
+    - src/beginners-guide/chat/index.md
+    - Chat memory: src/beginners-guide/chat/chat-memory.md
+    - Controlling chat behaviour: src/beginners-guide/chat/controlling-chat-behavior.md
+    - Debugging chat: src/beginners-guide/chat/debugging-chat.md
+    - Initializing chat: src/beginners-guide/chat/initialization.md
   - Recap: src/beginners-guide/recap.md
 - Advanced:
   - src/advanced/index.md
