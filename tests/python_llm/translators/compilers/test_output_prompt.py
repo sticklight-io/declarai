@@ -41,4 +41,7 @@ def test_compile_output_prompt():
     formatted_output = (
         '"return_name": Dict[str, str]  # The returned value from this function'
     )
-    assert compiled_output_prompt == formatted_output
+    replacement_prompt = STRUCTURED_SYSTEM_PROMPT.format(
+        return_name=return_name or "declarai_result", output_schema=""
+    )
+    assert compiled_output_prompt.replace(replacement_prompt, "") == formatted_output
