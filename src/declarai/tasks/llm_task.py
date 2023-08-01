@@ -21,7 +21,6 @@ from declarai.llm.settings import PromptSettings
 from declarai.middlewares.base import TaskMiddleware
 from .chat.message import Message
 
-from ..python_llm.traslators.compilers.output_prompt import STRUCTURED_SYSTEM_PROMPT
 from .future_task import FutureLLMTask
 
 logger = logging.getLogger("BaseFunction")

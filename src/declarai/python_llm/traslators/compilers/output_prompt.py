@@ -5,14 +5,9 @@ output prompt from them.
 """
 from typing import Optional
 
-STRUCTURED_SYSTEM_PROMPT = """You are a REST api endpoint.You only answer in JSON structures 
-with a single key named '{return_name}', nothing else.
-The expected format is:
-{output_schema}"""
-
 
 def compile_output_schema_template(
-    return_name: str, return_type: str, return_doc: str
+    return_name: str, return_type: str, return_doc: str, structured_template: str
 ) -> str:
     if not any([return_name, return_type, return_doc]):
         return ""
@@ -30,7 +25,7 @@ def compile_output_schema_template(
     if not output_schema:
         return ""
 
-    return STRUCTURED_SYSTEM_PROMPT.format(
+    return structured_template.format(
         output_schema=output_schema, return_name=return_name
     )
 
@@ -53,10 +48,11 @@ def compile_output_prompt(
     return_docstring: str,
     return_magic: str = None,
     structured: Optional[bool] = True,
+    structured_template: Optional[str] = None,
 ) -> str:
     str_schema = str_schema or return_magic
 
     if not structured:
         return compile_unstructured_template(return_type, return_docstring)
 
-    return compile_output_schema_template(str_schema, return_type, return_docstring)
+    return compile_output_schema_template(str_schema, return_type, return_docstring, structured_template)

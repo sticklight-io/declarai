@@ -2,7 +2,7 @@ import logging
 from typing import Any
 
 from declarai.python_llm.parsers.function_parser import ParsedFunction
-from declarai.templates import APIJsonRoleInstructionTemplate, InstructFunctionTemplate
+from declarai.templates import InstructFunctionTemplate
 
 from .compilers.output_prompt import compile_output_prompt
 
@@ -21,8 +21,9 @@ class FunctionLLMTranslator:
     to later create the LLM prompt.
     """
 
-    def __init__(self, parsed_function: ParsedFunction):
+    def __init__(self, parsed_function: ParsedFunction, structured_template: str):
         self.parsed_func = parsed_function
+        self.structured_template = structured_template
 
     @property
     def template(self):
@@ -131,6 +132,7 @@ class FunctionLLMTranslator:
             return_docstring=return_doc,
             return_magic=self.parsed_func.magic.return_name,
             structured=self.has_structured_return_type,
+            structured_template=self.structured_template,
         )
 
     @property
