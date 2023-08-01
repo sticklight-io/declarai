@@ -2,7 +2,10 @@ import copy
 import json
 import logging
 import re
+from json import JSONDecodeError
 from typing import Dict, Optional, Any, List, Union
+
+from pydantic.tools import parse_raw_as, parse_obj_as
 
 from declarai.llm import LLM
 from declarai.llm.base_llm import LLMResponse
@@ -71,15 +74,21 @@ class LLMChat:
     def format_message(prompt: str, role: str) -> Message:
         return Message(prompt, role)
 
-    def _exec_unstructured(self, messages) -> Optional[str]:
+    def _exec_unstructured(self, messages: List[Message]) -> Optional[Any]:
         self.llm_response = self.llm.predict(messages=messages)
         raw_result = self.llm_response.response
+        if self.prompt_config.return_type:
+            try:
+                return parse_raw_as(self.prompt_config.return_type, raw_result)
+            except JSONDecodeError:
+                return parse_obj_as(self.prompt_config.return_type, raw_result)
         return raw_result
 
-    def _exec_structured(self, messages) -> Any:
+    def _exec_structured(self, messages: List[Message]) -> Any:
         """
         Parses the generated data and returns the result.
         """
+        logger.debug(messages)
         self.llm_response = self.llm.predict(messages=messages)
         raw_result = self.llm_response.response
         try:
@@ -92,14 +101,11 @@ class LLMChat:
                     serialized.update(serialized_json_value)
                 return serialized
             else:
-                json_values = re.findall(r"{.*}", raw_result, re.DOTALL)
-                serialized = {}
-                for json_value in json_values:
-                    serialized_json_value = json.loads(json_value)
-                    serialized.update(serialized_json_value)
-                if self.prompt_config.return_name in serialized:
-                    return serialized[self.prompt_config.return_name]
-                return serialized
+                parsed_result = parse_raw_as(dict, raw_result)
+                root_key = self.prompt_config.return_name or "declarai_result"
+                parsed_result = parsed_result[root_key]
+
+                return parse_obj_as(self.prompt_config.return_type, parsed_result)
 
         except json.JSONDecodeError:
             logger.warning(

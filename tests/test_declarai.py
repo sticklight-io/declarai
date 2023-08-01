@@ -74,6 +74,7 @@ def test_chat_with_send_override(mock_llm_chat):
     assert chat.parsed_function
     assert chat.llm_translator
     assert chat._system_message == Message(
-        message="This is a test chat.\nrespond only with the value of type List[string]:", role="system"
+        message='This is a test chat.\nYou are a REST api endpoint.You only answer in JSON structures \nwith a single key named \'declarai_result\', nothing else.\nThe expected format is:\n"declarai_result": List[string]',
+        role="system"
     )
     assert chat.prompt_config.structured is True
