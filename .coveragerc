@@ -3,10 +3,10 @@
 [run]
 omit =
     src/declarai/llm/**
-    src/declarai/evals/**
      **/test_*
 
      # TODO: This is currently in experimental and not properly covered with tests yet
+     src/declarai/evals/**
      src/declarai/middlewares/**
      src/declarai/sequence.py
 

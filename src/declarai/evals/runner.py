@@ -28,7 +28,9 @@ def evaluate_single_task_scenario(
 
                 try:
                     input_tokens = str(initialized_scenario.llm_response.prompt_tokens)
-                    output_tokens = str(initialized_scenario.llm_response.completion_tokens)
+                    output_tokens = str(
+                        initialized_scenario.llm_response.completion_tokens
+                    )
                 except:
                     input_tokens = "error"
                     output_tokens = "error"
@@ -76,7 +78,9 @@ def evaluate_sequence_task_scenario(
 
                 try:
                     input_tokens = str(initialized_scenario.llm_response.prompt_tokens)
-                    output_tokens = str(initialized_scenario.llm_response.completion_tokens)
+                    output_tokens = str(
+                        initialized_scenario.llm_response.completion_tokens
+                    )
                 except:
                     input_tokens = "error"
                     output_tokens = "error"
