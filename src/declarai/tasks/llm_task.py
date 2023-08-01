@@ -50,10 +50,12 @@ class LLMTask:
     def _exec_unstructured(self, prompt: str) -> Optional[Any]:
         logger.debug(prompt)
         llm_result = self.llm.predict(prompt)
-        try:
-            return parse_raw_as(self.prompt_config.return_type, llm_result.response)
-        except JSONDecodeError:
-            return parse_obj_as(self.prompt_config.return_type, llm_result.response)
+        if self.prompt_config.return_type:
+            try:
+                return parse_raw_as(self.prompt_config.return_type, llm_result.response)
+            except JSONDecodeError:
+                return parse_obj_as(self.prompt_config.return_type, llm_result.response)
+        return llm_result.response
 
     def _exec_structured(self, prompt) -> Any:
         """
@@ -75,15 +77,9 @@ class LLMTask:
                 return serialized
             else:
                 parsed_result = parse_raw_as(dict, raw_result)['declarai_result']
+                if isinstance(parsed_result, dict) and self.prompt_config.return_name != 'declarai_result':
+                    parsed_result = parsed_result[self.prompt_config.return_name]
                 return parse_obj_as(self.prompt_config.return_type, parsed_result)
-                # json_values = re.findall(r"{.*}", raw_result, re.DOTALL)
-                # serialized = {}
-                # for json_value in json_values:
-                #     serialized_json_value = json.loads(json_value)
-                #     serialized.update(serialized_json_value)
-                # if self.prompt_config.return_name in serialized:
-                #     return serialized[self.prompt_config.return_name]
-                # return serialized
 
         except json.JSONDecodeError:
             logger.warning(

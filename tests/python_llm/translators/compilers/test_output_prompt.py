@@ -37,9 +37,6 @@ def test_compile_output_prompt():
     )
     only_json_result = compiled_output_prompt.replace(FORMAT_INSTRUCTIONS, "")
     formatted_output = (
-        "```json\n"
-        "{{\n"
-        '    "return_name": Dict[str, str]  # The returned value from this function\n'
-        "}}\n```"
+        '"return_name": Dict[str, str]  # The returned value from this function'
     )
     assert only_json_result == formatted_output

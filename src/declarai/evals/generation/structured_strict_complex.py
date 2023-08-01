@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -7,7 +7,7 @@ from declarai import Declarai
 
 class TimeFrame(BaseModel):
     start: int
-    end: int
+    end: Optional[int]
 
 
 class BusinessTrait(BaseModel):

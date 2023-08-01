@@ -1,3 +1,4 @@
+from typing import Dict
 from unittest.mock import MagicMock
 
 from declarai.tasks.future_task import FutureLLMTask
@@ -23,6 +24,7 @@ def test_llm_task():
         template=TEST_TASK_TEMPLATE,
         template_kwargs=TEMPLATE_KWARGS,
         llm=test_llm,
+        prompt_kwargs={"return_type": str},
     )
 
     compiled_task_template = "input-value: {input_val} | output-value: {output_val}"
@@ -39,13 +41,18 @@ def test_llm_task():
 def test_llm_task_result_name_override():
     test_llm = MagicMock()
     test_llm.predict.return_value = MagicMock()
-    test_llm.predict.return_value.response = '{"result": "output-value"}'
+    test_llm.predict.return_value.response = (
+        '{"declarai_result": {"result": "output-value"}}'
+    )
 
     llm_task = LLMTask(
         template=TEST_TASK_TEMPLATE,
         template_kwargs=TEMPLATE_KWARGS,
         llm=test_llm,
-        prompt_kwargs={"return_name": "result"},
+        prompt_kwargs={
+            "return_name": "result",
+            "return_type": str,
+        },
     )
     compiled_task_template = "input-value: {input_val} | output-value: {output_val}"
     compiled_task_with_values = "input-value: input-value | output-value: output-value"
@@ -100,6 +107,7 @@ def test_future_llm_task():
         template=TEST_TASK_TEMPLATE,
         template_kwargs=TEMPLATE_KWARGS,
         llm=test_llm,
+        prompt_kwargs={"return_type": str},
     )
     compiled_task_with_values = "input-value: input-value | output-value: output-value"
     future_task = llm_task.plan(**TASK_KWARGS)

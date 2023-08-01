@@ -21,7 +21,7 @@ class SignatureReturn:
         str_schema: Optional[str] = None,
         type_: Optional[T] = None,
     ):
-        self.name = name
+        self.name = str(name) if name else name
         self.str_schema = str_schema
         self.type_ = type_
 
