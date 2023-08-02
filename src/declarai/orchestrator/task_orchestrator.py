@@ -17,6 +17,7 @@ import logging
 from typing import Any, Type
 
 from declarai.operators.base.types.operator import BaseOperator
+from declarai.orchestrator.future_llm_task import FutureLLMTask
 from declarai.python_parser.parser import PythonParser
 
 INPUTS_TEMPLATE = "Inputs:\n{inputs}\n"
@@ -43,23 +44,19 @@ class LLMTaskOrchestrator:
     def compile(self, **kwargs):
         return self.operator.compile(**kwargs)
 
-    def plan(self, **kwargs):
-        return self.operator.compile(**kwargs)
+    def plan(self, **kwargs) -> FutureLLMTask:
+        """
+        Populates the compiled template with the actual data.
+        :param kwargs: the data to populate the template with
+        """
 
-    # TODO: Implement furute task
-    # def plan(self, **kwargs) -> FutureLLMTask:
-    #     """
-    #     Populates the compiled template with the actual data.
-    #     :param kwargs: the data to populate the template with
-    #     """
-    #     populated_prompt = self._plan(**kwargs)
-    #     return FutureLLMTask(
-    #         self._exec,
-    #         kwargs=kwargs,
-    #         compiled_template=self.compile(),
-    #         populated_prompt=populated_prompt,
-    #     )
-    #
+        populated_prompt = self.compile(**kwargs)
+        return FutureLLMTask(
+            self.__call__,
+            kwargs=kwargs,
+            compiled_template=self.compile(),
+            populated_prompt=populated_prompt,
+        )
 
     # TODO: Handle middlewares
     # def _exec(self, populated_prompt: str) -> Any:

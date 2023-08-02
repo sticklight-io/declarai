@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import List, Optional, Type
 
 from declarai.operators.base.types import Message
@@ -28,8 +29,9 @@ class OpenAIOperator(BaseOperator):
         openai_token: Optional[str] = None,
         model: Optional[str] = None,
     ) -> Type["OpenAIOperator"]:
-        cls.llm = OpenAILLM(openai_token, model)
-        return cls
+        new_operator = deepcopy(cls)
+        new_operator.llm = OpenAILLM(openai_token, model)
+        return new_operator
 
     def __init__(
         self,
