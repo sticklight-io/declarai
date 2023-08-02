@@ -13,20 +13,13 @@ the different LLM API providers as well as custom models have different APIs wit
 structures. For that reason, there are multiple implementations of operators, depending on the required use case.
 """
 
-import logging
-from typing import Any, Type, List, Dict, Callable
+from typing import Any, List, Dict, Callable
 
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators.base.types.llm import LLMResponse
 from declarai.operators.base.types.operator import BaseOperator
 from declarai.orchestrator.future_llm_task import FutureLLMTask
 from declarai.python_parser.parser import PythonParser
-
-INPUTS_TEMPLATE = "Inputs:\n{inputs}\n"
-INPUT_LINE_TEMPLATE = "{param}: {{{param}}}"
-NEW_LINE_INPUT_LINE_TEMPLATE = "\n{param}: {{{param}}}"
-
-logger = logging.getLogger("FunctionLLMTranslator")
 
 
 class LLMTaskOrchestrator:
@@ -40,13 +33,14 @@ class LLMTaskOrchestrator:
 
     def __init__(
         self,
-        code: Any,
+        decorated: Any,
         operator: Callable[[Any], BaseOperator],
-        middlewares: List[TaskMiddleware] = None
+        middlewares: List[TaskMiddleware] = None,
+        **kwargs
     ):
-        self.parsed = PythonParser(code)
-        self.operator = operator(parsed=self.parsed)
+        self.parsed = PythonParser(decorated)
         self.middlewares = middlewares
+        self.operator = operator(parsed=self.parsed, **kwargs)
 
     def compile(self, **kwargs) -> Any:
         return self.operator.compile(**kwargs)

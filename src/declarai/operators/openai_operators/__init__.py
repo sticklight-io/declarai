@@ -1,1 +1,1 @@
-from .operator import OpenAIOperator
+from .task_operator import OpenAITaskOperator

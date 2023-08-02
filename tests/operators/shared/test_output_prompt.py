@@ -1,6 +1,6 @@
 import pytest
 
-from declarai.operators.openai_operators.operator import compile_output_prompt
+from declarai.operators.openai_operators.task_operator import compile_output_prompt
 from declarai.operators.shared.output_prompt import compile_output_schema_template
 from declarai.operators.shared.templates import StructuredOutputInstructionPrompt
 

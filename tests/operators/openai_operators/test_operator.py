@@ -1,9 +1,9 @@
-from declarai.operators import OpenAIOperator
+from declarai.operators import OpenAITaskOperator
 from declarai.python_parser.parser import PythonParser
 
 
 def test_openai_operator():
-    openai_operator_class = OpenAIOperator.new_operator(
+    openai_operator_class = OpenAITaskOperator.new_operator(
         openai_token="test-token",
         model="test-model",
     )

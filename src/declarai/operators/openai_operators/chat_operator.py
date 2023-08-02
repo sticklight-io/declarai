@@ -1,4 +1,4 @@
-from copy import deepcopy
+import logging
 from functools import partial
 from typing import List, Optional, Type
 
@@ -6,19 +6,14 @@ from declarai.operators.base.types import Message, MessageRole
 from declarai.operators.base.types.operator import BaseOperator, CompiledTemplate
 from declarai.operators.shared.output_prompt import compile_output_prompt
 from declarai.operators.shared.templates import (
-    InstructFunctionTemplate,
-    StructuredOutputInstructionPrompt, StructuredOutputChatPrompt,
-)
-from declarai.orchestrator.task_orchestrator import (
-    INPUT_LINE_TEMPLATE,
-    INPUTS_TEMPLATE,
-    NEW_LINE_INPUT_LINE_TEMPLATE,
-    logger,
+    StructuredOutputChatPrompt,
 )
 from declarai.python_parser.parser import PythonParser
 
 from .openai_llm import OpenAILLM
 from ..base.types.llm import LLMResponse
+
+logger = logging.getLogger("OpenAIChatOperator")
 
 
 class OpenAIChatOperator(BaseOperator):
@@ -78,8 +73,7 @@ class OpenAIChatOperator(BaseOperator):
             compiled_system_prompt = f"{self.system}/n{output_schema}"
         else:
             compiled_system_prompt = self.system
-        return [Message(message=compiled_system_prompt, role=MessageRole.system)] + messages
-
-    def predict(self, messages: List[Message], **kwargs) -> LLMResponse:
-        return self.llm.predict(messages=messages, **self.llm_params)
-
+        messages = [
+            Message(message=compiled_system_prompt, role=MessageRole.system)
+        ] + messages
+        return {"messages": messages}

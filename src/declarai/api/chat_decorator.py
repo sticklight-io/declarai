@@ -14,7 +14,7 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
     def return_orchestrator(self, decorated_cls):
         def llm_chat_factory(cls, **kwargs):
             llm_chat = LLMChatOrchestrator(
-                decorated_cls=decorated_cls,
+                decorated=decorated_cls,
                 operator=self.operator,
                 **kwargs,
             )

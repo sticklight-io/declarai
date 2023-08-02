@@ -1,25 +1,27 @@
+import logging
 from functools import partial
 from typing import List, Optional, Type, Callable
 
-from declarai.operators.base.types import Message
+from declarai.operators.base.types import Message, MessageRole
 from declarai.operators.base.types.operator import BaseOperator, CompiledTemplate
 from declarai.operators.shared.output_prompt import compile_output_prompt
 from declarai.operators.shared.templates import (
     InstructFunctionTemplate,
     StructuredOutputInstructionPrompt,
 )
-from declarai.orchestrator.task_orchestrator import (
-    INPUT_LINE_TEMPLATE,
-    INPUTS_TEMPLATE,
-    NEW_LINE_INPUT_LINE_TEMPLATE,
-    logger,
-)
 from declarai.python_parser.parser import PythonParser
 
 from .openai_llm import OpenAILLM
+from ..base.types.llm import LLMResponse
+
+logger = logging.getLogger("OpenAITaskOperator")
+
+INPUTS_TEMPLATE = "Inputs:\n{inputs}\n"
+INPUT_LINE_TEMPLATE = "{param}: {{{param}}}"
+NEW_LINE_INPUT_LINE_TEMPLATE = "\n{param}: {{{param}}}"
 
 
-class OpenAIOperator(BaseOperator):
+class OpenAITaskOperator(BaseOperator):
     llm: OpenAILLM
     compiled_template: List[Message]
     set_llm: Callable
@@ -29,7 +31,7 @@ class OpenAIOperator(BaseOperator):
         cls,
         openai_token: Optional[str] = None,
         model: Optional[str] = None,
-    ) -> Type["OpenAIOperator"]:
+    ) -> Type["OpenAITaskOperator"]:
         openai_llm = OpenAILLM(openai_token, model)
         partial_class = partial(cls, openai_llm)
         return partial_class
@@ -92,13 +94,13 @@ class OpenAIOperator(BaseOperator):
 
         messages = []
         if output_schema:
-            messages.append(Message(message=output_schema, role="system"))
+            messages.append(Message(message=output_schema, role=MessageRole.system))
 
         populated_instruction = instruction_template.format(
             input_instructions=self.parsed.docstring_freeform,
             input_placeholder=self._compile_input_placeholder(),
         )
-        messages.append(Message(message=populated_instruction, role="user"))
+        messages.append(Message(message=populated_instruction, role=MessageRole.user))
         return messages
 
     def compile(self, **kwargs) -> CompiledTemplate:
