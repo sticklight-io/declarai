@@ -13,7 +13,7 @@ def test_resolve_openai_operator_with_token():
     kwargs = {"openai_token": "test_token"}
     llm_settings = LLMSettings(provider="openai", model="davinci")
     operator = resolve_operator(llm_settings, **kwargs)
-    assert operator == OpenAIOperator
+    assert operator.func == OpenAIOperator
 
 
 @patch(
@@ -23,7 +23,7 @@ def test_resolve_openai_operator_with_token():
 def test_resolve_openai_operator_without_token():
     llm_settings = LLMSettings(provider="openai", model="davinci")
     operator = resolve_operator(llm_settings)
-    assert operator == OpenAIOperator
+    assert operator.func == OpenAIOperator
 
 
 def test_resolve_openai_operator_no_token_raises_error():

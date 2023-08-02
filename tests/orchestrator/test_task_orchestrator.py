@@ -9,7 +9,10 @@ def test_task_orchestrator():
     operator.return_value = instantiated_operator
 
     instantiated_operator.compile.return_value = "compiled_result"
-    instantiated_operator.predict.return_value = "predicted_result"
+    instantiated_operator.predict.return_value = MagicMock()
+    llm_response = MagicMock()
+    llm_response.response = "predicted_result"
+    instantiated_operator.predict.return_value = llm_response
 
     def test_task() -> str:
         pass
