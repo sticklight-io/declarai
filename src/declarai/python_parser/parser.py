@@ -60,7 +60,7 @@ class PythonParser:
     def signature_kwargs(self) -> Dict[ArgName, ArgType]:
         return {
             param.name: param.annotation
-            for param in dict(self._signature.parameters).values()
+            for param in dict(self._signature.parameters).values() if param.name != "self"
         }
 
     @property
