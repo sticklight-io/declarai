@@ -5,7 +5,6 @@ from typing import Optional, List
 from declarai.middlewares.types import TaskMiddleware
 from declarai.operators import resolve_operator
 from declarai.orchestrator.chat_orchestrator import LLMChatOrchestrator
-from declarai.python_parser.parser import PythonParser
 
 logger = logging.getLogger("LLMChatDecorator")
 
@@ -19,7 +18,9 @@ class LLMChatDecorator:
     ):
         self.declarai_instance = declarai_instance
 
-        operator = resolve_operator(self.declarai_instance.llm_config, operator_type="chat", **kwargs)
+        operator = resolve_operator(
+            self.declarai_instance.llm_config, operator_type="chat", **kwargs
+        )
         self.operator = operator
         self.middlewares = middlewares or []
 
