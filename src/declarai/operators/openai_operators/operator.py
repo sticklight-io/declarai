@@ -17,7 +17,6 @@ from declarai.orchestrator.task_orchestrator import (
 from declarai.python_parser.parser import PythonParser
 
 from .openai_llm import OpenAILLM
-from ..base.types.llm import LLMResponse
 
 
 class OpenAIOperator(BaseOperator):
@@ -106,5 +105,5 @@ class OpenAIOperator(BaseOperator):
         template = self.compile_template()
         if kwargs:
             template[-1].message = template[-1].message.format(**kwargs)
-            return template
-        return template
+            return {"messages": template}
+        return {"messages": template}

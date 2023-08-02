@@ -14,8 +14,9 @@ structures. For that reason, there are multiple implementations of operators, de
 """
 
 import logging
-from typing import Any, Type
+from typing import Any, Type, List, Dict
 
+from declarai.middlewares.types import TaskMiddleware
 from declarai.operators.base.types.llm import LLMResponse
 from declarai.operators.base.types.operator import BaseOperator
 from declarai.orchestrator.future_llm_task import FutureLLMTask
@@ -33,16 +34,21 @@ class LLMTaskOrchestrator:
 
     parser: PythonParser
     operator: BaseOperator
-
-    # TODO: Implement fields
-    # middlewares
+    middlewares: List[TaskMiddleware]
     llm_response: LLMResponse
+    _kwargs: Dict[str, Any]
 
-    def __init__(self, code: Any, operator: Type[BaseOperator]):
+    def __init__(
+        self,
+        code: Any,
+        operator: Type[BaseOperator],
+        middlewares: List[TaskMiddleware] = None
+    ):
         self.parsed = PythonParser(code)
-        self.operator = operator(self.parsed)
+        self.operator = operator(parsed=self.parsed)
+        self.middlewares = middlewares
 
-    def compile(self, **kwargs):
+    def compile(self, **kwargs) -> Any:
         return self.operator.compile(**kwargs)
 
     def plan(self, **kwargs) -> FutureLLMTask:
@@ -59,18 +65,19 @@ class LLMTaskOrchestrator:
             populated_prompt=populated_prompt,
         )
 
-    # TODO: Handle middlewares
-    # def _exec(self, populated_prompt: str) -> Any:
-    #     if self.middlewares:
-    #         for middleware in self.middlewares:
-    #             exec_with_middlewares = middleware(self, populated_prompt)
-    #         return exec_with_middlewares()
-    #     return self._exec_task(populated_prompt)
-
-    def __call__(self, **kwargs) -> Any:
+    def _exec(self, kwargs) -> Any:
         self.llm_response = self.operator.predict(**kwargs)
         return self.parsed.parse(self.llm_response.response)
 
-        # self.call_kwargs = kwargs
-        # populated_prompt = self._plan(**kwargs)
-        # return self._exec(populated_prompt)
+    def _exec_middlewares(self, kwargs) -> Any:
+        if self.middlewares:
+            exec_with_middlewares = None
+            for middleware in self.middlewares:
+                exec_with_middlewares = middleware(self, self._kwargs)
+            if exec_with_middlewares:
+                return exec_with_middlewares()
+        return self._exec(kwargs)
+
+    def __call__(self, **kwargs) -> Any:
+        self._kwargs = kwargs
+        return self._exec_middlewares(kwargs)

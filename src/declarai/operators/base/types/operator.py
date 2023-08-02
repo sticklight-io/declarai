@@ -26,4 +26,4 @@ class BaseOperator(ABC):
         ...
 
     def predict(self, **kwargs) -> LLMResponse:
-        return self.llm.predict(self.compile(**kwargs), **self.llm_params)
+        return self.llm.predict(**self.compile(**kwargs), **self.llm_params)

@@ -18,7 +18,6 @@ class LLMTaskDecorator:
         self.operator = operator
         self.middlewares = middlewares or []
 
-    # TODO: Handle middlewares
     def __call__(
         self,
         func=None,
@@ -34,6 +33,8 @@ class LLMTaskDecorator:
             return self._task(func)
 
     def _task(self, func):
-        llm_task = LLMTaskOrchestrator(func, self.operator)
+        llm_task = LLMTaskOrchestrator(
+            func, self.operator, middlewares=self.middlewares
+        )
         llm_task.__name__ = func.__name__
         return llm_task
