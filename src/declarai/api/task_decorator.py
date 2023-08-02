@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List, Optional
 
 from declarai.middlewares.types import TaskMiddleware
 from declarai.operators import resolve_operator

@@ -2,8 +2,8 @@ from typing import List
 
 import openai
 
-from declarai.operators.base.types.llm import BaseLLM, LLMResponse
 from declarai.operators.base.types import Message
+from declarai.operators.base.types.llm import BaseLLM, LLMResponse
 
 from .settings import OPENAI_API_KEY, OPENAI_MODEL
 

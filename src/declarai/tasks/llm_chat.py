@@ -7,8 +7,8 @@ from typing import Any, Dict, List, Optional, Union
 from pydantic.tools import parse_obj_as, parse_raw_as
 
 from declarai.middlewares.types import TaskMiddleware
-from declarai.operators.base.types.llm import LLM, LLMResponse
 from declarai.operators.base.types import Message, PromptSettings
+from declarai.operators.base.types.llm import LLM, LLMResponse
 
 logger = logging.getLogger("LLMChat")
 

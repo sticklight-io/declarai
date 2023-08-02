@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional, TypeVar
 
-from declarai.python_parser.parser import PythonParser
-
 from declarai.operators.base.types.llm import LLM
+from declarai.python_parser.parser import PythonParser
 
 CompiledTemplate = TypeVar("CompiledTemplate")
 

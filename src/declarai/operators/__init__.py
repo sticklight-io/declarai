@@ -3,8 +3,8 @@ from typing import Type, Union
 from typing_extensions import Literal
 
 from declarai.operators.base.llm_settings import LLMSettings
-
 from declarai.operators.base.types.operator import BaseOperator
+
 from .openai_operators.operator import OpenAIOperator
 
 # Based on documentation from https://platform.openai.com/docs/models/overview
