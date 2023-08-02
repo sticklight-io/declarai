@@ -14,7 +14,7 @@ structures. For that reason, there are multiple implementations of operators, de
 """
 
 import logging
-from typing import Any, Type, List, Dict
+from typing import Any, Type, List, Dict, Callable
 
 from declarai.middlewares.types import TaskMiddleware
 from declarai.operators.base.types.llm import LLMResponse
@@ -41,7 +41,7 @@ class LLMTaskOrchestrator:
     def __init__(
         self,
         code: Any,
-        operator: Type[BaseOperator],
+        operator: Callable[[Any], BaseOperator],
         middlewares: List[TaskMiddleware] = None
     ):
         self.parsed = PythonParser(code)

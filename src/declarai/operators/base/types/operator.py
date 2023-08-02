@@ -11,7 +11,7 @@ class BaseOperator(ABC):
     llm: LLM
     llm_params: Optional[Dict[str, Any]] = {}
 
-    def __init__(self, llm: LLM, parsed: PythonParser):
+    def __init__(self, llm: LLM, parsed: PythonParser, **kwargs):
         self.llm = llm
         self.parsed = parsed
         self.llm_response = None

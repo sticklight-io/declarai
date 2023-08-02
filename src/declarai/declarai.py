@@ -1,4 +1,5 @@
 # from declarai.api.chat_decorator import LLMChatDecorator
+from declarai.api.chat_decorator import LLMChatDecorator
 from declarai.api.magic import magic
 from declarai.api.task_decorator import LLMTaskDecorator
 from declarai.operators import LLMSettings
@@ -37,7 +38,6 @@ class Declarai:
         self.task = LLMTaskDecorator(self)
 
         class Experimental:
-            # chat = LLMChatDecorator(self)
-            pass
+            chat = LLMChatDecorator(self)
 
-        self.Experimental = Experimental()
+        self.Experimental = Experimental

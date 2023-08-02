@@ -4,6 +4,7 @@ from typing_extensions import Literal
 
 from declarai.operators.base.llm_settings import LLMSettings
 from declarai.operators.base.types.operator import BaseOperator
+from .openai_operators.chat_operator import OpenAIChatOperator
 
 from .openai_operators.operator import OpenAIOperator
 
@@ -17,15 +18,24 @@ ModelsOpenai = Literal[
     "code-davinci-002",
 ]
 
-
 AllModels = Union[ModelsOpenai]
 
 
-def resolve_operator(llm_config: LLMSettings, **kwargs) -> Type[BaseOperator]:
+def resolve_operator(
+    llm_config: LLMSettings,
+    operator_type: Literal["chat", "task"] = "task",
+    **kwargs) -> Type[
+    BaseOperator]:
     if llm_config.provider == "openai":
         open_ai_token = kwargs.get("openai_token")
         model = llm_config.model
+        if operator_type == "task":
+            operator = OpenAIOperator
+        elif operator_type == "chat":
+            operator = OpenAIChatOperator
+        else:
+            raise NotImplementedError(f"Operator type : {operator_type} not implemented")
         if open_ai_token:
-            return OpenAIOperator.new_operator(openai_token=open_ai_token, model=model)
-        return OpenAIOperator.new_operator(model=model)
+            return operator.new_operator(openai_token=open_ai_token, model=model)
+        return operator.new_operator(model=model)
     raise NotImplementedError()

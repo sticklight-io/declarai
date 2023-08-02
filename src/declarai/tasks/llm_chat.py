@@ -41,7 +41,6 @@ class LLMChat:
 
         self.llm_response: Optional[LLMResponse] = None
         self.last_compiled_messages: Optional[List[Message]] = None
-        self.result: Any = None
         self.call_kwargs: Dict[str, Any] = {}
 
     def __new__(cls, *args, **kwargs):
