@@ -2,29 +2,28 @@ import json
 import logging
 import re
 from json import JSONDecodeError
-from typing import Dict, Optional, Any, List, Union
+from typing import Any, Dict, List, Optional, Union
 
-from pydantic.tools import parse_raw_as, parse_obj_as
+from pydantic.tools import parse_obj_as, parse_raw_as
 
-from declarai.operators.llms import LLM
-from declarai.middlewares.base import TaskMiddleware
-from declarai.operators.llms.base_llm import LLMResponse
-from declarai.operators.llms.settings import PromptSettings
-from declarai.operators.openai_operators.message import Message
+from declarai.middlewares.types import TaskMiddleware
+from declarai.operators.base.types.llm import LLM, LLMResponse
+from declarai.operators.base.types import Message, PromptSettings
 
 logger = logging.getLogger("LLMChat")
 
 
 class LLMChat:
-    def __init__(self,
-                 template: str,
-                 template_kwargs: Dict[str, str],
-                 llm: LLM,
-                 prompt_kwargs: Optional[Dict[str, Any]] = None,
-                 middlewares: Optional[List[TaskMiddleware]] = None,
-                 greeting: Optional[str] = None,
-                 system: Optional[str] = None,
-                 ):
+    def __init__(
+        self,
+        template: str,
+        template_kwargs: Dict[str, str],
+        llm: LLM,
+        prompt_kwargs: Optional[Dict[str, Any]] = None,
+        middlewares: Optional[List[TaskMiddleware]] = None,
+        greeting: Optional[str] = None,
+        system: Optional[str] = None,
+    ):
         self.llm = llm
         self.template = template
         self.template_args = template_kwargs
@@ -36,7 +35,9 @@ class LLMChat:
         self.middlewares = middlewares or []
         self.__system_message: Optional[Message] = None
         self.__messages: List[Message] = []
-        self._greeting_message = self.format_message(greeting, "assistant") if greeting else None
+        self._greeting_message = (
+            self.format_message(greeting, "assistant") if greeting else None
+        )
 
         self.llm_response: Optional[LLMResponse] = None
         self.last_compiled_messages: Optional[List[Message]] = None
@@ -55,8 +56,9 @@ class LLMChat:
     @property
     def _system_message(self) -> Message:
         if not self.__system_message:
-            self.__system_message = Message(self.template.format(**self.template_args),
-                                            "system")
+            self.__system_message = Message(
+                self.template.format(**self.template_args), "system"
+            )
         return self.__system_message
 
     @property
@@ -124,8 +126,13 @@ class LLMChat:
 
         return messages
 
-    def compile(self, return_prompt: bool = False, message: Optional[str] = None, role: Optional[str] = "user",
-                **kwargs) -> Union[str, List[Message]]:
+    def compile(
+        self,
+        return_prompt: bool = False,
+        message: Optional[str] = None,
+        role: Optional[str] = "user",
+        **kwargs,
+    ) -> Union[str, List[Message]]:
         """
         Generates the initial template to be used for later predictions.
         Optionally passing kwargs will also inject the data into the compiled template.

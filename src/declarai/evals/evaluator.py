@@ -6,10 +6,10 @@ from declarai.evals.extraction import (
     multi_value_extraction_kwargs,
     multi_value_multi_type_extraction,
     multi_value_multi_type_extraction_kwargs,
-    single_value_multi_type_extraction_kwargs,
-    single_value_multi_type_extraction,
     single_value_extraction,
     single_value_extraction_kwargs,
+    single_value_multi_type_extraction,
+    single_value_multi_type_extraction_kwargs,
 )
 from declarai.evals.generation import (
     structured_open_ended,

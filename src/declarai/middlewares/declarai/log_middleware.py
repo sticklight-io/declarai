@@ -1,7 +1,7 @@
 import logging
 from time import time
 
-from declarai.middlewares.base import TaskMiddleware
+from declarai.middlewares.types import TaskMiddleware
 from declarai.tasks.types import LLMTaskType
 
 logger = logging.getLogger("PromptLogger")

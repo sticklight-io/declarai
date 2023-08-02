@@ -1,8 +1,9 @@
 import logging
-from declarai.python_parsers import ParsedFunction, FunctionLLMTranslator
-from declarai.operators.templates import StructuredOutputChatPrompt
+
+from declarai.operators.shared.templates import StructuredOutputChatPrompt
+from declarai.python_parser.parser import PythonParser
 from declarai.tasks.llm_chat import LLMChat
-from declarai.operators.templates import CHAT_TEMPLATE
+from tests.tasks.test_llm_chat import CHAT_TEMPLATE
 
 logger = logging.getLogger("LLMChatDecorator")
 
@@ -27,10 +28,10 @@ class LLMChatDecorator:
             return self._chat(func)
 
     def _chat(self, cls):
-        parsed_function = ParsedFunction(cls)
+        parsed_function = PythonParser(cls)
         send_function = getattr(cls, "send", None)
         if send_function:
-            send_parsed_function = ParsedFunction(send_function)
+            send_parsed_function = PythonParser(send_function)
             llm_translator = FunctionLLMTranslator(
                 send_parsed_function, StructuredOutputChatPrompt
             )

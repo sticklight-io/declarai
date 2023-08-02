@@ -4,6 +4,8 @@
 omit =
     src/declarai/llm/**
      **/test_*
+     **/types.py
+     **/types/*.py
 
      # TODO: This is currently in experimental and not properly covered with tests yet
      src/declarai/evals/**

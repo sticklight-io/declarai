@@ -14,10 +14,11 @@ Usage:
     >>> reducer.compile()
 """
 
-from typing_extensions import Literal
 from typing import Optional, Set, Tuple
 
-from declarai.operators import templates
+from typing_extensions import Literal
+
+from declarai.operators.shared import templates
 from declarai.orchestrator.future_llm_task import FutureLLMTask
 
 ReduceStrategies = Literal["ChainOfThought"]

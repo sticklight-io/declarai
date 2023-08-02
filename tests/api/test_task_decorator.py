@@ -1,0 +1,49 @@
+from unittest.mock import MagicMock, patch
+
+from declarai.api.magic import magic
+from declarai.api.task_decorator import LLMTaskDecorator
+
+
+@patch("declarai.orchestrator.task_orchestrator.PythonParser")
+@patch("declarai.api.task_decorator.resolve_operator")
+def test_task_decorator(mocked_resolve_operator, mocked_python_parser):
+    declarai_instance = MagicMock()
+    mocked_resolve_operator.return_value = MagicMock()
+    mock_operator_instance = (
+        mocked_resolve_operator.return_value.return_value
+    ) = MagicMock()
+    middleware = MagicMock()
+    middlewares = [middleware]
+
+    mocked_python_parser.return_value = MagicMock()
+
+    task_decorator = LLMTaskDecorator(
+        declarai_instance=declarai_instance, middlewares=middlewares
+    )
+
+    @task_decorator
+    def test_task(a: str, b: int) -> str:
+        """
+        This is a test task
+        :param a: this is a string
+        :param b: this is an integer
+        :return: returns a string
+        """
+        return magic("return_name", a=a, b=b)
+
+    assert task_decorator.declarai_instance == declarai_instance
+    assert task_decorator.operator == mocked_resolve_operator.return_value
+    assert task_decorator.middlewares == middlewares
+
+    assert test_task.__name__ == "test_task"
+    assert test_task.parsed == mocked_python_parser.return_value
+    assert test_task.operator == mock_operator_instance
+
+    # assert test_task.middlewares =
+
+    # assert test_task.parsed_function
+    # assert test_task.parsed_function.magic.return_name == "return_name"
+    # assert test_task.llm_translator
+    #
+    # res = test_task(a="a", b=1)
+    # assert res == mock_llm_task.return_value.return_value
