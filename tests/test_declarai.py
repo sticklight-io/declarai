@@ -17,4 +17,4 @@ def test_declarai(mocked_llm_settings, mocked_task_decorator, _):
     assert declarai.task == mocked_task_decorator.return_value
 
     # Test experimental apis
-    assert declarai.Experimental
+    assert declarai.experimental

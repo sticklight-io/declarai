@@ -49,6 +49,9 @@ def type_annotation_to_str_schema(type_) -> Optional[str]:
 
     if isinstance(type_, typing._GenericAlias):
         root_name = type_._name
+        if not root_name:
+            if type_.__origin__ == typing.Union:
+                root_name = "Union"
         properties = []
         for sub_type in type_.__args__:
             resolved_schema = resolve_to_json_schema(sub_type)

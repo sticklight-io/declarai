@@ -40,4 +40,4 @@ class Declarai:
         class Experimental:
             chat = LLMChatDecorator(self)
 
-        self.Experimental = Experimental
+        self.experimental = Experimental

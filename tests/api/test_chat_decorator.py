@@ -13,7 +13,7 @@ def test_chat(mock_chat_operator, _):
 
     declarai = Declarai(provider="test", model="test")
 
-    @declarai.Experimental.chat
+    @declarai.experimental.chat
     class TestChat:
         """
         This is a test chat.
