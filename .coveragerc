@@ -2,7 +2,7 @@
 
 [run]
 omit =
-    src/declarai/llm/**
+    src/declarai/operators/shared/templates/**
      **/test_*
      **/types.py
      **/types/*.py
