@@ -1,38 +1,13 @@
-from typing import List, Optional
-
-from declarai.middlewares.types import TaskMiddleware
+from declarai.api.base_decorator import LLMOrchestratorDecorator
 from declarai.operators import resolve_operator
 from declarai.orchestrator.task_orchestrator import LLMTaskOrchestrator
 
 
-class LLMTaskDecorator:
-    def __init__(
-        self,
-        declarai_instance,
-        middlewares: Optional[List[TaskMiddleware]] = None,
-        **kwargs,
-    ):
-        self.declarai_instance = declarai_instance
+class LLMTaskDecorator(LLMOrchestratorDecorator):
+    def get_operator(self, **kwargs):
+        return resolve_operator(self.declarai_instance.llm_config, **kwargs)
 
-        operator = resolve_operator(self.declarai_instance.llm_config, **kwargs)
-        self.operator = operator
-        self.middlewares = middlewares or []
-
-    def __call__(
-        self,
-        func=None,
-        *,
-        middlewares: str = None,
-    ):
-        # When arguments are passed
-        if func is None:
-            self.middlewares = middlewares
-            return self
-        else:
-            # When no arguments are passed
-            return self._task(func)
-
-    def _task(self, func):
+    def return_orchestrator(self, func):
         llm_task = LLMTaskOrchestrator(
             func, self.operator, middlewares=self.middlewares
         )
