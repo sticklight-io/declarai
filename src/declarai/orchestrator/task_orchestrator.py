@@ -16,6 +16,7 @@ structures. For that reason, there are multiple implementations of operators, de
 import logging
 from typing import Any, Type
 
+from declarai.operators.base.types.llm import LLMResponse
 from declarai.operators.base.types.operator import BaseOperator
 from declarai.orchestrator.future_llm_task import FutureLLMTask
 from declarai.python_parser.parser import PythonParser
@@ -35,7 +36,7 @@ class LLMTaskOrchestrator:
 
     # TODO: Implement fields
     # middlewares
-    # llm_response
+    llm_response: LLMResponse
 
     def __init__(self, code: Any, operator: Type[BaseOperator]):
         self.parsed = PythonParser(code)
@@ -67,8 +68,8 @@ class LLMTaskOrchestrator:
     #     return self._exec_task(populated_prompt)
 
     def __call__(self, **kwargs) -> Any:
-        response = self.operator.predict(**kwargs)
-        return self.parsed.parse(response)
+        self.llm_response = self.operator.predict(**kwargs)
+        return self.parsed.parse(self.llm_response.response)
 
         # self.call_kwargs = kwargs
         # populated_prompt = self._plan(**kwargs)

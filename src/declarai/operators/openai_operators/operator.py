@@ -17,6 +17,7 @@ from declarai.orchestrator.task_orchestrator import (
 from declarai.python_parser.parser import PythonParser
 
 from .openai_llm import OpenAILLM
+from ..base.types.llm import LLMResponse
 
 
 class OpenAIOperator(BaseOperator):
@@ -92,14 +93,7 @@ class OpenAIOperator(BaseOperator):
 
         messages = []
         if output_schema:
-            if self.parsed.has_structured_return_type:
-                system_prompt = structured_template.format(
-                    output_schema=output_schema,
-                    return_name=self.parsed.return_name,
-                )
-            else:
-                system_prompt = output_schema
-            messages.append(Message(message=system_prompt, role="system"))
+            messages.append(Message(message=output_schema, role="system"))
 
         populated_instruction = instruction_template.format(
             input_instructions=self.parsed.docstring_freeform,
@@ -114,7 +108,3 @@ class OpenAIOperator(BaseOperator):
             template[-1].message = template[-1].message.format(**kwargs)
             return template
         return template
-
-    def predict(self, **kwargs) -> str:
-        llm_response = self.llm.predict(self.compile(**kwargs), **self.llm_params)
-        return llm_response.response

@@ -135,7 +135,10 @@ class PythonParser:
         else:
             parsed_result = raw_result
 
-        return parse_obj_as(self.signature_return_type, parsed_result)
+        if self.signature_return_type:
+            return parse_obj_as(self.signature_return_type, parsed_result)
+        else:
+            return parsed_result
 
     # TODO: Multiple results:
     # if self.prompt_config.multi_results:

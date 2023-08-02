@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional, TypeVar
 
-from declarai.operators.base.types.llm import LLM
+from declarai.operators.base.types.llm import LLM, LLMResponse
 from declarai.python_parser.parser import PythonParser
 
 CompiledTemplate = TypeVar("CompiledTemplate")
@@ -14,6 +14,7 @@ class BaseOperator(ABC):
     def __init__(self, llm: LLM, parsed: PythonParser):
         self.llm = llm
         self.parsed = parsed
+        self.llm_response = None
 
     # TODO: ???
     @property
@@ -24,6 +25,5 @@ class BaseOperator(ABC):
     def compile(self, **kwargs) -> CompiledTemplate:
         ...
 
-    def predict(self, **kwargs) -> str:
-        llm_response = self.llm.predict(**self.compile(**kwargs), **self.llm_params)
-        return llm_response.response
+    def predict(self, **kwargs) -> LLMResponse:
+        return self.llm.predict(self.compile(**kwargs), **self.llm_params)
