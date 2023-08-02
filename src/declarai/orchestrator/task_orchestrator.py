@@ -16,7 +16,7 @@ structures. For that reason, there are multiple implementations of operators, de
 import logging
 from typing import Any, Type, List, Dict, Callable
 
-from declarai.middlewares.types import TaskMiddleware
+from declarai.middlewares.base import TaskMiddleware
 from declarai.operators.base.types.llm import LLMResponse
 from declarai.operators.base.types.operator import BaseOperator
 from declarai.orchestrator.future_llm_task import FutureLLMTask

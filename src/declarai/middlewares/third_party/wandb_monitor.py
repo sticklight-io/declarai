@@ -1,7 +1,7 @@
 import importlib
 from time import time
 
-from declarai.middlewares.types import TaskMiddleware
+from declarai.middlewares.base import TaskMiddleware
 
 
 class WandDBMonitorCreator:

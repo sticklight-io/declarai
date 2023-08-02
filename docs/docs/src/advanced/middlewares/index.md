@@ -17,7 +17,7 @@ Lets take for exmample this simple implementation of a logging middleware:
 import logging
 from time import time
 
-from declarai.middlewares.types import TaskMiddleware
+from declarai.middlewares.base import TaskMiddleware
 from declarai.tasks.types import LLMTaskType
 
 logger = logging.getLogger("LLMLogger")

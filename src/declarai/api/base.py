@@ -1,6 +1,6 @@
 from typing import List, Optional, Any
 
-from declarai.middlewares.types import TaskMiddleware
+from declarai.middlewares.base import TaskMiddleware
 from declarai.operators import resolve_operator
 from declarai.orchestrator.task_orchestrator import LLMTaskOrchestrator
 

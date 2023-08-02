@@ -1,6 +1,6 @@
 from functools import partial
 
-from declarai.api.base_decorator import LLMOrchestratorDecorator
+from declarai.api.base import LLMOrchestratorDecorator
 from declarai.operators import resolve_operator
 from declarai.orchestrator.chat_orchestrator import LLMChatOrchestrator
 
