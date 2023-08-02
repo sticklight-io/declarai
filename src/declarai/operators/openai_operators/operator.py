@@ -1,5 +1,5 @@
-from copy import deepcopy
-from typing import List, Optional, Type
+from functools import partial
+from typing import List, Optional, Type, Callable
 
 from declarai.operators.base.types import Message
 from declarai.operators.base.types.operator import BaseOperator, CompiledTemplate
@@ -22,6 +22,7 @@ from .openai_llm import OpenAILLM
 class OpenAIOperator(BaseOperator):
     llm: OpenAILLM
     compiled_template: List[Message]
+    set_llm: Callable
 
     @classmethod
     def new_operator(
@@ -29,15 +30,12 @@ class OpenAIOperator(BaseOperator):
         openai_token: Optional[str] = None,
         model: Optional[str] = None,
     ) -> Type["OpenAIOperator"]:
-        new_operator = deepcopy(cls)
-        new_operator.llm = OpenAILLM(openai_token, model)
-        return new_operator
+        openai_llm = OpenAILLM(openai_token, model)
+        partial_class = partial(cls, openai_llm)
+        return partial_class
 
-    def __init__(
-        self,
-        parsed: PythonParser,
-    ):
-        super().__init__(parsed)
+    def __init__(self, llm: OpenAILLM, parsed: PythonParser):
+        super().__init__(llm, parsed)
 
     def _compile_input_placeholder(self) -> str:
         """
