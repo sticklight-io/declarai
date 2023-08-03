@@ -4,9 +4,10 @@ So it all seems pretty magical up to this point, but what if you want to see wha
 Being able to debug your tasks is a very important part of the development process, and **Declarai** makes it easy for you.
 
 ## Compiling tasks
-The first and simplest tool to better understand what's happening under the hood is the `compile` method.
+The first and simplest tool to better understand what's happening under the hood is the `compile` method.<br>
+Declarai has an `evals` module as well for advanced debugging and benchmarking which you can review later here: [evals](../../features/evals/)
 
-Let's take the last example from the previous section and add a call to the `compile` method:
+Let's take the last task from the previous section and add a call to the `compile` method:
 ```python
 @declarai.task
 def movie_recommender(user_input: str) -> Dict[str, str]:
@@ -48,7 +49,7 @@ it will be populated with the real values passed to our task.
      it is still possible that the model will not generate the desired output. For this reason it is important to be able to debug your tasks and understand what actually got sent to the model
 
 ## Compiling tasks with real values
-The `compile` method can also be used to view the prompt with the real values of the parameters.
+The `compile` method can also be used to view the prompt with the real values provided to the task.
 This is useful when prompts might behave differently for different inputs.
 
 ```python hl_lines="10"

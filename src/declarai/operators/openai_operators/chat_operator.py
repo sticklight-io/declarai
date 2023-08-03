@@ -59,7 +59,8 @@ class OpenAIChatOperator(BaseOperator):
             structured_template=template,
         )
 
-    def compile(self, messages: List[Message]) -> CompiledTemplate:
+    def compile(self, messages: List[Message], **kwargs) -> CompiledTemplate:
+        self.system = self.system.format(**kwargs)
         structured_template = StructuredOutputChatPrompt
         if self.parsed_func:
             output_schema = self._compile_output_prompt(structured_template)

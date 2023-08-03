@@ -40,9 +40,9 @@ declarai = Declarai(provider="openai", model="gpt-3.5-turbo", openai_token="<you
     </a>
 </div>
 
-## Advanced User Guide
+## Advanced
 
-If you feel this tutorial is too easy, feel free to jump to our [**Advanced**](../advanced/) section, which covers more complex 
+If you feel this tutorial is too easy, feel free to jump to our [**Features**](../features/) section, which covers more complex 
 topics like middlewares, running evaluations and building multi provider flows.
 
-We recommend you to read the tutorial first, and then the advanced guide if you want to learn more.
+We recommend you read the tutorial first, and then the advanced guide if you want to learn more.

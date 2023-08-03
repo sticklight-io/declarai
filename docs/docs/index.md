@@ -45,8 +45,7 @@ handles the rest.
 
 - **Pythonic Interface to LLM:** - Leverage your existing Python skills instead of spending unnecessary time creating complex prompts.
 
-- **Lightweight:** - Declarai is written almost solely in python 3.6 with optional SDKs, 
-  so there's no need to worry about dependencies.
+- **Lightweight:** - Declarai is written almost solely in python 3.6 using only pydantic and openai SDKs, so there's no need to worry about dependency spaghetti.
 
 - **Extendable:** - Declarai is designed to be easily extendable, the interface is simple and accessible by design so
   you can easily override or customize the behavior of the framework to your specific needs.
@@ -55,7 +54,7 @@ handles the rest.
   Declarai constructs detailed prompts that guide Large Language Models (LLMs) to generate the desired output type.
 
 - **Context-Informed Prompts via Docstrings:** - Implement function docstrings to supply contextual data to LLMs, 
-  augmenting their comprehension of the designated task and thereby boosting their performance.
+  augmenting their comprehension of the designated task, thereby boosting their performance.
 
 - **Automated Execution of LLM Tasks:** - Declarai takes care of the execution code, letting you concentrate on the core business logic.
 
@@ -64,11 +63,6 @@ Utilizing Declarai leads to improved code readability, maintainability, and pred
 ---
 
 ## Installation
-!!! info
-     
-     Following is the basic installatoin which comes with no integrations of dependencies except for openai sdk, 
-     for a full list of supported extnesions, please view the [integrations](/declarai/src/integrations/) page.
-
 <div class="termy">
 
 ```console
@@ -106,7 +100,7 @@ print(rank_by_severity(message="How was your weekend?"))
 ```
 
 1. The `@declarai.task` decorator marks the function as a Declarai prompt task.
-2. The type hints `List[str]` is used to parse the output of the llm into a list of strings.
+2. The type hints `List[str]` are used to parse the output of the llm into a list of strings.
 3. The docstring represents the task's description which is used to generate the prompt.
     - `description` - the context of the task
     - `:param` - The function's parameters and their description
@@ -120,7 +114,7 @@ Declarai will return a serialized object as defined by the type hints at runtime
 def extract_phone_number(email_content: str) -> List[str]:
     """
     Extract the phone numbers from the provided email_content
-    :param email_content: Text represents the email content 
+    :param email_content: Text that represents the email content 
     :return: The phone numbers that are used in the email
     """
 
@@ -143,7 +137,7 @@ print(datetime_parser(raw_date="Janury 1st 2020"))
 ```
 
 
-```python title="Pydantic model"
+```python title="Pydantic models"
 class Animal(BaseModel):
     name: str
     family: str
@@ -179,6 +173,10 @@ print(suggest_animals(location="jungle"))
 
 ### Chat interface
 Create chat interfaces with ease, simply by writing a class with docstrings
+
+!!! info  
+    Notice that `chat` is exposed under the `experimental` namespace, noting this interface is still work in progress.
+
 ```python
 @declarai.experimental.chat
 class CalculatorBot:
@@ -199,9 +197,7 @@ print(calc_bot.send(message="1 + 1"))
 ### Task Middlewares
 Easy to use middlewares provided out of the box as well as the ability to easily create your own.
 
-```py title="Simple Middleware"
-
-```python
+```py title="Logging Middleware"
 @declarai.task(middlewares=[LoggingMiddleware])
 def extract_info(text: str) -> Dict[str, str]:
     """

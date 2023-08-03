@@ -1,24 +1,18 @@
-## Add a greeting :material-human-greeting:
+## Greetings :material-human-greeting:
 
-Let's add a greeting to the chatbot. We will use the `greeting` attribute to do this.
-Greeting is usually used when you want to start a conversation with the chatbot first message.
+Greetings are used to start the conversation with a bot message instead of a user message.
+The `greeting` attribute defines this first message and is added to the conversation on initialization.
 
 ```py
-from declarai import Declarai
-
-declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
-
-@declarai.chat
+@declarai.experimental.chat
 class SQLBot:
     """
     You are a sql assistant. You help with SQL queries with one-line answers.
     """
     greeting = "Hello, I am a SQL assistant. How can I assist you today?"
-    
 ```
 
-Let's test it out.
-
+The greeting attribute is later available as a property of the chatbot instance to use when implementing your interface.
 ```py
 sql_bot = SQLBot()
 sql_bot.greeting
@@ -34,29 +28,27 @@ sql_bot.send("When should I use a LEFT JOIN?")
 
 sql_bot.conversation
 
-> [
+> [ # (1)!
     assistant: Hello, I am a SQL assistant. How can I assist you today?,
     user: When should I use a LEFT JOIN?,
     assistant: You should use a LEFT JOIN when you want to retrieve all records from the left table and matching records from the right table.
-] # (1)!
+] 
 ```
 
-1. So cool! The chatbot started the conversation with the greeting message.
-
-
-
+1. We can see here that the greeting, initiated by the assistant, is the first message in the conversation.
 
 ## Inject a message to the memory
 
-Declarai enables to inject a custom message to the chatbot memory by using the `add_message` method.
+Declarai enables injecting custom messages into the conversation history by using the `add_message` method.
 
-This is super useful when you want to add a custom message to the chatbot memory, without triggering the chatbot to generate a response.
+This is super useful when you want to intervene with the conversation flow without necessarily triggering another response from the model.
 
 Consider using it for:  
 
-* Injecting Prefilled context for the chatbot even if the user hasn't interacted yet.  
+* Creating a prefilled conversation even before the user's interaction.  
 * Modifying the chatbot memory after the chatbot has generated a response.  
-* Modifying the chatbot system guide.
+* Modifying the chatbot system prompt.
+* Guiding the conversation flow given certain criteria met in the user-bot interaction.
 
 ```py 
 sql_bot = SQLBot()
@@ -67,16 +59,15 @@ sql_bot.send("What is your favorite SQL operation?")
 > "I don't know."
 ``` 
 
-1. The chatbot memory now contains the injected message.
+1. The chatbot's conversation history now contains the injected message and reacts accordingly.
 
 
-## Pass parameters to messages
+## Dynamic system prompting
 In the following example, we will pass a parameter to the chatbot system prompt.
-
-
+This value will be populated at runtime and will allow us to easily create base chatbots with varying behaviors.
 
 ```py
-@declarai.chat
+@declarai.experimental.chat
 class JokeGenerator:
     """
     You are a joke generator. You generate jokes that a {character} would tell.
@@ -98,3 +89,8 @@ print(squidward_joke)
 > "Why did Squidward bring a ladder to work? Because he wanted to climb up the corporate "sour-cules"!"
 ```
 
+<div style="text-align: right">
+    <a href="../debugging-chat" class="md-button">
+        Next <i class="fas fa-arrow-right"></i>
+    </a>
+</div>
