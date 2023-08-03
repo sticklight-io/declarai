@@ -1,7 +1,6 @@
 # Introducing declareai
 [![versions](https://img.shields.io/pypi/pyversions/declarai.svg)](https://github.com/vendi-ai/declarai)
 [![license](https://img.shields.io/github/license/vendi-ai/declarai.svg)](https://github.com/vendi-ai/declarai/blob/main/LICENSE)
-![Coverage](https://raw.githubusercontent.com/{you}/{repo}/master/coverage_badge.svg?sanitize=true)
 
 ![Logo - declarai.png](assets/Logo-declarai.png)
 
