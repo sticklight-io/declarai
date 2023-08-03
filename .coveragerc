@@ -7,7 +7,7 @@ omit =
      **/types.py
      **/types/*.py
 
-     # TODO: This is currently in experimental and not properly covered with tests yet
+     # This is currently in experimental and not properly covered with tests yet
      src/declarai/evals/**
      src/declarai/middlewares/**
      src/declarai/orchestrator/sequence.py

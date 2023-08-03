@@ -52,7 +52,6 @@ if __name__ == "__main__":
     table.add_column("input_tokens", width=10)
     table.add_column("output_tokens", width=10)
     table.add_column("output", width=100)
-    # TODO: Add a performance
 
     console.print("[green]Running Evals:")
     console.print("[green]Running Extraction scenarios...")
@@ -115,7 +114,9 @@ if __name__ == "__main__":
         table,
     )
 
-    # TODO: Chain of thought is hard...
+    # TODO:
+    #  Chain of thought needs some love,
+    #  currently only working on older model versions
     # console.print("[green]Running Logical scenarios...")
     # evaluate_sequence_task_scenario(
     #     "chain_of_thought",
