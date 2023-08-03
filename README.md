@@ -14,7 +14,13 @@ pip install declarai
 
 ## Setup
 ```bash
-export DECLARAI_OPENAI_API_KEY= <your openai token>
+export DECLARAI_OPENAI_API_KEY=<your openai token>
+```
+or pass the token when initializing the declarai object
+```python
+from declarai import Declarai
+
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo", openai_token="<your-openai-key>")
 ```
 
 ## Usage:
@@ -22,8 +28,7 @@ The most basic functionality. Just add the `@task` decorator to your function, a
 ```python
 from declarai import Declarai
 
-# Optionally provide the API key to declarai on initialization
-declarai = Declarai(provider="openai", model="gpt-3.5-turbo", openai_token="<your-decorators-key>")
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
 @declarai.task
 def generate_poem(title: str) -> str:
@@ -46,86 +51,97 @@ Not the best poem out there, but hey! You've written your first declarative AI c
 Declarai aims to promote clean and readable code by enforcing the use of doc-strings and typing.
 The resulting code is readable and easily maintainable.
 
-For more complex use cases you can use a reducer, to build and compile multiple prompts into one!
+## Features
 
+### Tasks with python native output parsing:
+
+Python primitives
 ```python
-from typing import Any, Dict, List
-from declarai import Declarai, Sequence
+@declarai.task
+def rank_by_severity(message: str) -> int:
+    """
+    Rank the severity of the provided message by it's urgency.
+    Urgency is ranked on a scale of 1-5, with 5 being the most urgent.
+    :param message: The message to rank
+    :return: The urgency of the message
+    """
 
-ALL_DEPARTMENTS = ["sales", "support", "billing"]
 
-declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
+print(rank_by_severity(message="The server is down!"))
+#> 5
+print(rank_by_severity(message="How was your weekend?"))
+#> 1
+```
+
+Python complex objects
+```python
+@declarai.task
+def datetime_parser(raw_date: str) -> datetime:
+    """
+    Parse the input into a valid datetime string of the format YYYY-mm-ddThh:mm:ss
+    :param raw_date: The provided raw date
+    :return: The parsed datetime output
+    """
+
+
+print(datetime_parser(raw_date="Janury 1st 2020"))
+#> 2020-01-01 00:00:00
+```
+
+pydantic models
+```python
+class Animal(BaseModel):
+    name: str
+    family: str
+    leg_count: int
 
 
 @declarai.task
-def suggest_title(question: str) -> str:
+def suggest_animals(location: str) -> Dict[int, List[Animal]]:
     """
-    Given a question from our customer support, suggest a title for it
-    :param question: the provided question
-    :return: The title suggested for the question
+    Create a list of numbers from 0 to 5
+    for each number, suggest a list of animals with that number of legs
+    :param location: The location where the animals can be found
+    :return: A list of animal leg count and for each count, the corresponding animals
     """
-    return declarai.magic("question_title", question=question)
 
 
-@declarai.task
-def route_to_department(title: str, departments: List[str]) -> str:
-    """
-    Given a question title, route it to the relevant department
-    :param title: A title generated for the question
-    :param departments: The departments to route the question to
-    :return: The department that the question should be routed to
-    """
-    return declarai.magic("department", title=title, departments=departments)
-
-
-@declarai.task
-def suggest_department_answers(question: str, department: str) -> List[str]:
-    """
-    Given a question and a department, suggest 2 answers from the department's knowledge base
-    :param question: The question to suggest answers for
-    :param department: The department to suggest answers from
-    :return: The suggested answers
-    """
-    return declarai.magic("answers", question=question, department=department)
-
-
-def handle_customer_question(question: str) -> Dict[str, Any]:
-    suggested_title = suggest_title.plan(question=question)
-    selected_department = route_to_department.plan(
-        title=suggested_title, departments=ALL_DEPARTMENTS
-    )
-    suggested_answers = suggest_department_answers.plan(
-        question=question, department=selected_department
-    )
-
-    sequence_task = Sequence(suggested_answers, reduce_strategy="ChainOfThought")
-
-    res = sequence_task()
-
-    return {
-        "question_title": res["question_title"],
-        "question": question,
-        "department": res["department"],
-        "answers": res["answers"],
-    }
-
-
-print(
-    handle_customer_question(
-        "Hey, I'm not using my account anymore. "
-        "I've already talked to customer support and am not interested in it anymore. "
-        "Who should I talk to about this?"
-    )
-)
-
-# {
-#     'question_title': 'Account Deactivation Assistance',
-#     'question': "Hey, I'm not using my account anymore. I've already talked to customer support and am not interested in it anymore. "
-#                 "Who should I talk to about this?",
-#     'department': 'support', 
-#     'answers': [
-#         'You can contact our support team at support@example.com for account deactivation assistance.',
-#         'Alternatively, you can also reach out to our live chat support for immediate assistance regarding account deactivation.'
-#     ]
+print(suggest_animals(location="jungle"))
+#> {
+#       0: [
+#           Animal(name='snake', family='reptile', leg_count=0)
+#       ], 
+#       2: [
+#           Animal(name='monkey', family='mammal', leg_count=2), 
+#           Animal(name='parrot', family='bird', leg_count=2)
+#       ], 
+#       4: [
+#          Animal(name='tiger', family='mammal', leg_count=4), 
+#          Animal(name='elephant', family='mammal', leg_count=4)
+#       ]
 # }
 ```
+
+
+### Simple Chat interface
+```python
+@declarai.experimental.chat
+class CalculatorBot:
+    """
+    You a calculator bot,
+    given a request, you will return the result of the calculation
+    """
+
+    def send(self, message: str) -> int: ...
+
+
+calc_bot = CalculatorBot()
+print(calc_bot.send(message="1 + 1"))
+#> 2
+```
+
+To read more about what you can do with Declarai, 
+please visit our documentation site: https://vendi-ai.github.io/declarai/ !
+
+## Contributing
+
