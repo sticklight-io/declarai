@@ -6,10 +6,10 @@ from declarai.evals.extraction import (
     multi_value_extraction_kwargs,
     multi_value_multi_type_extraction,
     multi_value_multi_type_extraction_kwargs,
-    single_value_multi_type_extraction_kwargs,
-    single_value_multi_type_extraction,
     single_value_extraction,
     single_value_extraction_kwargs,
+    single_value_multi_type_extraction,
+    single_value_multi_type_extraction_kwargs,
 )
 from declarai.evals.generation import (
     structured_open_ended,
@@ -52,7 +52,6 @@ if __name__ == "__main__":
     table.add_column("input_tokens", width=10)
     table.add_column("output_tokens", width=10)
     table.add_column("output", width=100)
-    # TODO: Add a performance
 
     console.print("[green]Running Evals:")
     console.print("[green]Running Extraction scenarios...")
@@ -115,7 +114,9 @@ if __name__ == "__main__":
         table,
     )
 
-    # TODO: Chain of thought is hard...
+    # TODO:
+    #  Chain of thought needs some love,
+    #  currently only working on older model versions
     # console.print("[green]Running Logical scenarios...")
     # evaluate_sequence_task_scenario(
     #     "chain_of_thought",

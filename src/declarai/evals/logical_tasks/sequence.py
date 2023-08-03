@@ -1,7 +1,7 @@
-from typing import Any, Dict, List
+from typing import List
 
 from declarai import Declarai
-from declarai.sequence import Sequence
+from declarai.orchestrator.sequence import Sequence
 
 
 def suggest_title(question: str) -> str:

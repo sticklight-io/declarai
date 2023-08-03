@@ -26,10 +26,10 @@ logger = logging.getLogger("LLMLogger")
 class LoggingMiddleware(TaskMiddleware):
     start_time: time = None
 
-    def before(self, _): # (1)!
+    def before(self, _):  # (1)!
         self.start_time = time()
 
-    def after(self, task: LLMTaskType): # (2)!
+    def after(self, task: LLMTaskType):  # (2)!
         end_time = time() - self.start_time
         log_message = f"{task.__name__} took {end_time} seconds to complete"
         logger.info(log_message)
