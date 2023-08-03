@@ -1,67 +1,97 @@
 site_name: Declarai
+
+extra:
+  analytics:
+    provider: google
+    property: G-XXXXXXX
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/emoticon-happy-outline
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/emoticon-sad-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback! Help us improve this page by
+            using our <a href="..." target="_blank" rel="noopener">feedback form</a>.
 nav:
-- Declarai: index.md
-- Beginners guide:
-  - src/beginners-guide/index.md
-  - Simple task: src/beginners-guide/simple-task.md
-  - Controlling task behavior: src/beginners-guide/controlling-task-behavior.md
-  - Debugging tasks: src/beginners-guide/debugging-tasks.md
-  - Chat task:
-    - src/beginners-guide/chat/index.md
-    - Chat memory: src/beginners-guide/chat/chat-memory.md
-    - Controlling chat behaviour: src/beginners-guide/chat/controlling-chat-behavior.md
-    - Debugging chat: src/beginners-guide/chat/debugging-chat.md
-    - Initializing chat: src/beginners-guide/chat/initialization.md
-  - Recap: src/beginners-guide/recap.md
-- Advanced:
-  - src/advanced/index.md
-  - magic: src/advanced/magic.md
-  - multi models and providers: src/advanced/multi-model-multi-provider.md
-  - middlewares:
-    - src/advanced/middlewares/index.md
-  - Evals:
-    - src/advanced/evals/index.md
-- Providers:
-  - src/providers/index.md
-  - src/providers/openai.md
-- integrations:
-  - src/integrations/index.md
-- Changelog: src/changelog.md
-- Contribute : src/contribute.md
+  - Declarai: index.md
+  - Beginners guide:
+      - src/beginners-guide/index.md
+      - Simple task: src/beginners-guide/simple-task.md
+      - Controlling task behavior: src/beginners-guide/controlling-task-behavior.md
+      - Debugging tasks: src/beginners-guide/debugging-tasks.md
+      - Chat task:
+          - src/beginners-guide/chat/index.md
+          - Chat memory: src/beginners-guide/chat/chat-memory.md
+          - Controlling chat behaviour: src/beginners-guide/chat/controlling-chat-behavior.md
+          - Debugging chat: src/beginners-guide/chat/debugging-chat.md
+          - Initializing chat: src/beginners-guide/chat/advanced-initialization.md
+      - Recap: src/beginners-guide/recap.md
+  - Features:
+      - src/features/index.md
+      - Chat:
+          - src/features/chat/index.md
+          - Chat memory: src/features/chat/chat-memory.md
+          - Controlling chat behavior: src/features/chat/controlling-chat-behavior.md
+          - Debugging chat: src/features/chat/debugging-chat.md
+          - Customizing chat response: src/features/chat/customizing-chat-response.md
+          - Advanced initialization: src/features/chat/advanced-initialization.md
+      - magic: src/features/magic.md
+      - multi models and providers: src/features/multi-model-multi-provider.md
+      - middlewares:
+          - src/features/middlewares/index.md
+      - Evals:
+          - src/features/evals/index.md
+  - Best practices:
+      - src/best-practices/index.md
+  - Providers:
+      - src/providers/index.md
+      - src/providers/openai.md
+  - integrations:
+      - src/integrations/index.md
+  - Changelog: src/changelog.md
+  - Contribute: src/contribute.md
 
 theme:
-    features:
-      - tabs
-      - content.tooltips
-      - content.code.copy
-      - content.code.annotate
-      - navigation.indexes
-    name: material
-    logo: img/Vendi-logo.svg
+  features:
+    - tabs
+    - content.tooltips
+    - content.code.copy
+    - content.code.annotate
+    - navigation.indexes
+  name: material
+  logo: img/Vendi-logo.svg
 extra_css:
-- css/extra.css
-- css/termynal.css
+  - css/extra.css
+  - css/termynal.css
 extra_javascript:
-- js/termynal.js
-- js/custom.js
-- js/tablesort.js
-- https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
+  - js/termynal.js
+  - js/custom.js
+  - js/tablesort.js
+  - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
 repo_url: https://github.com/vendi-ai/declarai
 repo_name: vendi-ai/declarai
 markdown_extensions:
-- attr_list
-- md_in_html
-- tables
-- toc:
-    permalink: true
-    title: Page contents
-- admonition
-- pymdownx.details
-- pymdownx.superfences
-- pymdownx.highlight
-- pymdownx.extra
-- pymdownx.emoji:
-    emoji_index: !!python/name:materialx.emoji.twemoji
-    emoji_generator: !!python/name:materialx.emoji.to_svg
-- pymdownx.tabbed:
-    alternate_style: true
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      title: Page contents
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.extra
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.tabbed:
+      alternate_style: true
+
+

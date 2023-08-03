@@ -4,9 +4,10 @@ So it all seems pretty magical up to this point, but what if you want to see wha
 Being able to debug your tasks is a very important part of the development process, and **Declarai** makes it easy for you.
 
 ## Compiling tasks
-The first and simplest tool to better understand what's happening under the hood is the `compile` method.
+The first and simplest tool to better understand what's happening under the hood is the `compile` method.<br>
+Declarai has an `evals` module as well for advanced debugging and benchmarking which you can review later here: [evals](../../features/evals/)
 
-Let's take the last example from the previous section and add a call to the `compile` method:
+Let's take the last task from the previous section and add a call to the `compile` method:
 ```python
 @declarai.task
 def movie_recommender(user_input: str) -> Dict[str, str]:
@@ -19,24 +20,24 @@ def movie_recommender(user_input: str) -> Dict[str, str]:
 ```
 ```python
 print(movie_recommender.compile())
-> 
-Recommend a selection of movies to watch based on the user input 
-For each movie provide a short description as well # (1)! 
-Inputs: # (2)!
-user_input: {user_input} # The user's input 
 
-# (3)!
-The output should be a markdown code snippet formatted in the following schema, including the leading and trailing '```json' and '```': 
- ```json
-    {{
-        "declarai_result": Dict[str, str]  # A dictionary of movie names and descriptions
-    }}
- .```
+> {
+    'messages': [ # (1)!
+        # (2)!        
+        system: You are a REST api endpoint. 
+                You only answer in JSON structures with a single key named 'declarai_result', nothing else. 
+                The expected format is: "declarai_result": Dict[string, string]  # A dictionary of movie names and descriptions,
+        # (3)!
+        user: Recommend a selection of movies to watch based on the user input  
+              For each movie provide a short description as well.
+              Inputs: user_input: {user_input} # (4)!
+]}
 ```
 
-1. Here we can see our original task definition taken from the docstring.
-2. Our task's inputs is transformed into a placeholder for the actual value accompanied by the value's name and meaning.
-3. The expected output is also transformed into a placeholder for the actual value accompanied by the value's type and meaning.
+1. As we are working with the openai llm provider, which exposes a chat interface, we translate the task into **messages** as defined by openai's API.
+2. In order to guide the task with the correct output format, we provide a **system** message that explains LLM's role and expected responses
+3. The **user message** is the actual translation of the task at hand, with the user's input as a placeholder for the actual value.
+4. **{user_input}** will be populated with the actual value when the task is being called at runtime.
 
 What we're seeing here is the template for this specific task. It is built so that when called at runtime, 
 it will be populated with the real values passed to our task.
@@ -48,26 +49,24 @@ it will be populated with the real values passed to our task.
      it is still possible that the model will not generate the desired output. For this reason it is important to be able to debug your tasks and understand what actually got sent to the model
 
 ## Compiling tasks with real values
-The `compile` method can also be used to view the prompt with the real values of the parameters.
+The `compile` method can also be used to view the prompt with the real values provided to the task.
 This is useful when prompts might behave differently for different inputs.
 
-```python
-print(movie_recommender.compile(user_input="I want to watch a movie about space"))
-> 
-Recommend a selection of movies to watch based on the user input 
-For each movie provide a short description as well 
-Inputs: # (1)! 
-user_input: I want to watch a movie about space # The user's input 
+```python hl_lines="10"
+print(movie_recommender.compile())
 
-The output should be a markdown code snippet formatted in the following schema, including the leading and trailing '```json' and '```': 
- ```json
-    {{
-        "declarai_result": Dict[str, str]  # A dictionary of movie names and descriptions
-    }}
- .```
+> {
+    'messages': [     
+        system: You are a REST api endpoint. 
+                You only answer in JSON structures with a single key named 'declarai_result', nothing else. 
+                The expected format is: "declarai_result": Dict[string, string]  # A dictionary of movie names and descriptions,
+        user: Recommend a selection of movies to watch based on the user input  
+              For each movie provide a short description as well.
+              Inputs: user_input: I want to watch a movie about space # (1)!
+]}
 ```
 
-1. The actual value of the parameter is now populated in the placeholder and we have our final prompt!
+1. The actual **value** of the parameter is now populated in the placeholder and we have our final prompt!
 
 
 !!! tip

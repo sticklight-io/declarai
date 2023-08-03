@@ -44,11 +44,20 @@ def movie_recommender(user_input: str) -> List[str]: # (1)!
 print(movie_recommender(user_input="I want to watch a movie about space"))
 > ['Interstellar', 'Gravity', 'The Martian', 'Apollo 13', '2001: A Space Odyssey', 'Moon', 'Sunshine', 'Contact', 'The Right Stuff', 'Hidden Figures']
 ```
+
+
+!!! info
+
+    Notice How the text in our documentation has changed from singular to plural form. 
+    Maintaining consistency between the task's description and the return type is important for the model to understand the expected output.<br>
+    For more best-practices, see [here](../../best-practices). 
+
+
 Awesome! 
 
-Now we've got a list of movies to choose from!
+Now we have a list of movies to choose from!
 
-But what if we want to go even further :thinking:?
+But what if we want to go even further :thinking:? <br>
 Let's say we want the model to also provide a short description of each movie.
 ```python
 @declarai.task
@@ -62,7 +71,7 @@ def movie_recommender(user_input: str) -> Dict[str, str]: # (1)!
 ```
 
 1. We've updated the return value to allow for the creation of a dictionary of movie names and descriptions.
-2. We enforce the description of the return value to ensure the model understands the expected output.
+2. We re-enforce the description of the return value to ensure the model understands the expected output.
 
 ```python
 print(movie_recommender(user_input="I want to watch a movie about space"))

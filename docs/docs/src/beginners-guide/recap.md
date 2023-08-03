@@ -12,3 +12,7 @@ You should now be able to easily:
         Previous <i class="fas fa-arrow-left"></i>
     </a>
 </div>
+
+## Next steps
+
+You are welcome to explore our [**Features**](../../features/) section, where you can find the full list of supported features and how to use them.

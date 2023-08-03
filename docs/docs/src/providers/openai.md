@@ -1,8 +1,8 @@
 To use OpenAI models, you can set the following configuration options:
 
-| Setting | Env Variable     | Runtime Variable | Required? | Notes |
-| --- |------------------| --- |  :---: | --- |
-| API key | `OPENAI_API_KEY` | `settings.openai.api_key` | ✅ | |
+| Setting | <div style="width:180px">Env Variable</div> | <div style="width:280px">Runtime Variable</div> | Required? |
+|---------|---------------------------------------------|-------------------------------------------------|:---------:|
+| API key | `DECLARAI_OPENAI_API_KEY`                   | `Declarai(... openai_token=<api-token>)`        |     ✅     |
 
 
 ## Getting an API key

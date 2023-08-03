@@ -74,5 +74,5 @@ class LLMChatOrchestrator:
         return self._exec_with_message_state(kwargs)
 
     def send(self, **kwargs) -> Any:
-        self.add_message(kwargs["message"], role=MessageRole.user)
-        return self(messages=self._messages)
+        self.add_message(kwargs.pop("message"), role=MessageRole.user)
+        return self(messages=self._messages, **kwargs)

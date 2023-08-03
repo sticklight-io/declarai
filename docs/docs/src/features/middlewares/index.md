@@ -7,11 +7,11 @@ or more complex things like interfering with the task and injecting guardrails i
 
 ## Creating a middleware
 
-A middleware is a Class that implements a `before` and/or `after` method.
-Each accepts a LLMTask object as an argument, and doesn't return anything.
+A middleware is a Class that implements a `before` and/or `after` method.<br>
+Each accepts an LLMTask object as an argument, and doesn't return anything.
 
 
-Lets take for exmample this simple implementation of a logging middleware:
+Let's take for example this simple implementation of a logging middleware:
 
 ```python
 import logging
