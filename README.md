@@ -141,7 +141,7 @@ print(calc_bot.send(message="1 + 1"))
 ```
 
 To read more about what you can do with Declarai, 
-please visit our documentation site: https://vendi-ai.github.io/declarai/ !
+please visit our documentation site: [docs](https://vendi-ai.github.io/declarai/)
 
 ## Contributing
-
+We welcome contributions to Declarai! Please read our [contributing guide](CONTRIBUTING.md) to get started.
