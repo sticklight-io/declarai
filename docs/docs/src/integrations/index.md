@@ -1,20 +1,7 @@
 # Integrations
 
-Declarai comes with no additional dependencies out of the box, to keep the core of the library clean and simple.
+Declarai comes with minimal dependencies out of the box, to keep the core of the library clean and simple.
 If you would like to extend the functionality of Declarai, you can install one of the following integrations.
-
-## [Pydantic](https://docs.pydantic.dev/1.10/)
-
-Pydantic is a popular open-source library that makes defining data schemas and validating input data straightforward and painless.
-Declarai comes with a Pydantic integration that allows you to use Pydantic models as input and output types for your tasks.
-
-```bash
-pip install declarai[pydantic]
-```
-
-!!! warning
-
-    Please not that at the moment Delcarai only supports Pydantic V1, Support for V2 is on our roadmap!
 
 ## [Wandb](https://wandb.ai/site)
 
