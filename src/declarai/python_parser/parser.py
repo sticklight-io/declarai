@@ -7,6 +7,7 @@ from functools import lru_cache as memoized
 from typing import Any, Dict, Optional
 
 from pydantic import parse_obj_as, parse_raw_as
+from pydantic.error_wrappers import ValidationError
 
 from declarai.python_parser.annotations.type_annotation_to_schema import (
     type_annotation_to_str_schema,
@@ -22,6 +23,10 @@ from declarai.python_parser.types import (
 )
 
 from .docstring_parsers.reST import ReSTDocstringParser
+
+
+class OutputParsingError(Exception):
+    pass
 
 
 class PythonParser:
@@ -60,7 +65,8 @@ class PythonParser:
     def signature_kwargs(self) -> Dict[ArgName, ArgType]:
         return {
             param.name: param.annotation
-            for param in dict(self._signature.parameters).values() if param.name != "self"
+            for param in dict(self._signature.parameters).values()
+            if param.name != "self"
         }
 
     @property
@@ -136,25 +142,15 @@ class PythonParser:
             parsed_result = raw_result
 
         if self.signature_return_type:
-            return parse_obj_as(self.signature_return_type, parsed_result)
+            try:
+                return parse_obj_as(self.signature_return_type, parsed_result)
+            except ValidationError:
+                raise OutputParsingError(
+                    f"\nFailed parsing result into type:\n"
+                    f"{self.signature_return_type}\n"
+                    "----------------------------------\n"
+                    f"raw_result:\n"
+                    f"{raw_result}"
+                )
         else:
             return parsed_result
-
-    # TODO: Multiple results:
-    # if self.prompt_config.multi_results:
-    #     json_values = re.findall(r"{.*?}", raw_result, re.DOTALL)
-    #     serialized = {}
-    #     for json_value in json_values:
-    #         clean_value = json_value.replace("```json", "").replace("```", "")
-    #         serialized_json_value = json.loads(clean_value)
-    #         serialized.update(serialized_json_value)
-    #     return serialized
-
-    # TODO: Error handling
-    # except json.JSONDecodeError:
-    # logger.warning(
-    #     "Failed to parse generated data\nplan: %s\ngenerated: %s",
-    #     self._plan,
-    #     raw_result,
-    # )
-    # return None

@@ -45,7 +45,7 @@ declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 WandDBMonitor = WandDBMonitorCreator(
     name="<context-name>",
     project="<project-name>",
-    key="<your-api-key>",
+    key="<your-decorators-key>",
 )
 
 

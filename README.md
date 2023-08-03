@@ -23,7 +23,7 @@ The most basic functionality. Just add the `@task` decorator to your function, a
 from declarai import Declarai
 
 # Optionally provide the API key to declarai on initialization
-declarai = Declarai(provider="openai", model="gpt-3.5-turbo", openai_token="<your-api-key>")
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo", openai_token="<your-decorators-key>")
 
 @declarai.task
 def generate_poem(title: str) -> str:

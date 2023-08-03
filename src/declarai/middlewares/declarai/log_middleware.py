@@ -33,8 +33,7 @@ class LoggingMiddleware(TaskMiddleware):
             "template": str(task.compile()),
             "call_kwargs": str(task._kwargs),
             "compiled_template": str(task.compile(**task._kwargs)),
-            # "prompt_config": task.prompt_config.__dict__,
             "result": task.llm_response.response,
             "time": end_time,
         }
-        logger.warning(log_record)
+        logger.info(log_record)

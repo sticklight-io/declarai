@@ -1,6 +1,6 @@
 import logging
 from functools import partial
-from typing import List, Optional, Type, Callable
+from typing import Callable, List, Optional, Type
 
 from declarai.operators.base.types import Message, MessageRole
 from declarai.operators.base.types.operator import BaseOperator, CompiledTemplate
@@ -12,7 +12,6 @@ from declarai.operators.shared.templates import (
 from declarai.python_parser.parser import PythonParser
 
 from .openai_llm import OpenAILLM
-from ..base.types.llm import LLMResponse
 
 logger = logging.getLogger("OpenAITaskOperator")
 

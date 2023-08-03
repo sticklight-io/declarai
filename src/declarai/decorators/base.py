@@ -1,8 +1,7 @@
-from typing import List, Optional, Any
+from abc import abstractmethod
+from typing import Any, List, Optional
 
 from declarai.middlewares.base import TaskMiddleware
-from declarai.operators import resolve_operator
-from declarai.orchestrator.task_orchestrator import LLMTaskOrchestrator
 
 
 class LLMOrchestratorDecorator:
@@ -17,6 +16,7 @@ class LLMOrchestratorDecorator:
         self.operator = self.get_operator(**kwargs)
         self.middlewares = middlewares or []
 
+    @abstractmethod
     def get_operator(self, **kwargs):
         ...
 
@@ -34,5 +34,6 @@ class LLMOrchestratorDecorator:
             # When no arguments are passed
             return self.return_orchestrator(decorated)
 
+    @abstractmethod
     def return_orchestrator(self, decorated: Any) -> Any:
         ...

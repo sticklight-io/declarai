@@ -1,11 +1,11 @@
 from unittest.mock import MagicMock, patch
 
-from declarai.api.magic import magic
-from declarai.api.task_decorator import LLMTaskDecorator
+from declarai.decorators.magic import magic
+from declarai.decorators.task_decorator import LLMTaskDecorator
 
 
 @patch("declarai.orchestrator.task_orchestrator.PythonParser")
-@patch("declarai.api.task_decorator.resolve_operator")
+@patch("declarai.decorators.task_decorator.resolve_operator")
 def test_task_decorator_no_args(mocked_resolve_operator, mocked_python_parser):
     declarai_instance = MagicMock()
     mocked_resolve_operator.return_value = MagicMock()

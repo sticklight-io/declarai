@@ -12,7 +12,7 @@ class WandDBMonitorCreator:
     >>> WandDBMonitor = WandDBMonitorCreator(
     ...     name="<task name>",
     ...     project="<project name>",
-    ...     key="<api-key>",
+    ...     key="<decorators-key>",
     ... )
     ...
     >>> @declarai.task(middlewares=[WandDBMonitor])

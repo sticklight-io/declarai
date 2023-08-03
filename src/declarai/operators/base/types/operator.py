@@ -16,11 +16,6 @@ class BaseOperator(ABC):
         self.parsed = parsed
         self.llm_response = None
 
-    # TODO: ???
-    @property
-    def prompt_params(self) -> Optional[Dict[str, Any]]:
-        return
-
     @abstractmethod
     def compile(self, **kwargs) -> CompiledTemplate:
         ...

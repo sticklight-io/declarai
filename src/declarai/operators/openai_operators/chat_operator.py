@@ -5,13 +5,10 @@ from typing import List, Optional, Type
 from declarai.operators.base.types import Message, MessageRole
 from declarai.operators.base.types.operator import BaseOperator, CompiledTemplate
 from declarai.operators.shared.output_prompt import compile_output_prompt
-from declarai.operators.shared.templates import (
-    StructuredOutputChatPrompt,
-)
+from declarai.operators.shared.templates import StructuredOutputChatPrompt
 from declarai.python_parser.parser import PythonParser
 
 from .openai_llm import OpenAILLM
-from ..base.types.llm import LLMResponse
 
 logger = logging.getLogger("OpenAIChatOperator")
 

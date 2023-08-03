@@ -1,8 +1,9 @@
-# from declarai.api.chat_decorator import LLMChatDecorator
-from declarai.api.chat_decorator import LLMChatDecorator
-from declarai.api.magic import magic
-from declarai.api.task_decorator import LLMTaskDecorator
-from declarai.operators import LLMSettings
+from typing import Optional, overload
+
+from declarai.decorators.chat_decorator import LLMChatDecorator
+from declarai.decorators.magic import magic
+from declarai.decorators.task_decorator import LLMTaskDecorator
+from declarai.operators import LLMSettings, ModelsOpenai, ProviderOpenai
 
 
 class Declarai:
@@ -18,16 +19,15 @@ class Declarai:
     # * Additionally supported providers should be exposed via the Declarai class *
     # * here:                                                                     *
     # *-------------------------------------------------------------------------- *
-    # TODO: Move this?
-    # @overload
-    # def __init__(
-    #     self,
-    #     provider: ProviderOpenai,
-    #     model: ModelsOpenai,
-    #     version: Optional[str] = None,
-    #     openai_token: Optional[str] = None,
-    # ):
-    #     ...
+    @overload
+    def __init__(
+        self,
+        provider: ProviderOpenai,
+        model: ModelsOpenai,
+        version: Optional[str] = None,
+        openai_token: Optional[str] = None,
+    ):
+        ...
 
     # *-------------------------------------------------------------------------- *
     # * Actual implementation of Declarai                                         *

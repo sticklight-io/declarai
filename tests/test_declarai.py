@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 from declarai import Declarai
 
 
-@patch("declarai.api.chat_decorator.resolve_operator")
+@patch("declarai.decorators.chat_decorator.resolve_operator")
 @patch("declarai.declarai.LLMTaskDecorator")
 @patch("declarai.declarai.LLMSettings")
 def test_declarai(mocked_llm_settings, mocked_task_decorator, _):

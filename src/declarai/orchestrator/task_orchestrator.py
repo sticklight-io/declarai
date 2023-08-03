@@ -13,7 +13,7 @@ the different LLM API providers as well as custom models have different APIs wit
 structures. For that reason, there are multiple implementations of operators, depending on the required use case.
 """
 
-from typing import Any, List, Dict, Callable
+from typing import Any, Callable, Dict, List
 
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators.base.types.llm import LLMResponse
