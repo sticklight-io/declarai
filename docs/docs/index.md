@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://vendi-ai.github.io/declarai/"><img src="./img/Logo-declarai.svg" alt="FastAPI"></a>
+  <a href="https://vendi-ai.github.io/declarai/"><img src="./img/Logo-declarai.svg" alt="Declarai"></a>
 </p>
 <p align="center">
     <em>Declarai, turning Python code into LLM tasks, easy to use, and production-ready.</em>
@@ -88,17 +88,21 @@ Done!
 ### Python native syntax
 Integrating deeply into python's native syntax, declarai understands your code and generates the prompt accordingly.
 
-```py title="Simple Syntax" 
-
+```python title="Simple Syntax"
 @declarai.task # (1)!
-def extract_phone_number(email_content: str) -> List[str]: # (2)!
+def rank_by_severity(message: str) -> int: # (2)!
     """
-    Extract the phone numbers from the provided email_content
-    :param email_content: Text represents the email content 
-    :return: The phone numbers that are used in the email
-    """# (3)!
-    return declarai.magic(email_content) # (4)!
+    Rank the severity of the provided message by it's urgency.
+    Urgency is ranked on a scale of 1-5, with 5 being the most urgent.
+    :param message: The message to rank
+    :return: The urgency of the message
+    """ # (3)!
 
+
+print(rank_by_severity(message="The server is down!"))
+#> 5
+print(rank_by_severity(message="How was your weekend?"))
+#> 1
 ```
 
 1. The `@declarai.task` decorator marks the function as a Declarai prompt task.
@@ -107,11 +111,92 @@ def extract_phone_number(email_content: str) -> List[str]: # (2)!
     - `description` - the context of the task
     - `:param` - The function's parameters and their description
     - `:return` - The output description
-4. The `magic` method is an optional placeholder for typing, and can be used as a replacement for the docstring interface when needed.
 
+    
+### Support Python typing and pydantic models
+Declarai will return a serialized object as defined by the type hints at runtime.
+```py title="Builtins"
+@declarai.task
+def extract_phone_number(email_content: str) -> List[str]:
+    """
+    Extract the phone numbers from the provided email_content
+    :param email_content: Text represents the email content 
+    :return: The phone numbers that are used in the email
+    """
+
+print(extract_phone_number(email_content="Hi, my phone number is 123-456-7890"))
+#> ['123-456-7890']
+```
+
+```python title="Builtins"
+@declarai.task
+def datetime_parser(raw_date: str) -> datetime:
+    """
+    Parse the input into a valid datetime string of the format YYYY-mm-ddThh:mm:ss
+    :param raw_date: The provided raw date
+    :return: The parsed datetime output
+    """
+
+
+print(datetime_parser(raw_date="Janury 1st 2020"))
+#> 2020-01-01 00:00:00
+```
+
+
+```python title="Pydantic model"
+class Animal(BaseModel):
+    name: str
+    family: str
+    leg_count: int
+
+
+@declarai.task
+def suggest_animals(location: str) -> Dict[int, List[Animal]]:
+    """
+    Create a list of numbers from 0 to 5
+    for each number, suggest a list of animals with that number of legs
+    :param location: The location where the animals can be found
+    :return: A list of animal leg count and for each count, the corresponding animals
+    """
+
+
+print(suggest_animals(location="jungle"))
+#> {
+#       0: [
+#           Animal(name='snake', family='reptile', leg_count=0)
+#       ], 
+#       2: [
+#           Animal(name='monkey', family='mammal', leg_count=2), 
+#           Animal(name='parrot', family='bird', leg_count=2)
+#       ], 
+#       4: [
+#          Animal(name='tiger', family='mammal', leg_count=4), 
+#          Animal(name='elephant', family='mammal', leg_count=4)
+#       ]
+# }
+```
 <br>
 
-#### Task Middlewares
+### Chat interface
+Create chat interfaces with ease, simply by writing a class with docstrings
+```python
+@declarai.experimental.chat
+class CalculatorBot:
+    """
+    You a calculator bot,
+    given a request, you will return the result of the calculation
+    """
+
+    def send(self, message: str) -> int: ...
+
+
+calc_bot = CalculatorBot()
+print(calc_bot.send(message="1 + 1"))
+#> 2
+```
+<br>
+
+### Task Middlewares
 Easy to use middlewares provided out of the box as well as the ability to easily create your own.
 
 ```py title="Simple Middleware"
@@ -140,168 +225,5 @@ Result:
 {'phone_number': '124-3435-132', 'name': 'jenny', 'email': 'georgia@coolmail.com'}
 ```
 
-<br>
+We highly recommend you to go through the beginner's guide to get a better understanding of the library and its capabilities - [Beginner's Guide](./src/beginners-guide)
 
-#### Complex Schema handling using pydantic
-
-In this example, we provide pydantic schemas to create meaningful objects for our application
-
-```python title="Schema"
-class TimeFrame(BaseModel):
-    start: int
-    end: int
-
-
-class BusinessExperience(BaseModel):
-    time_frame: TimeFrame
-    title: str
-    description: str
-    company: str
-
-
-class Recommendation(BaseModel):
-    recommender: str
-    recommendation: str
-
-
-class BusinessProfile(BaseModel):
-    bio: str
-    experience: List[BusinessExperience]
-    previous_jobs: List[str]
-    recommendations: List[Recommendation]
-```
-All we need to do is provide the desired schema as the return type of the function
-```py title="Complex Schema"
-@declarai.task
-def generate_business_profile(name: str, skills: List[str]) -> BusinessProfile:
-    """
-    Generate a business profile based on the given name and skills
-    Produce a short bio and a mapping of the skills and where they can be used
-    for fields with missing data, you can make up data to fill in the gaps
-    :param name: The name of the person
-    :param skills: The skills of the person
-    :return: The generated business profile
-    """
-    return declarai.magic(name=name, skills=skills)
-```
-Usage:
-```python title="Business Profile"
-profile = generate_business_profile(
-    name="Bob grapes",
-    skills=[
-        "Management", "entrepreneurship", "programming", "investing", "Machine Learning"
-    ],
-)
-print(profile)
-```
-Shortened to fit the page:
-```console
-{
-    'bio': 'Bob Grapes is a highly skilled professional with expertise in management, 
-    entrepreneurship, programming, investing, and machine learning. 
-    With a strong background in ... ",
-    'experience': [
-        {
-            'time_frame': {
-                'start': 2010, 
-                'end': 2015
-            }, 
-            'title': 'Manager', 
-            'description': 'Managed a team of 20 employees and oversaw daily operations', 
-            'company': 'ABC Company'
-        },
-            ... 
-        ], 
-    'previous_jobs': [
-        'ABC Company', 
-        'XYZ Startup', 
-        'DEF Tech', 
-        'GHI Corporation'
-    ], 
-    'recommendations': [
-        {
-            'recommender': 'John Smith', 
-            'recommendation': 'Bob is an exceptional leader with ..."
-        },
-        ...
-    ]
-}
-```
- 
-<br>
-
-### Complex flow optimization
-
-For more complex scenarios,  we may not want to cram too much into a single task. 
-This is a classic case of abstraction and separation of concerns.
-
-In order to achieve this, declarai provides a `Sequence` class that allows you to chain multiple tasks together.
-These tasks will be reduced to a single prompt that will be executed in a **single call to the llm**.
-
-```python title="Sequence"
-@declarai.task
-def suggest_title(question: str) -> str:
-  """
-  Given a question from our customer support, suggest a title for it
-  :param question: the provided question
-  :return: The title suggested for the question
-  """
-  return declarai.magic(question)
-
-
-@declarai.task
-def route_to_department(title: str, departments: List[str]) -> str:
-  """
-  Given a question title, route it to the relevant department
-  :param title: A title generated for the question
-  :param departments: The departments to route the question to
-  :return: The department that the question should be routed to
-  """
-  return declarai.magic(title, departments)
-
-
-@declarai.task
-def suggest_department_answers(question: str, department: str) -> List[str]:
-  """
-  Given a question and a department, suggest 2 answers from the department's knowledge base
-  :param question: The question to suggest answers for
-  :param department: The department to suggest answers from
-  :return: The suggested answers
-  """
-  return declarai.magic(question, department)
-
-
-# In the following we chain the tasks together to create a single prompt
-# The result will:
-# - Suggest a title for the question
-# - Route the question to the relevant department
-# - Suggest 2 answers from the department's knowledge base
-
-def suggest_answers(question: str, available_departments: List[str]) -> Dict[str, Any]:
-    suggested_title = suggest_title.plan(question=question)
-    selected_department = route_to_department.plan(
-      title=suggested_title, departments=available_departments
-    )
-    suggested_answers = suggest_department_answers.plan(
-      question=question, department=selected_department
-    )
-    return suggested_answers(reduce_strategy="ChainOfThought")
-```
-Usage:
-```python
-suggested_answers = suggest_answers(
-    question="I want to be able to click on that button but I can't. Is this currently possible?", 
-    available_departments=["sales", "support"])
-)
-print(suggested_answers)
-```
-```console
-{
-    "suggested_answers": [
-        "This isn't supported at the moment, you are welcome to open a feature request on our website!", 
-        "We have accepted you request and will check if this behavior is currently possible. We will get back to you shortly."
-    ],
-    "selected_department": "support",
-    "suggested_title": "Feature request"
-}
-```
