@@ -7,7 +7,7 @@ class LLMSettings:
         provider: str,
         model: str,
         version: Optional[str] = None,
-        **kwargs,
+        **_,
     ):
         self.provider = provider
         self._model = model
