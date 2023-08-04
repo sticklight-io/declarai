@@ -11,7 +11,7 @@ python = "^3.7.1"
 openai = "^0.27.8"
 pydantic = "^1.8.2"
 jsonref = "^1.1.0"
-wandb = {version = "^0.10.32", optional = true}
+wandb = "0.15.8"
 
 
 [tool.poetry.group.dev.dependencies]
