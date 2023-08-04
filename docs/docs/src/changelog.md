@@ -1,5 +1,14 @@
-## Latest changes
-- Added search & multi-task example to the docs.
+### 0.1.2
+
+**Minor bug fixes**
+
+Changes:
+
+  - Updates to documentation
+  - Updates to dependencies with reported vulnerabilities
+  - Fix typing and improve support for IDE autocompletion
+  - Fix issue with initialization failing when passed the `openai_token` at runtime.
+
 
 
 
