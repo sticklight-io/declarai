@@ -1,5 +1,5 @@
-from typing import Self, overload, Callable, Any, List, Type
-
+from typing import overload, Callable, Any, List, Type
+from typing_extensions import Self
 from declarai.decorators.base import LLMOrchestratorDecorator
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators import resolve_operator

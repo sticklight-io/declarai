@@ -1,6 +1,6 @@
 from functools import partial
-from typing import overload, List, Type, Self, Callable, Any
-
+from typing import overload, List, Type, Callable, Any
+from typing_extensions import Self
 from declarai.decorators.base import LLMOrchestratorDecorator
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators import resolve_operator
