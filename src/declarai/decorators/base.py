@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from typing import Any, List, Optional, overload, Callable, Self, Type
 
-from declarai.middlewares import TaskMiddlewareType
 from declarai.middlewares.base import TaskMiddleware
 from declarai.orchestrator.task_orchestrator import LLMTaskOrchestrator
 
