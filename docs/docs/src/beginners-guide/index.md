@@ -1,3 +1,8 @@
+---
+hide:
+  - footer
+---
+
 # Tutorial - Beginners guide
 
 This tutorial is a step-by-step guide to using **Declarai**. It walks you through the most basic features of the library.

@@ -1,3 +1,8 @@
+---
+hide:
+  - footer
+---
+
 # Simple task :material-flash:
 The simplest Declarai usage is a function decorated with `@declarai.task`:
 

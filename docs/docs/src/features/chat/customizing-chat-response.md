@@ -28,9 +28,3 @@ print(sql_bot.send(message="Offer two sql queries that use the 'SELECT' operatio
      As with tasks, the message is sent along with the expected return types.
      This means that if not careful, a message conflicting with the expected results could cause weird behavior in the llm responses.<br>
      For more best-practices, see [here](../../../best-practices).
-
-<div style="text-align: right">
-    <a href="../advanced-initialization" class="md-button">
-        Next <i class="fas fa-arrow-right"></i>
-    </a>
-</div>

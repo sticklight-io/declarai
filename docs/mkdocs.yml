@@ -58,6 +58,7 @@ theme:
     - content.code.copy
     - content.code.annotate
     - navigation.indexes
+    - navigation.footer
   name: material
   logo: img/Vendi-logo.svg
 extra_css:

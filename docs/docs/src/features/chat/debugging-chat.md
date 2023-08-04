@@ -25,9 +25,3 @@ print(sql_bot.compile())
 }
 ```
 Wonderful right? We can view the chatbot's messages in the format they will be sent to the language model.
-
-<div style="text-align: right">
-    <a href="../customizing-chat-response" class="md-button">
-        Next <i class="fas fa-arrow-right"></i>
-    </a>
-</div>
