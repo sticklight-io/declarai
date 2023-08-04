@@ -1,4 +1,6 @@
-### 0.1.2
+### v0.1.2
+
+View full release on [GitHub](https://github.com/vendi-ai/declarai/releases/tag/v0.1.2) and [PyPi](https://pypi.org/project/declarai/0.1.2/)
 
 **Minor bug fixes**
 
@@ -12,7 +14,9 @@ Changes:
 
 
 
-### 0.1.1
+### v0.1.1
+
+View full release on [GitHub](https://github.com/vendi-ai/declarai/releases/tag/v0.1.1) and [PyPi](https://pypi.org/project/declarai/0.1.1/)
 
 **Announcing the first release of Declarai!** 🥳 🥳
 
