@@ -35,9 +35,9 @@ class Declarai:
     def __init__(self, **kwargs):
         self.llm_config = LLMSettings(**kwargs)
 
-        self.task = LLMTaskDecorator(self)
+        self.task = LLMTaskDecorator(self, **kwargs)
 
         class Experimental:
-            chat = LLMChatDecorator(self)
+            chat = LLMChatDecorator(self, **kwargs)
 
         self.experimental = Experimental

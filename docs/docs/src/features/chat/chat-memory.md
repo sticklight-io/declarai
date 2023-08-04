@@ -50,9 +50,3 @@ sql_bot.system
 
 > "system: You are a sql assistant. You help with SQL related questions with one-line answers.\n"
 ```
-
-<div style="text-align: right">
-    <a href="../controlling-chat-behavior" class="md-button">
-        Next <i class="fas fa-arrow-right"></i>
-    </a>
-</div>

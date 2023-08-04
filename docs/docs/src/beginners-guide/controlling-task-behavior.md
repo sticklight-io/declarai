@@ -1,3 +1,8 @@
+---
+hide:
+  - footer
+---
+
 # Controlling task behavior :control_knobs:
 
 Task behavior can be controlled by any of the available interfaces in Python.

@@ -88,9 +88,3 @@ print(squidward_joke)
 > "Why did the jellyfish go to school? Because it wanted to improve its "sting-uage" skills!"
 > "Why did Squidward bring a ladder to work? Because he wanted to climb up the corporate "sour-cules"!"
 ```
-
-<div style="text-align: right">
-    <a href="../debugging-chat" class="md-button">
-        Next <i class="fas fa-arrow-right"></i>
-    </a>
-</div>

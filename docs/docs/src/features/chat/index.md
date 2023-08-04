@@ -40,10 +40,3 @@ sql_bot.send("When should I use a LEFT JOIN?") # (1)!
     ```
 
 
-<div style="text-align: right">
-    <a href="../chat/chat-memory" class="md-button">
-        Next <i class="fas fa-arrow-right"></i>
-    </a>
-</div>
-
-

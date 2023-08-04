@@ -1,3 +1,8 @@
+---
+hide:
+  - footer
+---
+
 # Debugging tasks
 
 So it all seems pretty magical up to this point, but what if you want to see what's going on behind the scenes?
