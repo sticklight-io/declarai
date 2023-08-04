@@ -26,7 +26,7 @@ def movie_recommender(user_input: str) -> Dict[str, str]:
     For each movie provide a short description as well
     :param user_input: The user's input
     :return: A dictionary of movie names and descriptions
-    """ # (2)!
+    """
 ```
 
 **Using type annotations** in the input and output create predictability in software and enforce a strict interface with the model.<br>

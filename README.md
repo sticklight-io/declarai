@@ -146,4 +146,4 @@ To read more about what you can do with Declarai,
 please visit our documentation site: [docs](https://vendi-ai.github.io/declarai/)
 
 ## Contributing
-We welcome contributions to Declarai! Please read our [contributing guide](CONTRIBUTING.md) to get started.
+We welcome contributions to Declarai! Please read our [contributing guide](https://vendi-ai.github.io/declarai/src/contribute/) to get started.
