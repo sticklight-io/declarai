@@ -21,28 +21,6 @@ class LLMOrchestratorDecorator:
     def get_operator(self, **kwargs):
         ...
 
-    @overload
-    def __call__(self, decorated: None = None, *, middlewares: List[Type[TaskMiddleware]]) -> Self:
-        ...
-
-    @overload
-    def __call__(self, decorated: Callable[..., Any]) -> LLMTaskOrchestrator:
-        ...
-
-    def __call__(
-        self,
-        decorated=None,
-        *,
-        middlewares: List[TaskMiddleware] = None
-    ):
-        # When arguments are passed
-        if decorated is None:
-            self.middlewares = middlewares
-            return self
-        else:
-            # When no arguments are passed
-            return self.return_orchestrator(decorated)
-
     @abstractmethod
     def return_orchestrator(self, decorated: Any) -> Any:
         ...
