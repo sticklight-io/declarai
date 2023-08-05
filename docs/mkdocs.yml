@@ -3,7 +3,7 @@ site_name: Declarai
 extra:
   analytics:
     provider: google
-    property: G-XXXXXXX
+    property: G-YQ30DDKFS4
     feedback:
       title: Was this page helpful?
       ratings:
