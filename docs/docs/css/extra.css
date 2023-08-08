@@ -5,3 +5,15 @@
 .md-annotation__index:before{
   background: rgba(133, 236, 199, 0.62);
 }
+
+.md-banner {
+    background-color: #1E3D58;
+    color: #ffffff;
+}
+.md-banner a {
+    color: #DAA520; /* Adjust this for the link color inside the banner */
+}
+
+.md-banner a:hover {
+    color: #e31849; /* Adjust this for the link hover color inside the banner */
+}
