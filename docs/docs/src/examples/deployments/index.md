@@ -66,3 +66,25 @@ res = requests.post("http://localhost:8000/movie_recommender",
 
 ```
 
+## Streamlit app
+Streamlit is a great tool for quickly building interactive web apps.
+Assuming you have deployed your Declarai code as a REST API, you can use the following snippet to build a Streamlit app that interacts with it:
+```python
+import streamlit as st
+import requests
+
+BACKEND_URL = "http://localhost:8000"
+st.title("Welcome to Movie Recommender System")
+st.write("This is a demo of a movie recommender system built using Declarai")
+
+user_input = st.text_input("What kind of movies do you like?")
+button = st.button("Submit")
+if button:
+    print(user_input)
+    with st.spinner("Thinking.."):
+        res = requests.post(f"{BACKEND_URL}/movie_recommender", json={"user_input": user_input})
+    st.write(res.json())
+```
+![img.png](streamlit_img.png)
+
+
