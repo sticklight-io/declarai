@@ -59,8 +59,24 @@ theme:
     - content.code.annotate
     - navigation.indexes
     - navigation.footer
+    - announce.dismiss
+    - header.autohide
   name: material
   logo: img/Vendi-logo.svg
+  custom_dir: overrides
+  palette:
+
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 extra_css:
   - css/extra.css
   - css/termynal.css

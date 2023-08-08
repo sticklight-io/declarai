@@ -1,4 +1,4 @@
-# Chatbots :simple-rocketdotchat:
+# Chatbots :speech_balloon:
 
 Unlike tasks, chatbots are meant to keep the conversation going. <br>
 Instead of executing a single operation, they are built to manage conversation context over time.
