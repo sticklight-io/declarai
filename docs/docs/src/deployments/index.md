@@ -47,13 +47,8 @@ if __name__ == "__main__":
     uvicorn.run(app)
 ```
 
-You can now run the server with `python app.py` and send a POST request to `http://localhost:8000/movie_recommender` with the following body:
+You can now run the server with `python app.py` and send a POST request to `http://localhost:8000/movie_recommender`:
 
-```json
-{
-  "user_input": "I want to watch a movie about a group of friends who go on a road trip"
-}
-```
 
 ```python
 import requests
