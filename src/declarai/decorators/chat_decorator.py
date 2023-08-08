@@ -1,7 +1,8 @@
 from functools import partial
 from typing import overload, List, Type, Callable, Any, Optional, Dict
-from typing_extensions import Self, Union
+from typing_extensions import Self, Union, TypeVar
 from declarai.decorators.base import LLMOrchestratorDecorator
+from declarai.memory.base import ChatMemory
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators import resolve_operator, LLMParamsType
 from declarai.orchestrator.chat_orchestrator import LLMChatOrchestrator
@@ -12,7 +13,9 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
 
     @overload
     def __call__(self, decorated: None = None, *, middlewares: Optional[List[Type[TaskMiddleware]]] = None,
-                 llm_params: Optional[Union[LLMParamsType, Dict[str, Any]]] = None) -> Self:
+                 llm_params: Optional[Union[LLMParamsType, Dict[str, Any]]] = None,
+                 chat_memory: Optional[ChatMemory] = None
+                 ) -> Callable[..., Callable[..., LLMChatOrchestrator]]:
         ...
 
     @overload
@@ -24,7 +27,8 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
         decorated=None,
         *,
         middlewares: List[TaskMiddleware] = None,
-        llm_params: Optional[LLMParamsType] = None
+        llm_params: Optional[LLMParamsType] = None,
+        chat_memory: Optional[ChatMemory] = None
     ):
         """
         Decorates a the python class to be a LLMChatOrchestrator
@@ -35,7 +39,7 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
         """
         # When arguments are passed
         if decorated is None:
-            return partial(self.return_orchestrator, middlewares=middlewares, llm_params=llm_params)
+            return partial(self.return_orchestrator, middlewares=middlewares, llm_params=llm_params, chat_memory=chat_memory)
         else:
             # When no arguments are passed
             return self.return_orchestrator(decorated)
@@ -50,6 +54,7 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
         decorated_cls: Callable[..., Any],
         middlewares: List[TaskMiddleware] = None,
         llm_params: LLMParamsType = None,
+        chat_memory: ChatMemory = None
     ) -> Callable[..., LLMChatOrchestrator]:
         non_private_methods = {
             method_name: method
@@ -74,4 +79,4 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
                 setattr(llm_chat, method_name, _method)
             return llm_chat
 
-        return partial(llm_chat_factory, decorated_cls, middlewares=middlewares, llm_params=llm_params)
+        return partial(llm_chat_factory, decorated_cls, middlewares=middlewares, llm_params=llm_params, chat_memory=chat_memory)
