@@ -48,6 +48,9 @@ nav:
       - src/providers/openai.md
   - Integrations:
       - src/integrations/index.md
+  - Deployments:
+      - src/deployments/index.md
+      - src/deployments/fastapi.md
   - Changelog: src/changelog.md
   - Contribute: src/contribute.md
 
