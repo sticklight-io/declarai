@@ -34,7 +34,7 @@ class OpenAIChatOperator(BaseOperator):
         parsed_func: PythonParser,
         **kwargs,
     ):
-        super().__init__(llm=llm, parsed=parsed)
+        super().__init__(llm=llm, parsed=parsed, **kwargs)
         self.parsed_func = parsed_func
         self.system = kwargs.get("system", self.parsed.docstring_freeform)
 

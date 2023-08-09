@@ -3,7 +3,7 @@
 TODO...
 """
 
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators.base.types import Message, MessageRole
@@ -69,8 +69,10 @@ class LLMChatOrchestrator:
             return self.parsed_send_func.parse(raw_response)
         return raw_response
 
-    def __call__(self, **kwargs) -> Any:
+    def __call__(self, llm_params: Optional[Dict[str, Any]] = None, **kwargs) -> Any:
         self._kwargs = kwargs
+        if llm_params:
+            self._kwargs["llm_params"] = llm_params
         return self._exec_with_message_state(kwargs)
 
     def send(self, **kwargs) -> Any:

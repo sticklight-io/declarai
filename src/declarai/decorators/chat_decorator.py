@@ -1,5 +1,5 @@
 from functools import partial
-from typing import overload, List, Type, Callable, Any
+from typing import overload, List, Type, Callable, Any, Optional, Dict
 from typing_extensions import Self
 from declarai.decorators.base import LLMOrchestratorDecorator
 from declarai.middlewares.base import TaskMiddleware
@@ -22,8 +22,16 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
         self,
         decorated=None,
         *,
-        middlewares: List[TaskMiddleware] = None
+        middlewares: List[TaskMiddleware] = None,
+        llm_params: Optional[Dict[str, Any]] = None,
     ):
+        """
+        Decorates a the python class to be a LLMChatOrchestrator
+        :param decorated: the class
+        :param middlewares: the middlewares to use while executing the chat
+        :param llm_params: the llm params like temperature, top_k, top_p, etc to be used when prompting the chat
+        :return:
+        """
         # When arguments are passed
         if decorated is None:
             self.middlewares = middlewares

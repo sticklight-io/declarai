@@ -35,8 +35,8 @@ class OpenAITaskOperator(BaseOperator):
         partial_class = partial(cls, openai_llm)
         return partial_class
 
-    def __init__(self, llm: OpenAILLM, parsed: PythonParser):
-        super().__init__(llm, parsed)
+    def __init__(self, llm: OpenAILLM, parsed: PythonParser, **kwargs):
+        super().__init__(llm, parsed, **kwargs)
 
     def _compile_input_placeholder(self) -> str:
         """
