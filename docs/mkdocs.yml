@@ -48,6 +48,9 @@ nav:
       - src/providers/openai.md
   - Integrations:
       - src/integrations/index.md
+  - Examples:
+    - Deployments:
+      - src/examples/deployments/index.md
   - Changelog: src/changelog.md
   - Contribute: src/contribute.md
 
