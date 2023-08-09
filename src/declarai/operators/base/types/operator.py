@@ -14,12 +14,12 @@ class BaseOperator(ABC):
         self.llm = llm
         self.parsed = parsed
         self.llm_response = None
-        self.llm_params = llm_params
+        self.llm_params = llm_params or {}
 
     @abstractmethod
     def compile(self, **kwargs) -> CompiledTemplate:
         ...
 
-    def predict(self, llm_params: Optional[Dict[str, Any]], **kwargs) -> LLMResponse:
-        llm_params = llm_params or self.llm_params
+    def predict(self, llm_params: Optional[Dict[str, Any]] = None, **kwargs) -> LLMResponse:
+        llm_params = llm_params or self.llm_params  # Order is important!
         return self.llm.predict(**self.compile(**kwargs), **llm_params)

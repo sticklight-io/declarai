@@ -1,20 +1,20 @@
 from abc import abstractmethod
-from typing import Any, List, Optional
-
-from declarai.middlewares.base import TaskMiddleware
+from typing import Any
 
 
 class LLMOrchestratorDecorator:
     def __init__(
         self,
         declarai_instance,
-        middlewares: Optional[List[TaskMiddleware]] = None,
         **kwargs,
     ):
+        """
+         Initializes the LLMOrchestratorDecorator instance.
+         :param kwargs: Additional keyword arguments.
+         """
         self.declarai_instance = declarai_instance
 
         self.operator = self.get_operator(**kwargs)
-        self.middlewares = middlewares or []
 
     @abstractmethod
     def get_operator(self, **kwargs):

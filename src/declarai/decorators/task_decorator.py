@@ -1,3 +1,4 @@
+from functools import partial
 from typing import overload, Callable, Any, List, Type, Optional, Dict
 from typing_extensions import Self
 from declarai.decorators.base import LLMOrchestratorDecorator
@@ -8,11 +9,23 @@ from declarai.orchestrator.task_orchestrator import LLMTaskOrchestrator
 
 class LLMTaskDecorator(LLMOrchestratorDecorator):
     @overload
-    def __call__(self, decorated: None = None, **kwargs) -> Self:
+    def __call__(
+        self,
+        decorated: None = None,
+        *,
+        middlewares: List[TaskMiddleware] = None,
+        llm_params: Optional[Dict[str, Any]] = None,
+    ) -> Self:
         ...
 
     @overload
-    def __call__(self, decorated: Callable[..., Any], **kwargs) -> LLMTaskOrchestrator:
+    def __call__(
+        self,
+        decorated: Callable[..., Any],
+        *,
+        middlewares: List[TaskMiddleware] = None,
+        llm_params: Optional[Dict[str, Any]] = None
+    ) -> LLMTaskOrchestrator:
         ...
 
     def __call__(
@@ -30,9 +43,7 @@ class LLMTaskDecorator(LLMOrchestratorDecorator):
         """
         # When arguments are passed
         if decorated is None:
-            self.middlewares = middlewares
-            self.llm_params = llm_params
-            return self
+            return partial(self.return_orchestrator, middlewares=middlewares, llm_params=llm_params)
         else:
             # When no arguments are passed
             return self.return_orchestrator(decorated)
@@ -40,9 +51,14 @@ class LLMTaskDecorator(LLMOrchestratorDecorator):
     def get_operator(self, **kwargs):
         return resolve_operator(self.declarai_instance.llm_config, **kwargs)
 
-    def return_orchestrator(self, func):
+    def return_orchestrator(
+        self,
+        func,
+        middlewares: List[TaskMiddleware] = None,
+        llm_params: Optional[Dict[str, Any]] = None
+    ):
         llm_task = LLMTaskOrchestrator(
-            func, self.operator, middlewares=self.middlewares, llm_params=self.llm_params
+            func, self.operator, middlewares=middlewares, llm_params=llm_params
         )
         llm_task.__name__ = func.__name__
         return llm_task
