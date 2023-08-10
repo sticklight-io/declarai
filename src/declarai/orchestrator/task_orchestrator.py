@@ -13,7 +13,7 @@ the different LLM API providers as well as custom models have different APIs wit
 structures. For that reason, there are multiple implementations of operators, depending on the required use case.
 """
 
-from typing import Any, Callable, Dict, List, Optional, Generic
+from typing import Any, Callable, Dict, List
 
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators.base.types.llm import LLMResponse
@@ -23,7 +23,7 @@ from declarai.orchestrator.future_llm_task import FutureLLMTask
 from declarai.python_parser.parser import PythonParser
 
 
-class LLMTaskOrchestrator(Generic[LLMParamsType]):
+class LLMTaskOrchestrator:
     is_declarai = True
 
     parser: PythonParser
