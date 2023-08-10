@@ -1,9 +1,9 @@
 from functools import partial
 from typing import overload, List, Type, Callable, Any, Optional, Dict
-from typing_extensions import Self
+from typing_extensions import Self, Union
 from declarai.decorators.base import LLMOrchestratorDecorator
 from declarai.middlewares.base import TaskMiddleware
-from declarai.operators import resolve_operator
+from declarai.operators import resolve_operator, LLMParamsType
 from declarai.orchestrator.chat_orchestrator import LLMChatOrchestrator
 from declarai.orchestrator.task_orchestrator import LLMTaskOrchestrator
 
@@ -11,7 +11,8 @@ from declarai.orchestrator.task_orchestrator import LLMTaskOrchestrator
 class LLMChatDecorator(LLMOrchestratorDecorator):
 
     @overload
-    def __call__(self, decorated: None = None, *, middlewares: List[Type[TaskMiddleware]]) -> Self:
+    def __call__(self, decorated: None = None, *, middlewares: Optional[List[Type[TaskMiddleware]]] = None,
+                 llm_params: Optional[Union[LLMParamsType, Dict[str, Any]]] = None) -> Self:
         ...
 
     @overload

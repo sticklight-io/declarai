@@ -46,7 +46,7 @@ class LLMTaskDecorator(LLMOrchestratorDecorator):
         func: Callable[..., Any],
         middlewares: List[TaskMiddleware] = None,
         llm_params: LLMParamsType = None
-    ) -> LLMTaskOrchestrator[LLMParamsType]:
+    ) -> LLMTaskOrchestrator:
         llm_task = LLMTaskOrchestrator(
             func, self.operator, middlewares=middlewares, llm_params=llm_params
         )
