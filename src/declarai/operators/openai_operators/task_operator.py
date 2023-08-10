@@ -9,8 +9,6 @@ from declarai.operators.shared.templates import (
     InstructFunctionTemplate,
     StructuredOutputInstructionPrompt,
 )
-from declarai.python_parser.parser import PythonParser
-
 from .openai_llm import OpenAILLM
 from .openai_llm.llm_params import OpenAILLMParams
 

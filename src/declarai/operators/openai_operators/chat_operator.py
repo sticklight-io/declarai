@@ -1,19 +1,20 @@
 import logging
 from functools import partial
-from typing import List, Optional, Type
+from typing import List, Optional, Type, Self
 
 from declarai.operators.base.types import Message, MessageRole
-from declarai.operators.base.types.operator import BaseOperator, CompiledTemplate
+from declarai.operators.base.types.operator import CompiledTemplate, BaseOperator
 from declarai.operators.shared.output_prompt import compile_output_prompt
 from declarai.operators.shared.templates import StructuredOutputChatPrompt
 from declarai.python_parser.parser import PythonParser
 
 from .openai_llm import OpenAILLM
+from .. import OpenAILLMParams
 
 logger = logging.getLogger("OpenAIChatOperator")
 
 
-class OpenAIChatOperator(BaseOperator):
+class OpenAIChatOperator(BaseOperator[OpenAILLMParams]):
     llm: OpenAILLM
     compiled_template: List[Message]
 
@@ -24,7 +25,7 @@ class OpenAIChatOperator(BaseOperator):
         model: Optional[str] = None,
     ) -> Type["OpenAIChatOperator"]:
         openai_llm = OpenAILLM(openai_token, model)
-        partial_class = partial(cls, openai_llm)
+        partial_class: Self = partial(cls, openai_llm)
         return partial_class
 
     def __init__(
@@ -72,6 +73,6 @@ class OpenAIChatOperator(BaseOperator):
         else:
             compiled_system_prompt = self.system
         messages = [
-            Message(message=compiled_system_prompt, role=MessageRole.system)
-        ] + messages
+                       Message(message=compiled_system_prompt, role=MessageRole.system)
+                   ] + messages
         return {"messages": messages}
