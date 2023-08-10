@@ -4,8 +4,10 @@ from typing_extensions import Literal
 
 from declarai.operators.base.llm_settings import LLMSettings
 from declarai.operators.base.types.operator import BaseOperator
+from .base.types.llm_params import LLMParamsType
 
 from .openai_operators.chat_operator import OpenAIChatOperator
+from .openai_operators.openai_llm.llm_params import OpenAILLMParams
 from .openai_operators.task_operator import OpenAITaskOperator
 
 # Based on documentation from https://platform.openai.com/docs/models/overview

@@ -12,6 +12,7 @@ from declarai.operators.shared.templates import (
 from declarai.python_parser.parser import PythonParser
 
 from .openai_llm import OpenAILLM
+from .openai_llm.llm_params import OpenAILLMParams
 
 logger = logging.getLogger("OpenAITaskOperator")
 
@@ -20,7 +21,7 @@ INPUT_LINE_TEMPLATE = "{param}: {{{param}}}"
 NEW_LINE_INPUT_LINE_TEMPLATE = "\n{param}: {{{param}}}"
 
 
-class OpenAITaskOperator(BaseOperator):
+class OpenAITaskOperator(BaseOperator[OpenAILLMParams]):
     llm: OpenAILLM
     compiled_template: List[Message]
     set_llm: Callable

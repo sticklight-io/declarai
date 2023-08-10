@@ -1,5 +1,7 @@
 from abc import abstractmethod
-from typing import Any
+from typing import Any, Generic
+
+from declarai.operators import LLMParamsType
 
 
 class LLMOrchestratorDecorator:

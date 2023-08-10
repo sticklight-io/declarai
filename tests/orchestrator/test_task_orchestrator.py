@@ -22,7 +22,7 @@ def test_task_orchestrator():
 
     # TODO: Implement test when plan is implemented
     # task_orchestrator.plan()
-    #
+
     res = task_orchestrator()
     assert res == "predicted_result"
 

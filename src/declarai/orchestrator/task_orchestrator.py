@@ -13,16 +13,17 @@ the different LLM API providers as well as custom models have different APIs wit
 structures. For that reason, there are multiple implementations of operators, depending on the required use case.
 """
 
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Generic
 
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators.base.types.llm import LLMResponse
+from declarai.operators.base.types.llm_params import LLMParamsType
 from declarai.operators.base.types.operator import BaseOperator
 from declarai.orchestrator.future_llm_task import FutureLLMTask
 from declarai.python_parser.parser import PythonParser
 
 
-class LLMTaskOrchestrator:
+class LLMTaskOrchestrator(Generic[LLMParamsType]):
     is_declarai = True
 
     parser: PythonParser
@@ -36,7 +37,7 @@ class LLMTaskOrchestrator:
         decorated: Any,
         operator: Callable[[Any], BaseOperator],
         middlewares: List[TaskMiddleware] = None,
-        llm_params: Optional[Dict[str, Any]] = None,
+        llm_params: LLMParamsType = None,
         **kwargs
     ):
         self.parsed = PythonParser(decorated)
@@ -74,7 +75,7 @@ class LLMTaskOrchestrator:
                 return exec_with_middlewares()
         return self._exec(kwargs)
 
-    def __call__(self, llm_params: Optional[Dict[str, Any]] = None, **kwargs) -> Any:
+    def __call__(self, *, llm_params: LLMParamsType = None, **kwargs) -> Any:
         self._kwargs = kwargs
         runtime_llm_params = llm_params or self.llm_params  # order is important! We prioritize runtime params that
         # were passed
