@@ -9,7 +9,7 @@ from declarai.operators.shared.templates import StructuredOutputChatPrompt
 from declarai.python_parser.parser import PythonParser
 
 from .openai_llm import OpenAILLM
-from .. import OpenAILLMParams
+from .openai_llm import OpenAILLMParams
 
 logger = logging.getLogger("OpenAIChatOperator")
 

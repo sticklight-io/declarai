@@ -21,7 +21,7 @@ class BaseOperator(Generic[LLMParamsType]):
     def compile(self, **kwargs) -> CompiledTemplate:
         ...
 
-    def predict(self, llm_params: Optional[LLMParamsType] = None, **kwargs: object) -> LLMResponse:
+    def predict(self, *, llm_params: Optional[LLMParamsType] = None, **kwargs: object) -> LLMResponse:
         print(llm_params)
         llm_params = llm_params or self.llm_params  # Order is important -
         # provided params during execution should override the ones provided during initialization
