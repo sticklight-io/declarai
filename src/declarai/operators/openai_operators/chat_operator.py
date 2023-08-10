@@ -1,6 +1,7 @@
 import logging
 from functools import partial
-from typing import List, Optional, Type, Self
+from typing import List, Optional, Type
+from typing_extensions import Self
 
 from declarai.operators.base.types import Message, MessageRole
 from declarai.operators.base.types.operator import CompiledTemplate, BaseOperator
