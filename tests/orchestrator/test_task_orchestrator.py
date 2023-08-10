@@ -25,3 +25,6 @@ def test_task_orchestrator():
 
     res = task_orchestrator()
     assert res == "predicted_result"
+
+    res = task_orchestrator(llm_params={"temperature": 0.5})
+    instantiated_operator.predict.assert_called_with(llm_params={"temperature": 0.5})

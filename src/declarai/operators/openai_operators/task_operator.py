@@ -9,9 +9,8 @@ from declarai.operators.shared.templates import (
     InstructFunctionTemplate,
     StructuredOutputInstructionPrompt,
 )
-from declarai.python_parser.parser import PythonParser
-
 from .openai_llm import OpenAILLM
+from .openai_llm.llm_params import OpenAILLMParams
 
 logger = logging.getLogger("OpenAITaskOperator")
 
@@ -20,7 +19,7 @@ INPUT_LINE_TEMPLATE = "{param}: {{{param}}}"
 NEW_LINE_INPUT_LINE_TEMPLATE = "\n{param}: {{{param}}}"
 
 
-class OpenAITaskOperator(BaseOperator):
+class OpenAITaskOperator(BaseOperator[OpenAILLMParams]):
     llm: OpenAILLM
     compiled_template: List[Message]
     set_llm: Callable
@@ -34,9 +33,6 @@ class OpenAITaskOperator(BaseOperator):
         openai_llm = OpenAILLM(openai_token, model)
         partial_class = partial(cls, openai_llm)
         return partial_class
-
-    def __init__(self, llm: OpenAILLM, parsed: PythonParser):
-        super().__init__(llm, parsed)
 
     def _compile_input_placeholder(self) -> str:
         """

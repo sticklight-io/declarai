@@ -3,3 +3,12 @@ repos:
     rev: v8.16.1
     hooks:
       - id: gitleaks
+  - repo: https://github.com/codespell-project/codespell
+    rev: "v2.2.1"
+    hooks:
+      - id: codespell
+        args:
+          - src/declarai/operators/shared/templates/
+
+
+

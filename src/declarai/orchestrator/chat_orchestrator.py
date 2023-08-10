@@ -3,9 +3,10 @@
 TODO...
 """
 
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from declarai.middlewares.base import TaskMiddleware
+from declarai.operators import LLMParamsType
 from declarai.operators.base.types import Message, MessageRole
 from declarai.operators.base.types.llm import LLMResponse
 from declarai.operators.base.types.operator import BaseOperator
@@ -26,6 +27,7 @@ class LLMChatOrchestrator:
         decorated: Any,
         operator: Callable[[Any], BaseOperator],
         middlewares: List[TaskMiddleware] = None,
+        llm_params: LLMParamsType = None,
         **kwargs
     ):
         self.parsed = PythonParser(decorated)
@@ -36,6 +38,7 @@ class LLMChatOrchestrator:
         self.operator = operator(
             parsed=self.parsed, parsed_func=self.parsed_send_func, **kwargs
         )
+        self.llm_params = llm_params
 
         self.system = self.operator.system
         self.greeting = kwargs.pop("greeting", getattr(decorated, "greeting", None))
@@ -69,10 +72,13 @@ class LLMChatOrchestrator:
             return self.parsed_send_func.parse(raw_response)
         return raw_response
 
-    def __call__(self, **kwargs) -> Any:
-        self._kwargs = kwargs
+    def __call__(self, *, messages: List[Message], llm_params: LLMParamsType = None, **kwargs) -> Any:
+        kwargs["messages"] = messages
+        runtime_llm_params = llm_params or self.llm_params # order is important! We prioritize runtime params that
+        if runtime_llm_params:
+            kwargs["llm_params"] = runtime_llm_params
         return self._exec_with_message_state(kwargs)
 
-    def send(self, **kwargs) -> Any:
-        self.add_message(kwargs.pop("message"), role=MessageRole.user)
-        return self(messages=self._messages, **kwargs)
+    def send(self, message: str, llm_params: Union[LLMParamsType, Dict[str, Any]] = None, **kwargs) -> Any:
+        self.add_message(message, role=MessageRole.user)
+        return self(messages=self._messages, llm_params=llm_params, **kwargs)

@@ -1,7 +1,7 @@
 """LLMTaskOrchestrator
 
 Provides the most basic component to interact with an LLM.
-LLMs are ofter interacted with via an API. In order to provide prompts and receive predictions,
+LLMs are often interacted with via an API. In order to provide prompts and receive predictions,
 we will need to create the following:
 - parse the provided python code
 - Translate the parsed data into the proper prompt for the LLM
@@ -17,6 +17,7 @@ from typing import Any, Callable, Dict, List
 
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators.base.types.llm import LLMResponse
+from declarai.operators.base.types.llm_params import LLMParamsType
 from declarai.operators.base.types.operator import BaseOperator
 from declarai.orchestrator.future_llm_task import FutureLLMTask
 from declarai.python_parser.parser import PythonParser
@@ -36,10 +37,12 @@ class LLMTaskOrchestrator:
         decorated: Any,
         operator: Callable[[Any], BaseOperator],
         middlewares: List[TaskMiddleware] = None,
+        llm_params: LLMParamsType = None,
         **kwargs
     ):
         self.parsed = PythonParser(decorated)
         self.middlewares = middlewares
+        self.llm_params = llm_params
         self.operator = operator(parsed=self.parsed, **kwargs)
 
     def compile(self, **kwargs) -> Any:
@@ -72,6 +75,10 @@ class LLMTaskOrchestrator:
                 return exec_with_middlewares()
         return self._exec(kwargs)
 
-    def __call__(self, **kwargs) -> Any:
+    def __call__(self, *, llm_params: LLMParamsType = None, **kwargs) -> Any:
         self._kwargs = kwargs
+        runtime_llm_params = llm_params or self.llm_params  # order is important! We prioritize runtime params that
+        # were passed
+        if runtime_llm_params:
+            self._kwargs["llm_params"] = runtime_llm_params
         return self._exec_middlewares(kwargs)

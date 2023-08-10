@@ -1,9 +1,9 @@
 from functools import partial
-from typing import overload, List, Type, Callable, Any
-from typing_extensions import Self
+from typing import overload, List, Type, Callable, Any, Optional, Dict
+from typing_extensions import Self, Union
 from declarai.decorators.base import LLMOrchestratorDecorator
 from declarai.middlewares.base import TaskMiddleware
-from declarai.operators import resolve_operator
+from declarai.operators import resolve_operator, LLMParamsType
 from declarai.orchestrator.chat_orchestrator import LLMChatOrchestrator
 from declarai.orchestrator.task_orchestrator import LLMTaskOrchestrator
 
@@ -11,7 +11,8 @@ from declarai.orchestrator.task_orchestrator import LLMTaskOrchestrator
 class LLMChatDecorator(LLMOrchestratorDecorator):
 
     @overload
-    def __call__(self, decorated: None = None, *, middlewares: List[Type[TaskMiddleware]]) -> Self:
+    def __call__(self, decorated: None = None, *, middlewares: Optional[List[Type[TaskMiddleware]]] = None,
+                 llm_params: Optional[Union[LLMParamsType, Dict[str, Any]]] = None) -> Self:
         ...
 
     @overload
@@ -22,12 +23,19 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
         self,
         decorated=None,
         *,
-        middlewares: List[TaskMiddleware] = None
+        middlewares: List[TaskMiddleware] = None,
+        llm_params: Optional[LLMParamsType] = None
     ):
+        """
+        Decorates a the python class to be a LLMChatOrchestrator
+        :param decorated: the class
+        :param middlewares: the middlewares to use while executing the chat
+        :param llm_params: the llm params like temperature, top_k, top_p, etc to be used when prompting the chat
+        :return:
+        """
         # When arguments are passed
         if decorated is None:
-            self.middlewares = middlewares
-            return self
+            return partial(self.return_orchestrator, middlewares=middlewares, llm_params=llm_params)
         else:
             # When no arguments are passed
             return self.return_orchestrator(decorated)
@@ -37,7 +45,12 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
             self.declarai_instance.llm_config, operator_type="chat", **kwargs
         )
 
-    def return_orchestrator(self, decorated_cls) -> Callable[..., LLMChatOrchestrator]:
+    def return_orchestrator(
+        self,
+        decorated_cls: Callable[..., Any],
+        middlewares: List[TaskMiddleware] = None,
+        llm_params: LLMParamsType = None,
+    ) -> Callable[..., LLMChatOrchestrator]:
         non_private_methods = {
             method_name: method
             for method_name, method in decorated_cls.__dict__.items()
@@ -61,4 +74,4 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
                 setattr(llm_chat, method_name, _method)
             return llm_chat
 
-        return partial(llm_chat_factory, decorated_cls)
+        return partial(llm_chat_factory, decorated_cls, middlewares=middlewares, llm_params=llm_params)
