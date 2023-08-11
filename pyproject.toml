@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "declarai"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 authors = ["Aviv Almashanu <avivex1000@gmail.com>"]
 readme = "README.md"
