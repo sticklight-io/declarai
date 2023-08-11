@@ -49,7 +49,7 @@ class LLMChatOrchestrator:
         self.__set_memory()
 
     def __set_memory(self):
-        if self.greeting and not self._chat_memory.history:
+        if self.greeting:
             self.add_message(message=self.greeting, role=MessageRole.assistant)
 
     @property
