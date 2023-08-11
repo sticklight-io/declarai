@@ -10,7 +10,6 @@ class BaseChatMessageHistory(ABC):
     See `ChatMessageHistory` for default implementation.
 
     """
-
     @property
     @abstractmethod
     def history(self):

@@ -12,6 +12,7 @@ class InMemory(BaseChatMessageHistory, BaseModel):
     """
     messages: List[Message] = []
 
+    @property
     def history(self) -> List[Message]:
         """
         Returns the list of messages stored in memory.
