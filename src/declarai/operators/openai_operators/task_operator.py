@@ -19,7 +19,7 @@ INPUT_LINE_TEMPLATE = "{param}: {{{param}}}"
 NEW_LINE_INPUT_LINE_TEMPLATE = "\n{param}: {{{param}}}"
 
 
-class OpenAITaskOperator(BaseOperator[OpenAILLMParams]):
+class OpenAITaskOperator(BaseOperator):
     llm: OpenAILLM
     compiled_template: List[Message]
     set_llm: Callable
