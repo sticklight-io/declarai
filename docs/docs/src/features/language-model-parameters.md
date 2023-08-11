@@ -73,6 +73,8 @@ class SQLAdvisor:
     You are a proficient sql adivsor.
     Your goal is to help user's with sql related questions.
     """
+
+sql_advisor = SQLAdvisor()
 ```
 In the case above, all messages sent to the chat interface will use the parameters passed at declaration.
 
