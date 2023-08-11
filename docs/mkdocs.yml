@@ -35,9 +35,11 @@ nav:
           - Debugging chat: src/features/chat/debugging-chat.md
           - Customizing chat response: src/features/chat/customizing-chat-response.md
           - Advanced initialization: src/features/chat/advanced-initialization.md
-      - magic: src/features/magic.md
-      - multi models and providers: src/features/multi-model-multi-provider.md
-      - middlewares:
+          - Control LLM parameters: src/features/language-model-parameters
+      - Control LLM parameters: src/features/language-model-parameters
+      - Magic: src/features/magic.md
+      - Multi models and providers: src/features/multi-model-multi-provider.md
+      - Middlewares:
           - src/features/middlewares/index.md
       - Evals:
           - src/features/evals/index.md
