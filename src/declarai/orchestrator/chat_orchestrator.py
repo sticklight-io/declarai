@@ -3,10 +3,9 @@
 TODO...
 """
 
-from typing import Any, Callable, Dict, List, Optional, Union
-
-from declarai.memory import InMemory
-from declarai.memory.base import ChatMemory
+from typing import Any, Callable, Dict, List, Union
+from declarai.memory.base import BaseChatMessageHistory
+from declarai.memory import ChatMessageHistory
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators import LLMParamsType
 from declarai.operators.base.types import Message, MessageRole
@@ -17,6 +16,7 @@ from declarai.python_parser.parser import PythonParser
 
 class LLMChatOrchestrator:
     is_declarai = True
+    DEFAULT_CHAT_MEMORY = ChatMessageHistory
 
     operator: BaseOperator
     middlewares: List[TaskMiddleware]
@@ -26,10 +26,10 @@ class LLMChatOrchestrator:
     def __init__(
         self,
         decorated: Any,
-        operator: Callable[[Any], BaseOperator],
+        operator: Callable[..., BaseOperator],
         middlewares: List[TaskMiddleware] = None,
         llm_params: LLMParamsType = None,
-        chat_memory: ChatMemory = None,
+        chat_memory: BaseChatMessageHistory = None,
         **kwargs
     ):
         self.parsed = PythonParser(decorated)
@@ -40,7 +40,7 @@ class LLMChatOrchestrator:
         self.operator = operator(
             parsed=self.parsed, parsed_func=self.parsed_send_func, **kwargs
         )
-        self.chat_memory = chat_memory or InMemory()
+        self.chat_memory = chat_memory or self.DEFAULT_CHAT_MEMORY()
         self.llm_params = llm_params
 
         self.system = self.operator.system
@@ -75,7 +75,7 @@ class LLMChatOrchestrator:
 
     def __call__(self, *, messages: List[Message], llm_params: LLMParamsType = None, **kwargs) -> Any:
         kwargs["messages"] = messages
-        runtime_llm_params = llm_params or self.llm_params # order is important! We prioritize runtime params that
+        runtime_llm_params = llm_params or self.llm_params  # order is important! We prioritize runtime params that
         if runtime_llm_params:
             kwargs["llm_params"] = runtime_llm_params
         return self._exec_with_message_state(kwargs)

@@ -21,7 +21,7 @@ class LLMTaskDecorator(LLMOrchestratorDecorator):
         self,
         decorated: Optional[Callable[..., Any]] = None,
         *,
-        middlewares: Optional[List[TaskMiddleware]] = None,
+        middlewares: Optional[List[Type[TaskMiddleware]]] = None,
         llm_params: Optional[LLMParamsType] = None
     ):
         """
@@ -43,7 +43,7 @@ class LLMTaskDecorator(LLMOrchestratorDecorator):
     def return_orchestrator(
         self,
         func: Callable[..., Any],
-        middlewares: List[TaskMiddleware] = None,
+        middlewares: List[Type[TaskMiddleware]] = None,
         llm_params: LLMParamsType = None
     ) -> LLMTaskOrchestrator:
         llm_task = LLMTaskOrchestrator(
