@@ -1,17 +1,16 @@
-from typing import Optional, List
+from typing import List
 
-from .base import ChatMemory
+from pydantic.main import BaseModel
+
+from .base import BaseChatMessageHistory
 from declarai.operators.base.types import Message
 
 
-class InMemory(ChatMemory):
+class ChatMessageHistory(BaseChatMessageHistory, BaseModel):
     """
     This memory implementation stores all messages in memory in a list.
     """
-
-    def __init__(self, messages: Optional[List[Message]] = None, **kwargs):
-        super().__init__(**kwargs)
-        self.messages = messages or []
+    messages: List[Message] = []
 
     def history(self) -> List[Message]:
         """
@@ -26,3 +25,6 @@ class InMemory(ChatMemory):
         :param message: the message content and role
         """
         self.messages.append(message)
+
+    def clear(self) -> None:
+        self.messages = []
