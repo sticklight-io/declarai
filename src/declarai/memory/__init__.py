@@ -1,2 +1,2 @@
-from .in_memory import ChatMessageHistory
-from .file import FileChatMessageHistory
+from .in_memory import InMemory
+from .file import FileMemory

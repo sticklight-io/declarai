@@ -9,7 +9,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class FileChatMessageHistory(BaseChatMessageHistory):
+class FileMemory(BaseChatMessageHistory):
     """
     Chat message history that stores history in a local file.
 
@@ -26,7 +26,7 @@ class FileChatMessageHistory(BaseChatMessageHistory):
             # Create a temporary file and immediately close it to get its name.
             temp = tempfile.NamedTemporaryFile(delete=False)
             self.file_path = Path(temp.name)
-            temp.close()
+            self.file_path.write_text(json.dumps([]))
         else:
             self.file_path = Path(file_path)
 

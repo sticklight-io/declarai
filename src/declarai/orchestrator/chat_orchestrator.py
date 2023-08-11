@@ -5,7 +5,7 @@ TODO...
 
 from typing import Any, Callable, Dict, List, Union
 from declarai.memory.base import BaseChatMessageHistory
-from declarai.memory import ChatMessageHistory
+from declarai.memory import InMemory
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators import LLMParamsType
 from declarai.operators.base.types import Message, MessageRole
@@ -13,10 +13,11 @@ from declarai.operators.base.types.llm import LLMResponse
 from declarai.operators.base.types.operator import BaseOperator
 from declarai.python_parser.parser import PythonParser
 
+DEFAULT_CHAT_MEMORY = InMemory
+
 
 class LLMChatOrchestrator:
     is_declarai = True
-    DEFAULT_CHAT_MEMORY = ChatMessageHistory
 
     operator: BaseOperator
     middlewares: List[TaskMiddleware]
@@ -40,7 +41,7 @@ class LLMChatOrchestrator:
         self.operator = operator(
             parsed=self.parsed, parsed_func=self.parsed_send_func, **kwargs
         )
-        self.chat_memory = chat_memory or self.DEFAULT_CHAT_MEMORY()
+        self._chat_memory = chat_memory or DEFAULT_CHAT_MEMORY()
         self.llm_params = llm_params
 
         self.system = self.operator.system
@@ -48,19 +49,19 @@ class LLMChatOrchestrator:
         self.__set_memory()
 
     def __set_memory(self):
-        if self.greeting and not self.chat_memory.history():
+        if self.greeting and not self._chat_memory.history:
             self.add_message(message=self.greeting, role=MessageRole.assistant)
 
     @property
     def conversation(self) -> List[Message]:
-        return self.chat_memory.history()
+        return self._chat_memory.history
 
     def compile(self, **kwargs) -> List[Message]:
-        compiled = self.operator.compile(messages=self.chat_memory.history(), **kwargs)
+        compiled = self.operator.compile(messages=self._chat_memory.history, **kwargs)
         return compiled
 
     def add_message(self, message: str, role: MessageRole) -> None:
-        self.chat_memory.add_message(Message(message=message, role=role))
+        self._chat_memory.add_message(Message(message=message, role=role))
 
     def _exec(self, kwargs) -> LLMResponse:
         self.llm_response = self.operator.predict(**kwargs)
@@ -82,4 +83,4 @@ class LLMChatOrchestrator:
 
     def send(self, message: str, llm_params: Union[LLMParamsType, Dict[str, Any]] = None, **kwargs) -> Any:
         self.add_message(message, role=MessageRole.user)
-        return self(messages=self.chat_memory.history(), llm_params=llm_params, **kwargs)
+        return self(messages=self._chat_memory.history, llm_params=llm_params, **kwargs)
