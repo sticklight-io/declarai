@@ -10,12 +10,11 @@ from declarai.operators.shared.templates import StructuredOutputChatPrompt
 from declarai.python_parser.parser import PythonParser
 
 from .openai_llm import OpenAILLM
-from .openai_llm import OpenAILLMParams
 
 logger = logging.getLogger("OpenAIChatOperator")
 
 
-class OpenAIChatOperator(BaseOperator[OpenAILLMParams]):
+class OpenAIChatOperator(BaseOperator):
     llm: OpenAILLM
     compiled_template: List[Message]
 
