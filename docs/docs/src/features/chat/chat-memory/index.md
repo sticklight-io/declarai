@@ -52,7 +52,7 @@ sql_bot.system
 
 ## Default Memory
 
-The default message history of a chat is a simple in-memory list. This means that history exists only for the duration of the chatbot session.
+**The default message history of a chat is a simple in-memory list**. This means that history exists only for the duration of the chatbot session.
 
 If you prefer to have a persistent history, you can use the `FileMessageHistory` class from the `declarai.memory` module.
 
