@@ -30,7 +30,9 @@ nav:
       - src/features/index.md
       - Chat:
           - src/features/chat/index.md
-          - Chat memory: src/features/chat/chat-memory.md
+          - Chat memory:
+            - src/features/chat/chat-memory/index.md
+            - File Memory: src/features/chat/chat-memory/file-memory.md
           - Controlling chat behavior: src/features/chat/controlling-chat-behavior.md
           - Debugging chat: src/features/chat/debugging-chat.md
           - Customizing chat response: src/features/chat/customizing-chat-response.md

@@ -25,6 +25,13 @@ AllModels = Union[ModelsOpenai]
 def resolve_operator(
     llm_config: LLMSettings, operator_type: Literal["chat", "task"] = "task", **kwargs
 ) -> Type[BaseOperator]:
+    """
+    Resolves the operator to be used for the given llm_config
+    :param llm_config: llm settings like provider, model, etc
+    :param operator_type: relevant operator type
+    :param kwargs: api keys, etc
+    :return: a class that inherits from BaseOperator
+    """
     if llm_config.provider == "openai":
         open_ai_token = kwargs.get("openai_token")
         model = llm_config.model

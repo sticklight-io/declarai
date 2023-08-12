@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "declarai"
-version = "0.1.3"
-description = ""
+version = "0.1.4"
+description = "Declarai, turning Python code into LLM tasks, easy to use, and production-ready."
 authors = ["Aviv Almashanu <avivex1000@gmail.com>"]
 readme = "README.md"
 packages = [{include = "declarai", from = "src"}]

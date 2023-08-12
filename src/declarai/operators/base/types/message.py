@@ -1,4 +1,6 @@
 from enum import Enum
+from typing_extensions import Self
+from pydantic import BaseModel
 
 
 class MessageRole(str, Enum):
@@ -8,10 +10,9 @@ class MessageRole(str, Enum):
     function = "function"
 
 
-class Message:
-    def __init__(self, message: str, role: MessageRole):
-        self.message = message
-        self.role = role
+class Message(BaseModel):
+    message: str
+    role: MessageRole
 
     def __str__(self):
         return self.message

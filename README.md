@@ -1,20 +1,43 @@
-# Introducing declareai
-[![versions](https://img.shields.io/pypi/pyversions/declarai.svg)](https://github.com/vendi-ai/declarai)
-[![license](https://img.shields.io/github/license/vendi-ai/declarai.svg)](https://github.com/vendi-ai/declarai/blob/main/LICENSE)
+<p align="center">
+  <a href="https://github.com/vendi-ai/declarai">
+    <img src="https://img.shields.io/pypi/pyversions/declarai.svg" alt="versions">
+  </a>
+  <a href="https://github.com/vendi-ai/declarai">
+    <img src="https://img.shields.io/github/license/vendi-ai/declarai.svg" alt="license">
+  </a>
+  <a href="https://github.com/vendi-ai/declarai/actions/workflows/test.yaml">
+    <img src="https://github.com/vendi-ai/declarai/actions/workflows/test.yaml/badge.svg" alt="Tests">
+  </a>
+  <a href="https://pypi.org/project/declarai/">
+    <img src="https://img.shields.io/pypi/v/declarai?color=%2334D058&label=pypi%20package" alt="Pypi version">
+  </a>
+</p>
 
-![Logo - declarai.png](assets/Logo-declarai.png)
+<p align="center">
+  <img src="assets/Logo-declarai.png" alt="Logo - declarai.png">
+</p>
+
+---
+
+**Documentation**: <a href="https://vendi-ai.github.io/declarai" target="_blank">https://vendi-ai.github.io/declarai </a>
+
+**Source Code**: <a href="https://github.com/vendi-ai/declarai" target="_blank">https://github.com/vendi-ai/declarai </a>
+
+---
 
 Using AI in your code shouldn't be difficult. Supporting the mission of bringing AI to the masses,
-this repo is meant to abstract the know-how of prompt engineering and make using LLMs for daily programming accessible to everyone.
+Declarai is meant to abstract the know-how of prompt engineering and make using LLMs for daily programming accessible to everyone.
 
 If you know how to write python code and have written any doc-string in your life, this should be a breeze.
 
-## Installation
+##  🚀 Quickstart
+
+### Installation
 ```bash
 pip install declarai
 ```
 
-## Setup
+### Setup
 ```bash
 export DECLARAI_OPENAI_API_KEY=<your openai token>
 ```
@@ -25,8 +48,8 @@ from declarai import Declarai
 declarai = Declarai(provider="openai", model="gpt-3.5-turbo", openai_token="<your-openai-key>")
 ```
 
-## Usage:
-The most basic functionality. Just add the `@task` decorator to your function, add some documentation and you're good to go!
+## 💡 Basic Usage
+Craft AI-powered functionalities with ease using the `@task` decorator. Just add some type hints and a bit of documentation, and watch Declarai do its magic!
 ```python
 from declarai import Declarai
 
@@ -53,8 +76,16 @@ Not the best poem out there, but hey! You've written your first declarative AI c
 Declarai aims to promote clean and readable code by enforcing the use of doc-strings and typing.
 The resulting code is readable and easily maintainable.
 
-## Features
+## 🔍 Why Declarai?
+- **Intuitive Pythonic Interface**: Use your Python expertise instead of wrestling with complex prompts.
+- **Lightweight**: Minimal dependencies to avoid clutter.
+- **Extensible**: Modify and customize as per your needs.
+- **Type-Driven Prompt Design**: Automatic detailed prompts using Python's type annotations.
+- **Context-Rich Prompts via Docstrings**: Make your tasks clear and improve LLM performance.
+- **Automated LLM Task Execution**: Declarai manages the heavy lifting, letting you focus on the logic.
 
+
+## Features
 ### Tasks with python native output parsing:
 
 Python primitives
@@ -69,10 +100,12 @@ def rank_by_severity(message: str) -> int:
     """
 
 
-print(rank_by_severity(message="The server is down!"))
-#> 5
-print(rank_by_severity(message="How was your weekend?"))
-#> 1
+rank_by_severity(message="The server is down!")
+
+>>> 5
+rank_by_severity(message="How was your weekend?"))
+
+>>> 1
 ```
 
 Python complex objects
@@ -86,8 +119,9 @@ def datetime_parser(raw_date: str) -> datetime:
     """
 
 
-print(datetime_parser(raw_date="Janury 1st 2020"))
-#> 2020-01-01 00:00:00
+datetime_parser(raw_date="Janury 1st 2020"))
+
+>>> 2020-01-01 00:00:00
 ```
 
 pydantic models
@@ -108,20 +142,21 @@ def suggest_animals(location: str) -> Dict[int, List[Animal]]:
     """
 
 
-print(suggest_animals(location="jungle"))
-#> {
-#       0: [
-#           Animal(name='snake', family='reptile', leg_count=0)
-#       ], 
-#       2: [
-#           Animal(name='monkey', family='mammal', leg_count=2), 
-#           Animal(name='parrot', family='bird', leg_count=2)
-#       ], 
-#       4: [
-#          Animal(name='tiger', family='mammal', leg_count=4), 
-#          Animal(name='elephant', family='mammal', leg_count=4)
-#       ]
-# }
+suggest_animals(location="jungle")
+
+>>> {
+       0: [
+           Animal(name='snake', family='reptile', leg_count=0)
+       ], 
+       2: [
+           Animal(name='monkey', family='mammal', leg_count=2), 
+           Animal(name='parrot', family='bird', leg_count=2)
+       ], 
+       4: [
+          Animal(name='tiger', family='mammal', leg_count=4), 
+          Animal(name='elephant', family='mammal', leg_count=4)
+       ]
+ }
 ```
 
 
@@ -138,12 +173,14 @@ class CalculatorBot:
 
 
 calc_bot = CalculatorBot()
-print(calc_bot.send(message="1 + 1"))
-#> 2
+calc_bot.send(message="1 + 1")
+
+>>> 2
 ```
 
-To read more about what you can do with Declarai, 
-please visit our documentation site: [docs](https://vendi-ai.github.io/declarai/)
 
-## Contributing
-We welcome contributions to Declarai! Please read our [contributing guide](https://vendi-ai.github.io/declarai/src/contribute/) to get started.
+📚 For a thorough introduction, features, and best practices, explore our [official documentation](https://vendi-ai.github.io/declarai/) and [beginner's guide](https://vendi-ai.github.io/declarai/src/beginners-guide/).
+
+## Contributing 💼
+Join our mission to make declarative AI even better together! Check out our [contributing guide](https://vendi-ai.github.io/declarai/src/contribute/) to get started.
+
