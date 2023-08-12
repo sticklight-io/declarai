@@ -5,7 +5,7 @@ TODO...
 
 from typing import Any, Callable, Dict, List, Union
 from declarai.memory.base import BaseChatMessageHistory
-from declarai.memory import InMemory
+from declarai.memory import InMemoryMessageHistory
 from declarai.middlewares.base import TaskMiddleware
 from declarai.operators import LLMParamsType
 from declarai.operators.base.types import Message, MessageRole
@@ -13,7 +13,7 @@ from declarai.operators.base.types.llm import LLMResponse
 from declarai.operators.base.types.operator import BaseOperator
 from declarai.python_parser.parser import PythonParser
 
-DEFAULT_CHAT_MEMORY = InMemory
+DEFAULT_CHAT_MEMORY = InMemoryMessageHistory
 
 
 class LLMChatOrchestrator:

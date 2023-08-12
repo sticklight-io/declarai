@@ -6,7 +6,7 @@ from .base import BaseChatMessageHistory
 from declarai.operators.base.types import Message
 
 
-class InMemory(BaseChatMessageHistory, BaseModel):
+class InMemoryMessageHistory(BaseChatMessageHistory, BaseModel):
     """
     This memory implementation stores all messages in memory in a list.
     """
