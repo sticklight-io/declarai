@@ -11,6 +11,12 @@
   <a href="https://pypi.org/project/declarai/">
     <img src="https://img.shields.io/pypi/v/declarai?color=%2334D058&label=pypi%20package" alt="Pypi version">
   </a>
+    <a href="https://pepy.tech/project/declarai">
+    <img src="https://static.pepy.tech/badge/declarai/month" alt="Pypi downloads">
+  </a>
+  <a href="https://discord.gg/GrszSXNTDm">
+    <img src="https://dcbadge.vercel.app/api/server/GrszSXNTDm?compact=true&style=flat" alt="Discord invite">
+  </a>
 </p>
 
 <p align="center">
