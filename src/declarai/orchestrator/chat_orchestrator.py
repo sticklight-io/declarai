@@ -13,7 +13,7 @@ from declarai.operators.base.types.llm import LLMResponse
 from declarai.operators.base.types.operator import BaseOperator
 from declarai.python_parser.parser import PythonParser
 
-DEFAULT_CHAT_MEMORY = InMemoryMessageHistory
+DEFAULT_CHAT_HISTORY = InMemoryMessageHistory
 
 
 class LLMChatOrchestrator:
@@ -30,7 +30,7 @@ class LLMChatOrchestrator:
         operator: Callable[..., BaseOperator],
         middlewares: List[TaskMiddleware] = None,
         llm_params: LLMParamsType = None,
-        chat_memory: BaseChatMessageHistory = None,
+        chat_history: BaseChatMessageHistory = None,
         **kwargs
     ):
         self.parsed = PythonParser(decorated)
@@ -41,7 +41,7 @@ class LLMChatOrchestrator:
         self.operator = operator(
             parsed=self.parsed, parsed_func=self.parsed_send_func, **kwargs
         )
-        self._chat_memory = chat_memory or DEFAULT_CHAT_MEMORY()
+        self._chat_history = chat_history or DEFAULT_CHAT_HISTORY()
         self.llm_params = llm_params
 
         self.system = self.operator.system
@@ -54,14 +54,14 @@ class LLMChatOrchestrator:
 
     @property
     def conversation(self) -> List[Message]:
-        return self._chat_memory.history
+        return self._chat_history.history
 
     def compile(self, **kwargs) -> List[Message]:
-        compiled = self.operator.compile(messages=self._chat_memory.history, **kwargs)
+        compiled = self.operator.compile(messages=self._chat_history.history, **kwargs)
         return compiled
 
     def add_message(self, message: str, role: MessageRole) -> None:
-        self._chat_memory.add_message(Message(message=message, role=role))
+        self._chat_history.add_message(Message(message=message, role=role))
 
     def _exec(self, kwargs) -> LLMResponse:
         self.llm_response = self.operator.predict(**kwargs)
@@ -83,4 +83,4 @@ class LLMChatOrchestrator:
 
     def send(self, message: str, llm_params: Union[LLMParamsType, Dict[str, Any]] = None, **kwargs) -> Any:
         self.add_message(message, role=MessageRole.user)
-        return self(messages=self._chat_memory.history, llm_params=llm_params, **kwargs)
+        return self(messages=self._chat_history.history, llm_params=llm_params, **kwargs)

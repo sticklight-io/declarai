@@ -58,7 +58,7 @@ If you prefer to have a persistent history, you can use the `FileMessageHistory`
 
 
 ## Setting up a memory
-Setting up a memory is done by passing chat_memory as a keyword argument to the `declarai.experimental.chat` decorator.
+Setting up a memory is done by passing `chat_history` as a keyword argument to the `declarai.experimental.chat` decorator.
 
 ```py
 from declarai import Declarai
@@ -66,7 +66,7 @@ from declarai.memory import FileMessageHistory
 
 declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
-@declarai.experimental.chat(chat_memory=FileMessageHistory("sql_bot_history.txt")) # (1)!
+@declarai.experimental.chat(chat_history=FileMessageHistory("sql_bot_history.txt")) # (1)!
 class SQLBot:
     """
     You are a sql assistant. You help with SQL related questions with one-line answers.
@@ -75,7 +75,7 @@ class SQLBot:
 
 1. file path is not mandatory. If you do not provide a file path, the default file path is stored in a tmp directory.
 
-We can also initialize the chat_memory at runtime
+We can also initialize the chat_history at runtime
 
 ```py
 from declarai import Declarai
@@ -88,7 +88,7 @@ class SQLBot:
     """
     You are a sql assistant. You help with SQL related questions with one-line answers.
     """
-sql_bot = SQLBot(chat_memory=FileMessageHistory("sql_bot_history.txt"))
+sql_bot = SQLBot(chat_history=FileMessageHistory("sql_bot_history.txt"))
 ```
 
 
