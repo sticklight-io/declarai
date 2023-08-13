@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "declarai"
-version = "0.1.4"
+version = "0.1.5"
 description = "Declarai, turning Python code into LLM tasks, easy to use, and production-ready."
 authors = ["Aviv Almashanu <avivex1000@gmail.com>"]
 readme = "README.md"
@@ -25,6 +25,9 @@ mkdocs-material = "^9.1.21"
 
 [tool.poetry.extras]
 wandb = ["wandb"]
+postgresql = ["psycopg2"]
+redis = ["redis"]
+mongo = ["pymongo"]
 
 [build-system]
 requires = ["poetry-core"]

@@ -14,7 +14,7 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
     @overload
     def __call__(self, decorated: None = None, *, middlewares: Optional[List[Type[TaskMiddleware]]] = None,
                  llm_params: Optional[Union[LLMParamsType, Dict[str, Any]]] = None,
-                 chat_memory: Optional[BaseChatMessageHistory] = None
+                 chat_history: Optional[BaseChatMessageHistory] = None
                  ) -> Callable[..., Callable[..., LLMChatOrchestrator]]:
         ...
 
@@ -28,7 +28,7 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
         *,
         middlewares: List[TaskMiddleware] = None,
         llm_params: Optional[LLMParamsType] = None,
-        chat_memory: Optional[BaseChatMessageHistory] = None
+        chat_history: Optional[BaseChatMessageHistory] = None
     ):
         """
         Decorates a the python class to be a LLMChatOrchestrator
@@ -40,7 +40,7 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
         # When arguments are passed
         if decorated is None:
             return partial(self.return_orchestrator, middlewares=middlewares, llm_params=llm_params,
-                           chat_memory=chat_memory)
+                           chat_history=chat_history)
         else:
             # When no arguments are passed
             return self.return_orchestrator(decorated)
@@ -60,7 +60,7 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
         decorated_cls: Callable[..., Any],
         middlewares: List[Type[TaskMiddleware]] = None,
         llm_params: LLMParamsType = None,
-        chat_memory: BaseChatMessageHistory = None
+        chat_history: BaseChatMessageHistory = None
     ) -> Callable[..., LLMChatOrchestrator]:
         non_private_methods = {
             method_name: method
@@ -90,5 +90,5 @@ class LLMChatDecorator(LLMOrchestratorDecorator):
             decorated_cls,
             middlewares=middlewares,
             llm_params=llm_params,
-            chat_memory=chat_memory
+            chat_history=chat_history
         )

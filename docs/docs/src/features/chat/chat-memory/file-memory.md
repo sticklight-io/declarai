@@ -9,7 +9,7 @@ from declarai import Declarai
 from declarai.memory import FileMessageHistory
 declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
-@declarai.experimental.chat(chat_memory=FileMessageHistory("sql_bot_history.txt")) # (1)!
+@declarai.experimental.chat(chat_history=FileMessageHistory("sql_bot_history.txt")) # (1)!
 class SQLBot:
     """
     You are a sql assistant. You help with SQL related questions with one-line answers.
@@ -37,5 +37,5 @@ class SQLBot:
     You are a sql assistant. You help with SQL related questions with one-line answers.
     """
 
-sql_bot = SQLBot(chat_memory=FileMessageHistory("sql_bot_history.txt"))
+sql_bot = SQLBot(chat_history=FileMessageHistory("sql_bot_history.txt"))
 ```
