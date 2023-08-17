@@ -25,9 +25,9 @@
 
 ---
 
-**Documentation**: <a href="https://vendi-ai.github.io/declarai" target="_blank">https://vendi-ai.github.io/declarai </a>
+**Documentation**: <a href="https://declarai.com" target="_blank">https://vendi-ai.github.io/declarai </a>
 
-**Source Code**: <a href="https://github.com/vendi-ai/declarai" target="_blank">https://github.com/vendi-ai/declarai </a>
+**Source Code**: <a href="https://github.com/vendi-ai/declarai"/src target="_blank">https://github.com/vendi-ai/declarai </a>
 
 ---
 
