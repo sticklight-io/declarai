@@ -1,15 +1,20 @@
+"""
+This module contains the in-memory implementation of the chat message history.
+"""
 from typing import List
 
 from pydantic.main import BaseModel
 
+from declarai.operators import Message
+
 from .base import BaseChatMessageHistory
-from declarai.operators.base.types import Message
 
 
 class InMemoryMessageHistory(BaseChatMessageHistory, BaseModel):
     """
     This memory implementation stores all messages in memory in a list.
     """
+
     messages: List[Message] = []
 
     @property

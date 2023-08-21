@@ -1,14 +1,75 @@
+files: src
 repos:
-  - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.16.1
-    hooks:
-      - id: gitleaks
-  - repo: https://github.com/codespell-project/codespell
-    rev: "v2.2.1"
-    hooks:
-      - id: codespell
-        args:
-          - src/declarai/operators/shared/templates/
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.0.1
+  hooks:
+  - id: debug-statements
+  - id: end-of-file-fixer
+  - id: check-merge-conflict
+  - id: no-commit-to-branch
+- repo: https://github.com/jendrikseipp/vulture  # finds unused code
+  rev: v2.3
+  hooks:
+    - id: vulture
+      args: [ "src", "--min-confidence", "100", "--exclude", "projects/backend/.venv,projects/backend/tests", "--ignore-names", "cls"]
+- repo: https://github.com/hadialqattan/pycln  # Autoremoves unused imports
+  rev: "v2.1.1"
+  hooks:
+    - id: pycln
+      stages: [ manual ]
+- repo: https://github.com/PyCQA/flake8
+  rev: 5.0.4
+  hooks:
+  - id: flake8
+    args:
+    - "--config=.flake8"
+#- repo: local
+#  hooks:
+#  - id: pylint
+#    name: pylint
+#    entry: pylint
+#    language: system
+#    types: [python]
+#    args: ["-rn", "-sn", "--rcfile=.pylintrc", "--fail-on=I"]
+#    exclude: tests(/\w*)*/functional/|tests/input|tests(/\w*)*data/|doc/
+#  - id: isort
+#    name: isort
+#    entry: isort
+#    require_serial: true
+#    language: python
+#    types_or: [cython, pyi, python]
+#    args: ['--filter-files', '--settings-path', 'pyproject.toml']
+##    minimum_pre_commit_version: '2.9.2'
+
+- repo: https://github.com/psf/black
+  rev: 22.3.0
+  hooks:
+  - id: black
+    args: ["--config", "pyproject.toml" ]
+
+- repo: https://github.com/avilaton/add-msg-issue-prefix-hook
+  rev: v0.0.5
+  hooks:
+  - id: add-msg-issue-prefix
+    args:
+    - ".git/COMMIT_EDITMSG"
+
+  # Checks for common misspellings and typos
+- repo: https://github.com/codespell-project/codespell
+  rev: "v2.2.1"
+  hooks:
+    - id: codespell
+
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.16.1
+  hooks:
+    - id: gitleaks
+- repo: https://github.com/codespell-project/codespell
+  rev: "v2.2.1"
+  hooks:
+    - id: codespell
+      args:
+        - src/declarai/operators/shared/templates/
 
 
 

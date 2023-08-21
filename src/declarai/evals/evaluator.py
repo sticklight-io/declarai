@@ -21,7 +21,6 @@ from declarai.evals.generation import (
     unstructured_short_form,
     unstructured_short_form_kwargs,
 )
-from declarai.evals.logical_tasks import chain_of_thought, chain_of_thought_kwargs
 from declarai.evals.manipulation import data_manipulation, data_manipulation_kwargs
 from declarai.evals.metadata_significance import (
     generate_a_poem_no_metadata,
@@ -35,10 +34,7 @@ from declarai.evals.metadata_significance import (
     simple_task_significance_kwargs,
 )
 from declarai.evals.providers.openai import openai_models
-from declarai.evals.runner import (
-    evaluate_sequence_task_scenario,
-    evaluate_single_task_scenario,
-)
+from declarai.evals.runner import evaluate_single_task_scenario
 
 if __name__ == "__main__":
     console = Console()

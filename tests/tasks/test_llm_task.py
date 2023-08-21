@@ -1,7 +1,7 @@
 # from typing import Dict
 # from unittest.mock import MagicMock
 #
-# from declarai.orchestrator.future_llm_task import FutureLLMTask
+# from declarai.orchestrator.future_llm_task import FutureTask
 # from declarai.operators.base.types import LLMTask
 #
 # TEST_TASK_TEMPLATE = "{input} | {output}"
@@ -109,6 +109,6 @@
 #     )
 #     compiled_task_with_values = "input-value: input-value | output-value: output-value"
 #     future_task = llm_task.plan(**TASK_KWARGS)
-#     assert isinstance(future_task, FutureLLMTask)
+#     assert isinstance(future_task, FutureTask)
 #     assert future_task.populated_prompt == compiled_task_with_values
 #     assert future_task() == "output-value"
