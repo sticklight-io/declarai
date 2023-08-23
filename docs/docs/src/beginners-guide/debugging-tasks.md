@@ -58,7 +58,7 @@ The `compile` method can also be used to view the prompt with the real values pr
 This is useful when prompts might behave differently for different inputs.
 
 ```python hl_lines="10"
-print(movie_recommender.compile())
+print(movie_recommender.compile(user_input="I want to watch a movie about space"))
 
 > {
     'messages': [     
