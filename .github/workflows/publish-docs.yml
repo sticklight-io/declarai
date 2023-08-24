@@ -2,7 +2,7 @@ name: ci
 on:
   push:
     branches:
-      - fix-docs-publish
+      - main
 permissions:
   contents: write
 jobs:
