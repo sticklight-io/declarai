@@ -1,5 +1,5 @@
 site_name: Declarai
-edit_uri: edit/main/src
+edit_uri: edit/main/docs/
 site_dir: site
 
 extra:
@@ -78,6 +78,7 @@ theme:
     - announce.dismiss
     - header.autohide
     - navigation.tabs
+    - navigation.indexes
     - navigation.tabs.sticky
     - navigation.top
     - search.highlight
@@ -135,12 +136,11 @@ plugins:
         - scripts/gen_ref_pages.py
   - literate-nav:
       nav_file: SUMMARY.md
-  - section-index
   - mkdocstrings:
       default_handler: python
       handlers:
         python:
-          paths: [declarai]
+          paths: [src]
           import:
             - https://docs.python.org/3/objects.inv
             - https://installer.readthedocs.io/en/stable/objects.inv  # demonstration purpose in the docs

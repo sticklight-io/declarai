@@ -12,7 +12,6 @@ openai = "^0.27.8"
 pydantic = "^1.8.2"
 jsonref = "^1.1.0"
 wandb = {version = "^0.15.8", optional = true}
-mkdocs-autorefs = "^0.5.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -22,8 +21,9 @@ isort = "^5.11.5"
 pytest = "^7.4.0"
 pytest-cov = "^4.1.0"
 rich = "^13.4.2"
-mkdocs-material = "^9.1.21"
+mkdocs-material = "9.2.0b1"
 mkdocstrings = {version = "^0.22.0"}
+mkdocs-autorefs = "^0.5.0"
 mkdocstrings-python = "^1.5.0"
 mkdocstrings-crystal = "0.3.6"
 mkdocs-gen-files = "^0.5.0"

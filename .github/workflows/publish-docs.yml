@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: 3.x
+          python-version: 3.8
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
       - uses: actions/cache@v3
         with:
@@ -21,6 +21,5 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install -r requirements-docs.txt
-      - run: pip install git+https://${{ secrets.DECLARAI_MKDOCSTRINGS_INSIDERS_TOKEN }}@github.com/pawamoy-insiders/mkdocstrings-python.git
-
+      - run: pip install git+https://${{ secrets.DECLARAI_MKDOCSTRINGS_INSIDERS_TOKEN }}@github.com/pawamoy-insiders/mkdocstrings-python.git@1.5.0.1.2.0
       - run: mkdocs gh-deploy --force
