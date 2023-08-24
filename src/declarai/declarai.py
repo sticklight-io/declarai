@@ -70,9 +70,9 @@ class Declarai:
     # *-------------------------------------------------------------------------- *
     def __init__(self, **kwargs):
         self.llm_settings = LLMSettings(**kwargs)
-        self.task = TaskDecorator(self.llm_settings).task
+        self.task = TaskDecorator(self.llm_settings, **kwargs).task
 
         class Experimental:
-            chat = ChatDecorator(self.llm_settings).chat
+            chat = ChatDecorator(self.llm_settings, **kwargs).chat
 
         self.experimental = Experimental
