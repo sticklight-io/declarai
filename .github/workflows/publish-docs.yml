@@ -20,9 +20,6 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: |
-          python -m pip install --upgrade pip
-          pip install poetry
-          poetry install
+      - run: pip install -r requirements-docs.txt
       - run: pip install git+https://${{ secrets.DECLARAI_MKDOCSTRINGS_INSIDERS_TOKEN }}@github.com/pawamoy-insiders/mkdocstrings-python.git@1.5.0.1.2.0
       - run: mkdocs gh-deploy --force
