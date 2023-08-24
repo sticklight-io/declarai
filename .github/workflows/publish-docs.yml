@@ -21,6 +21,6 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install -r requirements-docs.txt
-      - run: pip install git+https://{{ secrets.DECLARAI_MKDOCSTRINGS_INSIDERS_TOKEN }}@github.com/pawamoy-insiders/mkdocstrings-python.git
+      - run: pip install git+https://${{ secrets.DECLARAI_MKDOCSTRINGS_INSIDERS_TOKEN }}@github.com/pawamoy-insiders/mkdocstrings-python.git
 
       - run: mkdocs gh-deploy --force
