@@ -1,8 +1,8 @@
 import pytest
 
 from declarai.operators.openai_operators.task_operator import compile_output_prompt
-from declarai.operators.shared.output_prompt import compile_output_schema_template
-from declarai.operators.shared.templates import StructuredOutputInstructionPrompt
+from declarai.operators.templates import compile_output_schema_template
+from declarai.operators.templates import StructuredOutputInstructionPrompt
 
 
 @pytest.mark.parametrize(

@@ -1,16 +1,17 @@
+"""
+Task implementation for openai operator.
+"""
 import logging
-from functools import partial
-from typing import Callable, List, Optional, Type
 
-from declarai.operators.base.types import Message, MessageRole
-from declarai.operators.base.types.operator import BaseOperator, CompiledTemplate
-from declarai.operators.shared.output_prompt import compile_output_prompt
-from declarai.operators.shared.templates import (
+from declarai.operators.message import Message, MessageRole
+from declarai.operators.operator import BaseOperator, CompiledTemplate
+from declarai.operators.templates import (
     InstructFunctionTemplate,
     StructuredOutputInstructionPrompt,
+    compile_output_prompt,
 )
+
 from .openai_llm import OpenAILLM
-from .openai_llm.llm_params import OpenAILLMParams
 
 logger = logging.getLogger("OpenAITaskOperator")
 
@@ -20,33 +21,35 @@ NEW_LINE_INPUT_LINE_TEMPLATE = "\n{param}: {{{param}}}"
 
 
 class OpenAITaskOperator(BaseOperator):
-    llm: OpenAILLM
-    compiled_template: List[Message]
-    set_llm: Callable
+    """
+    Task implementation for openai operator. This is a child of the BaseOperator class. See the BaseOperator class for further documentation.
+    Implements the compile method which compiles a parsed function into a message.
+    Uses the OpenAILLM to generate a response based on the given template.
 
-    @classmethod
-    def new_operator(
-        cls,
-        openai_token: Optional[str] = None,
-        model: Optional[str] = None,
-    ) -> Type["OpenAITaskOperator"]:
-        openai_llm = OpenAILLM(openai_token, model)
-        partial_class = partial(cls, openai_llm)
-        return partial_class
+    Attributes:
+        llm: OpenAILLM
+    """
+
+    llm: OpenAILLM
 
     def _compile_input_placeholder(self) -> str:
         """
         Creates a placeholder for the input of the function.
         The input format is based on the function input schema.
 
-        for example a function signature of:
-            def foo(a: int, b: str, c: float = 1.0):
+        !!! example
+            for example a function signature of:
+                ```py
+                def foo(a: int, b: str, c: float = 1.0):
+                ```
 
-        will result in the following placeholder:
-            Inputs:
-            a: {a}
-            b: {b}
-            c: {c}
+            will result in the following placeholder:
+            ```md
+                Inputs:
+                a: {a}
+                b: {b}
+                c: {c}
+            ```
         """
         inputs = ""
 
@@ -83,6 +86,14 @@ class OpenAITaskOperator(BaseOperator):
         )
 
     def compile_template(self) -> CompiledTemplate:
+        """
+        Unique compilation method for the OpenAITaskOperator class.
+        Uses the InstructFunctionTemplate and StructuredOutputInstructionPrompt templates to create a message.
+        And the _compile_input_placeholder method to create a placeholder for the input of the function.
+        Returns:
+            Dict[str, List[Message]]: A dictionary containing a list of messages.
+
+        """
         instruction_template = InstructFunctionTemplate
         structured_template = StructuredOutputInstructionPrompt
         output_schema = self._compile_output_prompt(structured_template)
@@ -99,6 +110,15 @@ class OpenAITaskOperator(BaseOperator):
         return messages
 
     def compile(self, **kwargs) -> CompiledTemplate:
+        """
+        Implements the compile method of the BaseOperator class.
+        Args:
+            **kwargs:
+
+        Returns:
+            Dict[str, List[Message]]: A dictionary containing a list of messages.
+
+        """
         template = self.compile_template()
         if kwargs:
             template[-1].message = template[-1].message.format(**kwargs)

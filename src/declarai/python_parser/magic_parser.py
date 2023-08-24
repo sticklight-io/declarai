@@ -44,7 +44,7 @@ def extract_magic_args(code) -> Magic:
     if len(magic_call.args) > 0:
         try:
             return_name = magic_call.args[0].s
-        except:
+        except:  # noqa
             return_name = magic_call.args[0].id
     else:
         return_name = None

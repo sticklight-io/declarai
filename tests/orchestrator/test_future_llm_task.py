@@ -1,6 +1,6 @@
 # from unittest.mock import MagicMock
 #
-# from declarai.orchestrator.future_llm_task import FutureLLMTask
+# from declarai.orchestrator.future_llm_task import FutureTask
 #
 #
 # def test_future_llm_task():
@@ -13,7 +13,7 @@
 #     compiled_template = "{input} | {output}"
 #     populated_prompt = "input-value | output-value"
 #
-#     future_llm_task = FutureLLMTask(
+#     future_llm_task = FutureTask(
 #         exec_func=exec_func,
 #         kwargs=kwargs,
 #         compiled_template=compiled_template,

@@ -1,10 +1,14 @@
-from typing import Optional, List, Dict
-from pathlib import Path
-import tempfile
-from .base import BaseChatMessageHistory
-from ..operators.base.types import Message
+"""
+This module contains the FileMessageHistory class, which is used to store chat message history in a local file.
+"""
 import json
 import logging
+import tempfile
+from pathlib import Path
+from typing import Dict, List, Optional
+
+from ..operators import Message
+from .base import BaseChatMessageHistory
 
 logger = logging.getLogger(__name__)
 
@@ -14,10 +18,12 @@ class FileMessageHistory(BaseChatMessageHistory):
     Chat message history that stores history in a local file.
 
     Args:
-        file_path: path of the local file to store the messages.
+        file_path: path of the local file to store the messages. if not passed the messages will be stored in a temporary file,
+         and a warning will be logged.
     """
 
     def __init__(self, file_path: Optional[str] = None):
+        super().__init__()
         if not file_path:
             # Create a temporary file and immediately close it to get its name.
             temp = tempfile.NamedTemporaryFile(delete=False)

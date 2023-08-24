@@ -1,0 +1,166 @@
+site_name: Declarai
+edit_uri: edit/main/src
+site_dir: site
+
+extra:
+  analytics:
+    provider: google
+    property: G-YQ30DDKFS4
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/emoticon-happy-outline
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/emoticon-sad-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback! Help us improve this page by
+            using our <a href="..." target="_blank" rel="noopener">feedback form</a>.
+nav:
+  - Docs:
+      - Get started: index.md
+      - Beginners guide:
+          - beginners-guide/index.md
+          - Simple task: beginners-guide/simple-task.md
+          - Controlling task behavior: beginners-guide/controlling-task-behavior.md
+          - Debugging tasks: beginners-guide/debugging-tasks.md
+          - Recap: beginners-guide/recap.md
+      - Features:
+          - features/index.md
+          - Chat:
+              - features/chat/index.md
+              - Chat memory:
+                - features/chat/chat-memory/index.md
+                - File Memory: features/chat/chat-memory/file-memory.md
+                - Redis Memory: features/chat/chat-memory/redis-memory.md
+                - MongoDB Memory: features/chat/chat-memory/mongodb-memory.md
+                - PostgreSQL Memory: features/chat/chat-memory/postgresql-memory.md
+              - Controlling chat behavior: features/chat/controlling-chat-behavior.md
+              - Debugging chat: features/chat/debugging-chat.md
+              - Customizing chat response: features/chat/customizing-chat-response.md
+              - Advanced initialization: features/chat/advanced-initialization.md
+              - Control LLM parameters: features/language-model-parameters.md
+          - Control LLM parameters: features/language-model-parameters.md
+          - Magic: features/magic.md
+          - Multi models and providers: features/multi-model-multi-provider.md
+          - Middlewares:
+              - features/middlewares/index.md
+          - Evals:
+              - features/evals/index.md
+      - Best practices:
+          - best-practices/index.md
+      - Providers:
+          - providers/index.md
+          - providers/openai.md
+      - Integrations:
+          - integrations/index.md
+      - Examples:
+        - Deployments:
+          - examples/deployments/index.md
+      - Newsletter: newsletter.md
+  - API Reference: reference/
+  - Changelog: changelog.md
+  - Contribute: contribute.md
+
+theme:
+  features:
+    - tabs
+    - content.tooltips
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+    - content.action.view
+    - navigation.footer
+    - announce.dismiss
+    - header.autohide
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - toc.follow
+  name: material
+  logo: img/Vendi-logo.svg
+  custom_dir: docs/overrides
+  palette:
+
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+extra_css:
+  - css/extra.css
+  - css/termynal.css
+  - css/mkdocstrings.css
+extra_javascript:
+  - js/termynal.js
+  - js/custom.js
+  - js/tablesort.js
+  - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
+repo_url: https://github.com/vendi-ai/declarai
+repo_name: vendi-ai/declarai
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: "¤"
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.extra
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
+  - autorefs
+  - gen-files:
+      scripts:
+        - scripts/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - section-index
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [declarai]
+          import:
+            - https://docs.python.org/3/objects.inv
+            - https://installer.readthedocs.io/en/stable/objects.inv  # demonstration purpose in the docs
+            - https://mkdocstrings.github.io/autorefs/objects.inv
+          options:
+            docstring_options:
+              ignore_init_summary: true
+            heading_level: 1
+            merge_init_into_class: true
+            separate_signature: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_signature_annotations: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            signature_crossrefs: true
+            summary: true
+            group_by_category: true
+            preload_modules: [declarai]
+            inherited_members: true
+            filters: []
+
+

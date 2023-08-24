@@ -1,13 +1,20 @@
+"""
+This module contains the PostgresMessageHistory class, which is used to store chat message history in a PostgreSQL database.
+
+"""
 import json
-from typing import List, Optional
-from .base import BaseChatMessageHistory
-from ..operators.base.types import Message
 import logging
+from typing import List, Optional
+
+from ..operators import Message
+from .base import BaseChatMessageHistory
 
 logger = logging.getLogger(__name__)
 
 DEFAULT_TABLE_NAME = "message_store"
+"A table name for the PostgreSQL database."
 DEFAULT_CONNECTION_STRING = "postgresql://postgres:postgres@localhost:5432/postgres"
+"A connection string for a PostgreSQL database."
 
 
 class PostgresMessageHistory(BaseChatMessageHistory):
@@ -15,13 +22,19 @@ class PostgresMessageHistory(BaseChatMessageHistory):
     Chat message history that stores history in a PostgreSQL database.
 
     Args:
+        session_id: Arbitrary key that is used to store the messages for a single chat session.
         connection_string: Database connection string.
+        table_name: Name of the table to use.
     """
 
-    def __init__(self, session_id: str, connection_string: Optional[str] = DEFAULT_CONNECTION_STRING,
-                 table_name: str = DEFAULT_TABLE_NAME):
+    def __init__(
+        self,
+        session_id: str,
+        connection_string: Optional[str] = DEFAULT_CONNECTION_STRING,
+        table_name: str = DEFAULT_TABLE_NAME,
+    ):
         try:
-            import psycopg2
+            import psycopg2  # pylint: disable=import-outside-toplevel
         except ImportError:
             raise ImportError(
                 "Cannot import psycopg2."
@@ -46,21 +59,22 @@ class PostgresMessageHistory(BaseChatMessageHistory):
     @property
     def history(self) -> List[Message]:
         """Retrieve the messages from the database."""
-        query = f"SELECT message FROM {self.table_name} WHERE session_id = %s ORDER BY id;"
+        query = (
+            f"SELECT message FROM {self.table_name} WHERE session_id = %s ORDER BY id;"
+        )
         self.cursor.execute(query, (self.session_id,))
         rows = self.cursor.fetchall()
         messages = [Message.parse_obj(row[0]) for row in rows]
         return messages
 
     def add_message(self, message: Message) -> None:
+        """Add a message to the database."""
         from psycopg2 import sql
-        """Append the message to the database."""
+
         query = sql.SQL("INSERT INTO {} (session_id, message) VALUES (%s, %s);").format(
             sql.Identifier(self.table_name)
         )
-        self.cursor.execute(
-            query, (self.session_id, json.dumps(message.dict()))
-        )
+        self.cursor.execute(query, (self.session_id, json.dumps(message.dict())))
         self.conn.commit()
 
     def clear(self) -> None:
@@ -76,7 +90,7 @@ class PostgresMessageHistory(BaseChatMessageHistory):
 
     def __del__(self):
         """Destructor to close cursor and connection."""
-        if hasattr(self, 'cursor'):
+        if hasattr(self, "cursor"):
             self.cursor.close()
-        if hasattr(self, 'conn'):
+        if hasattr(self, "conn"):
             self.conn.close()

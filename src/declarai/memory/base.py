@@ -1,6 +1,10 @@
-from abc import abstractmethod, ABC
+"""
+Base class for the memory module.
+"""
+from abc import ABC, abstractmethod  # pylint: disable=E0611
+from typing import List
 
-from declarai.operators.base.types import Message
+from declarai.operators import Message
 
 
 class BaseChatMessageHistory(ABC):
@@ -10,17 +14,28 @@ class BaseChatMessageHistory(ABC):
     See `ChatMessageHistory` for default implementation.
 
     """
+
     @property
     @abstractmethod
-    def history(self):
-        """Return the chat message history"""
-        pass
+    def history(self) -> List[Message]:
+        """
+        Return the chat message history
+
+        Returns:
+            List of Message objects
+        """
 
     @abstractmethod
     def add_message(self, message: Message) -> None:
-        """Add a Message object to the state."""
-        pass
+        """
+        Add a Message object to the state.
+
+        Args:
+            message: Message object to add to the state
+        """
 
     @abstractmethod
     def clear(self) -> None:
-        """Remove all messages from the state"""
+        """
+        Remove all messages from the state
+        """

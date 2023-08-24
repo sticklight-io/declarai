@@ -1,14 +1,22 @@
+"""
+This module contains the MongoDBMessageHistory class, which is used to store chat message history in a MongoDB database.
+
+"""
 import json
 import logging
 from typing import List
+
+from ..operators import Message
 from .base import BaseChatMessageHistory
-from ..operators.base.types import Message
 
 logger = logging.getLogger(__name__)
 
 DEFAULT_DBNAME = "chat_history"
+"""A database name for the MongoDB database."""
 DEFAULT_COLLECTION_NAME = "message_store"
+"""A collection name for the MongoDB database."""
 DEFAULT_CONNECTION_STRING = "mongodb://localhost:27017"
+"""A connection string for a MongoDB database."""
 
 
 class MongoDBMessageHistory(BaseChatMessageHistory):
@@ -17,8 +25,7 @@ class MongoDBMessageHistory(BaseChatMessageHistory):
 
     Args:
         connection_string: connection string to connect to MongoDB
-        session_id: arbitrary key that is used to store the messages
-            of a single chat session.
+        session_id: Arbitrary key that is used to store the messages for a single chat session.
         database_name: name of the database to use
         collection_name: name of the collection to use
     """

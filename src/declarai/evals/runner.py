@@ -31,7 +31,7 @@ def evaluate_single_task_scenario(
                     output_tokens = str(
                         initialized_scenario.llm_response.completion_tokens
                     )
-                except:
+                except:  # noqa
                     input_tokens = "error"
                     output_tokens = "error"
 
@@ -82,7 +82,7 @@ def evaluate_sequence_task_scenario(
                     output_tokens = str(
                         initialized_scenario.llm_response.completion_tokens
                     )
-                except:
+                except:  # noqa
                     input_tokens = "error"
                     output_tokens = "error"
 

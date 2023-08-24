@@ -1,22 +1,28 @@
+"""
+This module contains the RedisMessageHistory class, which is used to store chat message history in a Redis database.
+"""
+
 import json
 import logging
 from typing import List, Optional
 
+from ..operators import Message
 from .base import BaseChatMessageHistory
-from ..operators.base.types import Message
 
 logger = logging.getLogger(__name__)
 
-
 DEFAULT_TABLE_NAME = "message_store"
+"""A table name for the Redis database."""
 DEFAULT_URL = "redis://localhost:6379/0"
+"""A URL for the Redis database."""
+
 
 class RedisMessageHistory(BaseChatMessageHistory):
     """
     Chat message history that stores history in a Redis database.
 
     Args:
-        session_id: ID for the chat session.
+        session_id: Arbitrary key that is used to store the messages for a single chat session.
         url: URL to connect to the Redis server.
         key_prefix: Prefix for the Redis key.
         ttl: Time-to-live for the message records.
@@ -29,8 +35,9 @@ class RedisMessageHistory(BaseChatMessageHistory):
         key_prefix: str = f"{DEFAULT_TABLE_NAME}:",
         ttl: Optional[int] = None,
     ):
+        super().__init__()
         try:
-            import redis
+            import redis  # pylint: disable=import-outside-toplevel
         except ImportError:
             raise ImportError(
                 "Could not import redis python package. "

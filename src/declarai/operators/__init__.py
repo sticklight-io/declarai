@@ -1,13 +1,13 @@
-from typing import Type, Union
+from typing import Optional, Type, Union, overload
 
-from typing_extensions import Literal
+from typing_extensions import Literal, Tuple
 
-from declarai.operators.base.llm_settings import LLMSettings
-from declarai.operators.base.types.operator import BaseOperator
-from .base.types.llm_params import LLMParamsType
-
+from .llm import LLM, BaseLLM, BaseLLMParams, LLMParamsType, LLMResponse, LLMSettings
+from .message import Message, MessageRole
 from .openai_operators.chat_operator import OpenAIChatOperator
+from .openai_operators.openai_llm import OpenAILLM
 from .openai_operators.task_operator import OpenAITaskOperator
+from .operator import BaseChatOperator, BaseOperator
 
 # Based on documentation from https://platform.openai.com/docs/models/overview
 ProviderOpenai = Literal["openai"]
@@ -23,19 +23,47 @@ ModelsOpenai = Literal[
 AllModels = Union[ModelsOpenai]
 
 
+@overload
 def resolve_operator(
-    llm_config: LLMSettings, operator_type: Literal["chat", "task"] = "task", **kwargs
-) -> Type[BaseOperator]:
+    llm_config: LLMSettings, operator_type: Literal["task"], **kwargs
+) -> Tuple[Type[BaseOperator], LLM]:
+    ...
+
+
+@overload
+def resolve_operator(
+    llm_config: LLMSettings, operator_type: Literal["chat"], **kwargs
+) -> Tuple[Type[BaseChatOperator], LLM]:
+    ...
+
+
+def resolve_operator(
+    llm_settings: LLMSettings, operator_type: Literal["chat", "task"], **kwargs
+) -> Tuple[Type[BaseOperator], LLM]:
     """
-    Resolves the operator to be used for the given llm_config
-    :param llm_config: llm settings like provider, model, etc
-    :param operator_type: relevant operator type
-    :param kwargs: api keys, etc
-    :return: a class that inherits from BaseOperator
+    Resolves the operator to be used for the given llm_settings
+
+    Args:
+        llm_settings: llm settings like provider, model, etc
+        operator_type: relevant operator type
+        kwargs: api keys, etc
+
+    Returns:
+        an operator class object of type BaseOperator
+        an llm class object of type LLM
+
     """
-    if llm_config.provider == "openai":
+    if llm_settings.provider == "openai":
         open_ai_token = kwargs.get("openai_token")
-        model = llm_config.model
+        model = llm_settings.model
+        if open_ai_token:
+            llm = OpenAILLM(
+                model=model,
+                openai_token=open_ai_token,
+            )
+        else:
+            llm = OpenAILLM(model=model)
+
         if operator_type == "task":
             operator = OpenAITaskOperator
         elif operator_type == "chat":
@@ -44,7 +72,5 @@ def resolve_operator(
             raise NotImplementedError(
                 f"Operator type : {operator_type} not implemented"
             )
-        if open_ai_token:
-            return operator.new_operator(openai_token=open_ai_token, model=model)
-        return operator.new_operator(model=model)
+        return operator, llm
     raise NotImplementedError()

@@ -1,9 +1,10 @@
-from declarai.operators import OpenAITaskOperator
+from declarai.operators import OpenAITaskOperator, OpenAILLM
 from declarai.python_parser.parser import PythonParser
 
 
 def test_openai_operator():
-    openai_operator_class = OpenAITaskOperator.new_operator(
+    openai_operator_class = OpenAITaskOperator
+    llm = OpenAILLM(
         openai_token="test-token",
         model="test-model",
     )
@@ -16,7 +17,7 @@ def test_openai_operator():
         """
 
     parsed = PythonParser(openai_task)
-    openai_operator_instance = openai_operator_class(parsed)
+    openai_operator_instance = openai_operator_class(parsed=parsed, llm=llm)
     assert openai_operator_instance.parsed.name == openai_task.__name__
     compiled = openai_operator_instance.compile()
     assert isinstance(compiled, dict)
@@ -31,7 +32,7 @@ def test_openai_operator():
         ...
 
     parsed = PythonParser(openai_task)
-    openai_operator_instance = openai_operator_class(parsed)
+    openai_operator_instance = openai_operator_class(parsed=parsed, llm=llm)
     assert openai_operator_instance.parsed.name == openai_task.__name__
     compiled = openai_operator_instance.compile()
     assert isinstance(compiled, dict)

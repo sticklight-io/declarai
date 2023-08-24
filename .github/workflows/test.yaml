@@ -1,9 +1,31 @@
-name: test
-
+name: CI
 
 on: [pull_request]
 
 jobs:
+  pre-commit:
+    permissions:
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry pre-commit
+        poetry install
+
+    - name: Run pre-commit
+      run: pre-commit run --all-files
+
   test:
     permissions:
       pull-requests: write
@@ -12,18 +34,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install poetry
         poetry install
+
     - name: Run tests with pytest
       run: |
         poetry run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=src tests | tee pytest-coverage.txt
+
     - name: Upload coverage to GitHub Artifacts
       uses: actions/upload-artifact@v2
       with:

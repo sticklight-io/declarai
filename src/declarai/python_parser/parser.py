@@ -9,10 +9,10 @@ from typing import Any, Dict, Optional
 from pydantic import parse_obj_as, parse_raw_as
 from pydantic.error_wrappers import ValidationError
 
-from declarai.python_parser.annotations.type_annotation_to_schema import (
+from declarai.python_parser.magic_parser import Magic, extract_magic_args
+from declarai.python_parser.type_annotation_to_schema import (
     type_annotation_to_str_schema,
 )
-from declarai.python_parser.magic_parser import Magic, extract_magic_args
 from declarai.python_parser.types import (
     ArgName,
     ArgType,
