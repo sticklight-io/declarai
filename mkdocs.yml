@@ -140,7 +140,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [declarai]
+          paths: [src]
           import:
             - https://docs.python.org/3/objects.inv
             - https://installer.readthedocs.io/en/stable/objects.inv  # demonstration purpose in the docs
