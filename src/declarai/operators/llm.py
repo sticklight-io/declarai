@@ -66,7 +66,7 @@ class LLMSettings:
         self.version = version
 
     @property
-    def model(self, delimiter: Optional[str] = "-") -> str:
+    def model(self, delimiter: Optional[str] = "-", with_version: bool = True) -> str:
         """
         Some model providers allow defining a base model as well as a sub-model.
         Often the base model is an alias to latest model served on that model.
@@ -91,7 +91,7 @@ class LLMSettings:
         In any case you can always pass the full model name in the model parameter and leave the
         sub_model parameter empty if you prefer.
         """
-        if self.version:
+        if self.version and with_version:
             return f"{self._model}{delimiter}{self.version}"
         return self._model
 

@@ -4,8 +4,9 @@ from declarai import Declarai
 from declarai.operators import Message, MessageRole
 
 
+@patch("declarai.declarai.resolve_llm")
 @patch("declarai.chat.resolve_operator")
-def test_chat(mock_chat_resolve_operator):
+def test_chat(mock_chat_resolve_operator, mock_resolve_llm):
     operator_class_mock = MagicMock()
     operator_instance_mock = MagicMock()
 
@@ -15,7 +16,8 @@ def test_chat(mock_chat_resolve_operator):
     operator_class_mock.return_value = operator_instance_mock
 
     llm = MagicMock()
-    mock_chat_resolve_operator.return_value = (operator_class_mock, llm)
+    mock_chat_resolve_operator.return_value = operator_class_mock
+    mock_resolve_llm.return_value = llm
     declarai = Declarai(provider="test", model="test")
 
     @declarai.experimental.chat

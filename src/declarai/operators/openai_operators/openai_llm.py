@@ -6,8 +6,16 @@ from typing import List, Optional
 import openai
 
 from declarai.operators import BaseLLM, BaseLLMParams, LLMResponse, Message
+from declarai.operators.registry import register_llm
 
-from .settings import OPENAI_API_KEY, OPENAI_MODEL
+from .settings import (
+    AZURE_API_VERSION,
+    AZURE_OPENAI_API_BASE,
+    AZURE_OPENAI_KEY,
+    DEPLOYMENT_NAME,
+    OPENAI_API_KEY,
+    OPENAI_MODEL,
+)
 
 
 class OpenAIError(Exception):
@@ -16,7 +24,7 @@ class OpenAIError(Exception):
     pass
 
 
-class OpenAILLM(BaseLLM):
+class BaseOpenAILLM(BaseLLM):
     """
     OpenAI LLM implementation that uses openai sdk to make predictions.
     Args:
@@ -29,17 +37,28 @@ class OpenAILLM(BaseLLM):
 
     provider = "openai"
 
-    def __init__(self, openai_token: str = None, model: str = None):
+    def __init__(
+        self,
+        api_key: str,
+        api_type: str,
+        model_name: str,
+        headers: dict = None,
+        timeout: int = None,
+        stream: bool = None,
+        request_timeout: int = None,
+        **kwargs,
+    ):
+        self._kwargs = {
+            "headers": headers,
+            "timeout": timeout,
+            "stream": stream,
+            "request_timeout": request_timeout,
+            **kwargs,
+        }
         self.openai = openai
-        self.openai.api_key = openai_token or OPENAI_API_KEY
-        if not self.openai.api_key:
-            raise OpenAIError(
-                "Missing an OpenAI API key"
-                "In order to work with OpenAI, you will need to provide an API key"
-                "either by setting the DECLARAI_OPENAI_API_KEY or by providing"
-                "the API key via the init interface."
-            )
-        self.model = model or OPENAI_MODEL
+        self.api_key = api_key
+        self.api_type = api_type
+        self.model = model_name
 
     def predict(
         self,
@@ -75,6 +94,9 @@ class OpenAILLM(BaseLLM):
             top_p=top_p,
             frequency_penalty=frequency_penalty,
             presence_penalty=presence_penalty,
+            api_key=self.api_key,
+            api_type=self.api_type,
+            **self._kwargs,
         )
         return LLMResponse(
             response=res.choices[0]["message"]["content"],
@@ -82,6 +104,49 @@ class OpenAILLM(BaseLLM):
             prompt_tokens=res["usage"]["prompt_tokens"],
             completion_tokens=res["usage"]["completion_tokens"],
             total_tokens=res["usage"]["total_tokens"],
+        )
+
+
+@register_llm(provider="openai")
+class OpenAILLM(BaseOpenAILLM):
+    """
+    OpenAI LLM implementation that uses openai sdk to make predictions.
+    Args:
+        openai_token: OpenAI API key
+        model: OpenAI model name
+        headers: Headers to use for the request
+        timeout: Timeout to use for the request
+        stream: Stream to use for the request
+        request_timeout: Request timeout to use for the request
+    """
+
+    def __init__(
+        self,
+        openai_token: str = None,
+        model: str = None,
+        headers: dict = None,
+        timeout: int = None,
+        stream: bool = None,
+        request_timeout: int = None,
+    ):
+        openai_token = openai_token or OPENAI_API_KEY
+        model = model or OPENAI_MODEL
+        if not openai_token:
+            raise OpenAIError(
+                "Missing an OpenAI API key"
+                "In order to work with OpenAI, you will need to provide an API key"
+                "either by setting the DECLARAI_OPENAI_API_KEY or by providing"
+                "the API key via the init interface."
+            )
+        if not model:
+            raise OpenAIError(
+                "Missing an OpenAI model"
+                "In order to work with OpenAI, you will need to provide a model"
+                "either by setting the DECLARAI_OPENAI_MODEL or by providing"
+                "the model via the init interface."
+            )
+        super().__init__(
+            openai_token, "openai", model, headers, timeout, stream, request_timeout
         )
 
 
@@ -102,3 +167,50 @@ class OpenAILLMParams(BaseLLMParams):
     top_p: Optional[float]
     frequency_penalty: Optional[int]
     presence_penalty: Optional[int]
+
+
+@register_llm(provider="azure-openai")
+class AzureOpenAILLM(BaseOpenAILLM):
+    """
+    Azure OpenAI LLM implementation that uses openai sdk to make predictions with Azure's OpenAI.
+    Args:
+        azure_openai_key: Azure OpenAI API key
+        azure_openai_api_base: Azure OpenAI endpoint
+        model: Deployment name for the model in Azure
+        api_version: Azure API version
+        headers: Headers to use for the request
+        timeout: Timeout to use for the request
+        stream: Stream to use for the request
+        request_timeout: Request timeout to use for the request
+    """
+
+    provider = "azure-openai"
+
+    def __init__(
+        self,
+        azure_openai_key: str,
+        azure_openai_api_base: str,
+        model: str,
+        api_version: str = None,
+        headers: dict = None,
+        timeout: int = None,
+        stream: bool = None,
+        request_timeout: int = None,
+    ):
+        model = model or DEPLOYMENT_NAME
+        api_key = azure_openai_key or AZURE_OPENAI_KEY
+        api_version = api_version or AZURE_API_VERSION
+        api_base = azure_openai_api_base or AZURE_OPENAI_API_BASE
+
+        super().__init__(
+            api_key,
+            "azure",
+            model,
+            headers,
+            timeout,
+            stream,
+            request_timeout,
+            engine=model,
+            api_version=api_version,
+            api_base=api_base,
+        )

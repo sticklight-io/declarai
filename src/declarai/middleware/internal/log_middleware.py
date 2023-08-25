@@ -13,6 +13,7 @@ logger = logging.getLogger("PromptLogger")
 class LoggingMiddleware(TaskMiddleware):
     """
     Creates a Simple logging middleware for a given task.
+
     Example:
         ```py
         @declarai.task(middlewares=[LoggingMiddleware])

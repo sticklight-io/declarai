@@ -1,0 +1,3 @@
+"""
+Core settings for Declarai.
+"""

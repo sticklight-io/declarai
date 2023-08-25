@@ -7,7 +7,6 @@ from declarai.task import TaskDecorator
 @patch("declarai.task.PythonParser")
 @patch("declarai.task.resolve_operator")
 def test_task_decorator_no_args(mocked_resolve_operator, mocked_python_parser):
-    llm_settings = MagicMock()
     operator_class_mock = MagicMock()
     operator_instance_mock = MagicMock()
     llm = MagicMock()
@@ -17,12 +16,12 @@ def test_task_decorator_no_args(mocked_resolve_operator, mocked_python_parser):
     mocked_python_parser.return_value = MagicMock()
     operator_instance_mock.parsed = mocked_python_parser.return_value
     operator_class_mock.return_value = operator_instance_mock
-    mocked_resolve_operator.return_value = (operator_class_mock, llm)
+    mocked_resolve_operator.return_value = operator_class_mock
 
     middlewares = [middleware]
 
     task_decorator = TaskDecorator(
-        llm_settings=llm_settings, middlewares=middlewares
+        llm=llm
     )
     decorator = task_decorator.task
 
@@ -38,7 +37,7 @@ def test_task_decorator_no_args(mocked_resolve_operator, mocked_python_parser):
         """
         return magic("return_name", a=a, b=b)
 
-    assert task_decorator.llm_settings == llm_settings
+    assert task_decorator.llm == llm
     assert test_task.middlewares == middlewares
     assert test_task.__name__ == "test_task"
     assert test_task.operator.parsed == mocked_python_parser.return_value

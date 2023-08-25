@@ -5,17 +5,18 @@ import logging
 from typing import List
 
 from declarai.operators import Message, MessageRole
+from declarai.operators.openai_operators.openai_llm import AzureOpenAILLM, OpenAILLM
 from declarai.operators.operator import BaseChatOperator, CompiledTemplate
+from declarai.operators.registry import register_operator
 from declarai.operators.templates import (
     StructuredOutputChatPrompt,
     compile_output_prompt,
 )
 
-from .openai_llm import OpenAILLM
-
 logger = logging.getLogger("OpenAIChatOperator")
 
 
+@register_operator(provider="openai", operator_type="chat")
 class OpenAIChatOperator(BaseChatOperator):
     """
     Chat implementation of OpenAI operator. This is a child of the BaseChatOperator class. See the BaseChatOperator class for further documentation.
@@ -74,3 +75,15 @@ class OpenAIChatOperator(BaseChatOperator):
             Message(message=compiled_system_prompt, role=MessageRole.system)
         ] + messages
         return {"messages": messages}
+
+
+@register_operator(provider="azure-openai", operator_type="chat")
+class AzureOpenAIChatOperator(OpenAIChatOperator):
+    """
+    Chat implementation of OpenAI operator. This is a child of the BaseChatOperator class. See the BaseChatOperator class for further documentation.
+
+    Attributes:
+        llm: AzureOpenAILLM
+    """
+
+    llm: AzureOpenAILLM

@@ -1,4 +1,4 @@
-"""Task
+"""Task interface
 
 Provides the most basic component to interact with an LLM.
 LLMs are often interacted with via an API. In order to provide prompts and receive predictions,
@@ -18,10 +18,10 @@ from typing import Any, Callable, Dict, List, Optional, Type, overload
 from declarai._base import BaseTask
 from declarai.middleware.base import TaskMiddleware
 from declarai.operators import (
+    LLM,
     BaseOperator,
     LLMParamsType,
     LLMResponse,
-    LLMSettings,
     resolve_operator,
 )
 from declarai.python_parser.parser import PythonParser
@@ -182,9 +182,8 @@ class TaskDecorator:
         task: the decorator that creates the task
     """
 
-    def __init__(self, llm_settings: LLMSettings, **kwargs):
-        self.llm_settings = llm_settings
-        self._kwargs = kwargs
+    def __init__(self, llm: LLM):
+        self.llm = llm
 
     @staticmethod
     @overload
@@ -221,14 +220,12 @@ class TaskDecorator:
             (Task): the task that was created
 
         """
-        operator_type, llm = resolve_operator(
-            self.llm_settings, operator_type="task", **self._kwargs
-        )
+        operator_type = resolve_operator(self.llm, operator_type="task")
 
         def wrap(_func: Callable) -> Task:
             operator = operator_type(
                 parsed=PythonParser(_func),
-                llm=llm,
+                llm=self.llm,
                 llm_params=llm_params,
             )
             llm_task = Task(operator=operator, middlewares=middlewares)
