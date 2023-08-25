@@ -6,7 +6,7 @@ import os
 from declarai.core.core_settings import DECLARAI_PREFIX
 
 OPENAI_API_KEY: str = os.getenv(
-    f"{DECLARAI_PREFIX}_OPENAI_API_KEY", ""
+    f"{DECLARAI_PREFIX}_OPENAI_API_KEY", os.getenv("OPENAI_API_KEY", "")
 )  # pylint: disable=E1101
 "API key for openai provider."
 OPENAI_MODEL: str = os.getenv(
