@@ -141,7 +141,7 @@ print(datetime_parser(raw_date="Janury 1st 2020"))
 class Animal(BaseModel):
     name: str
     family: str
-    leg_count: int
+    leg_count: int = Field(description="The number of legs")
 
 
 @declarai.task
