@@ -10,6 +10,8 @@ from pydantic.main import ModelMetaclass
 def resolve_pydantic_schema_recursive(schema_def: Dict[str, Any]) -> Any:
     obj_type = schema_def.get("type")
     if obj_type not in ("array", "object"):
+        if "description" in schema_def:
+            return f"{obj_type} - {schema_def.get('description')}"
         return obj_type
 
     schema = {}
