@@ -37,7 +37,7 @@ AZURE_API_VERSION: str = os.getenv(
 
 
 DEPLOYMENT_NAME: str = os.getenv(
-    f"{DECLARAI_PREFIX}_DEPLOYMENT_NAME",
+    f"{DECLARAI_PREFIX}_AZURE_OPENAI_DEPLOYMENT_NAME",
     os.getenv("DEPLOYMENT_NAME", ""),
 )  # pylint: disable=E1101
 "Deployment name for the model in Azure openai provider."

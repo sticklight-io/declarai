@@ -56,6 +56,7 @@ nav:
       - Providers:
           - providers/index.md
           - providers/openai.md
+          - providers/azure_openai.md
       - Integrations:
           - integrations/index.md
       - Examples:
