@@ -29,9 +29,9 @@ Once completed, the rest of the examples in this module should be as simple as c
 
 
 ```python title="declarai_tutorial.py"
-from declarai import Declarai
+import declarai
 
-declarai = Declarai(provider="openai", model="gpt-3.5-turbo", openai_token="<your-openai-token>")
+openai = declarai.openai(model="gpt-3.5-turbo", openai_token="<your-openai-token>")
 ```
 
 

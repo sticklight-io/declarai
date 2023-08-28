@@ -5,8 +5,10 @@ Just like tasks, you can control the type hints by declaring the return type of 
 
 ```py
 from typing import List
+import declarai
+openai = declarai.openai(model="gpt-3.5-turbo")
 
-@declarai.experimental.chat
+@openai.experimental.chat
 class SQLBot:
     """
     You are a sql assistant."""

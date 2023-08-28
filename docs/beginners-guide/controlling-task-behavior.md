@@ -12,7 +12,11 @@ Controlling these parameters is key to achieving the desired results from the mo
 
 In the following example, we'll create a task that suggests movies to watch based on a given input.
 ```python
-@declarai.task
+import declarai
+
+openai = declarai.openai(model="gpt-3.5-turbo")
+
+@openai.task
 def movie_recommender(user_input: str): # (1)!
     """
     Recommend a movie to watch based on the user input
@@ -32,7 +36,11 @@ print(movie_recommender(user_input="I want to watch a movie about space"))
 This is a good start, 
 but let's say we want to have a selection of movies instead of a single suggestion.
 ```python
-@declarai.task
+from typing import List
+import declarai
+
+openai = declarai.openai(model="gpt-3.5-turbo")
+@openai.task
 def movie_recommender(user_input: str) -> List[str]: # (1)!
     """
     Recommend a selection of movies to watch based on the user input
@@ -65,7 +73,11 @@ Now we have a list of movies to choose from!
 But what if we want to go even further :thinking:? <br>
 Let's say we want the model to also provide a short description of each movie.
 ```python
-@declarai.task
+from typing import Dict
+import declarai
+
+openai = declarai.openai(model="gpt-3.5-turbo")
+@openai.task
 def movie_recommender(user_input: str) -> Dict[str, str]: # (1)!
     """
     Recommend a selection of movies to watch based on the user input

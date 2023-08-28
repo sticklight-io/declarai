@@ -9,7 +9,10 @@ This takes away from the magic that Declarai provides, but we are aware not ever
 Let's see how we can initialize a chatbot by passing the `system` and `greeting` parameters as arguments.
 
 ```py
-@declarai.experimental.chat
+import declarai
+
+openai = declarai.openai(model="gpt-3.5-turbo")
+@openai.experimental.chat
 class SQLBot:
     ...
 

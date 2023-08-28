@@ -14,7 +14,12 @@ Declarai has an `evals` module as well for advanced debugging and benchmarking w
 
 Let's take the last task from the previous section and add a call to the `compile` method:
 ```python
-@declarai.task
+from typing import Dict
+import declarai
+
+openai = declarai.openai(model="gpt-3.5-turbo")
+
+@openai.task
 def movie_recommender(user_input: str) -> Dict[str, str]:
     """
     Recommend a selection of movies to watch based on the user input
@@ -22,9 +27,8 @@ def movie_recommender(user_input: str) -> Dict[str, str]:
     :param user_input: The user's input
     :return: A dictionary of movie names and descriptions
     """
-```
-```python
-print(movie_recommender.compile())
+
+movie_recommender.compile()
 
 > {
     'messages': [ # (1)!
@@ -36,7 +40,8 @@ print(movie_recommender.compile())
         user: Recommend a selection of movies to watch based on the user input  
               For each movie provide a short description as well.
               Inputs: user_input: {user_input} # (4)!
-]}
+    ]
+}
 ```
 
 1. As we are working with the openai llm provider, which exposes a chat interface, we translate the task into **messages** as defined by openai's API.

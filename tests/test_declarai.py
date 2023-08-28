@@ -39,7 +39,7 @@ def test_declarai_openai_back_compat():
 def test_declarai_openai_back_compat2():
 
     kwargs = {"model": "davinci", "openai_token": "test_token"}
-    dec = declarai.OpenAi(**kwargs)
+    dec = declarai.openai(**kwargs)
     assert dec.llm.provider == "openai"
     assert dec.llm.model == "davinci"
     assert dec.llm.api_key == "test_token"

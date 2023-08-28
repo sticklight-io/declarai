@@ -23,11 +23,11 @@ Once set up, you can use the `WandDBMonitorCreator` to track your prompts in the
 
 ```python
 from typing import Dict
-from declarai import Declarai
-from declarai.middlewares.third_party.wandb_monitor import WandDBMonitorCreator
+import declarai
+from declarai.middleware import WandDBMonitorCreator
 
 
-declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
+openai = declarai.openai(model="gpt-3.5-turbo")
 
 WandDBMonitor = WandDBMonitorCreator(
     name="<context-name>",
@@ -36,14 +36,14 @@ WandDBMonitor = WandDBMonitorCreator(
 )
 
 
-@declarai.task(middlewares=[WandDBMonitor])
+@openai.task(middlewares=[WandDBMonitor])
 def extract_info(text: str) -> Dict[str, str]:
     """
     Extract the phone number, name and email from the provided text
     :param text: content to extract the info from
     :return: The info extracted from the text
     """
-    return Declarai.magic(text=text)
+    return declarai.magic(text=text)
 ```
 The tracked prompts should look like this:
 <p align="center">

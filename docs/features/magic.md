@@ -10,7 +10,7 @@ The Magic callable is an "empty" function that can be used for two main scenario
 
 Without magic:
 ```python
-@declarai.task
+@openai.task
 def suggest_nickname(real_name: str) -> str: # (1)!
     """
     Suggest a nickname for a person

@@ -17,7 +17,9 @@ from declarai.operators import (
     resolve_llm,
 )
 from declarai.task import TaskDecorator
+
 SUPPORT_018_BACK_COMPAT = True
+
 
 def magic(
     return_name: Optional[str] = None,
@@ -60,7 +62,6 @@ class Declarai:
         experimental.chat (Callable): A decorator for chat operators.
     """
     if SUPPORT_018_BACK_COMPAT:
-        @property
         def openai(self,
                    model: ModelsOpenai,
                    version: str = None,
@@ -68,8 +69,37 @@ class Declarai:
                    headers: dict = None,
                    timeout: int = None,
                    stream: bool = None,
-                   request_timeout: int = None,):
+                   request_timeout: int = None, ):
             warnings.warn('This function is deprecated', DeprecationWarning)
+            openai(model=model,
+                   version=version,
+                   openai_token=openai_token,
+                   headers=headers,
+                   timeout=timeout,
+                   stream=stream,
+                   request_timeout=request_timeout
+                   )
+
+        def azure_openai(self,
+                         deployment_name: str,
+                         azure_openai_key: str = None,
+                         azure_openai_api_base: str = None,
+                         api_version: str = None,
+                         headers: dict = None,
+                         timeout: int = None,
+                         stream: bool = None,
+                         request_timeout: int = None
+                         ):
+            warnings.warn('This function is deprecated', DeprecationWarning)
+            azure_openai(deployment_name=deployment_name,
+                         azure_openai_key=azure_openai_key,
+                         azure_openai_api_base=azure_openai_api_base,
+                         api_version=api_version,
+                         headers=headers,
+                         timeout=timeout,
+                         stream=stream,
+                         request_timeout=request_timeout
+                         )
 
     @overload
     def __init__(
@@ -208,6 +238,7 @@ def _patch_back_compat():
     Declarai.azure_openai = azure_openai
     Declarai.register_llm = register_llm
     Declarai.register_operator = register_operator
+
 
 if SUPPORT_018_BACK_COMPAT:
     _patch_back_compat()

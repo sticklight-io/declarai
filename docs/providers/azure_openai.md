@@ -1,9 +1,9 @@
 To use Azure OpenAI models, you can set the following configuration options:
 
 ```py
-from declarai import Declarai
+import declarai
 
-azure = Declarai.azure_openai(
+azure = declarai.azure_openai(
     azure_openai_key="<api-token>",
     azure_openai_api_base="<api-base>",
     deployment_name="<deployment-name>",
