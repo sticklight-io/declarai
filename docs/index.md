@@ -103,7 +103,7 @@ print(rank_by_severity(message="How was your weekend?"))
 #> 1
 ```
 
-1. The `@declarai.task` decorator marks the function as a Declarai prompt task.
+1. The `@openai.task` decorator marks the function as a Declarai prompt task.
 2. The type hints `List[str]` are used to parse the output of the llm into a list of strings.
 3. The docstring represents the task's description which is used to generate the prompt.
     - `description` - the context of the task

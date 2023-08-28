@@ -73,9 +73,9 @@ passed to the declarai task/chat interface as a dictionary. The following parame
 Pass your custom parameters to the declarai task/chat interface as a dictionary:
 
 ```python
-from declarai import Declarai
+import declarai
 
-declarai = Declarai.azure_openai(
+azure = declarai.azure_openai(
     deployment_name="my-model",
     azure_openai_key="<your API key>",
     azure_openai_api_base="https://<my-azure-domain>.com",
@@ -83,7 +83,7 @@ declarai = Declarai.azure_openai(
 )
 
 
-@declarai.task(llm_params={"temperature": 0.5, "max_tokens": 1000})  # (1)!
+@azure.task(llm_params={"temperature": 0.5, "max_tokens": 1000})  # (1)!
 def generate_song():
     """
     Generate a song about declarai

@@ -57,11 +57,11 @@ declarai = Declarai(provider="openai", model="gpt-3.5-turbo", openai_token="<you
 ## 💡 Basic Usage
 Craft AI-powered functionalities with ease using the `@task` decorator. Just add some type hints and a bit of documentation, and watch Declarai do its magic!
 ```python
-from declarai import Declarai
+import declarai
 
-declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
+openai = declarai.openai(model="gpt-3.5-turbo")
 
-@declarai.task
+@openai.task
 def generate_poem(title: str) -> str:
     """
     Write a 4 line poem on the provided title
@@ -96,7 +96,7 @@ The resulting code is readable and easily maintainable.
 
 Python primitives
 ```python
-@declarai.task
+@openai.task
 def rank_by_severity(message: str) -> int:
     """
     Rank the severity of the provided message by it's urgency.
@@ -116,7 +116,7 @@ rank_by_severity(message="How was your weekend?"))
 
 Python complex objects
 ```python
-@declarai.task
+@openai.task
 def datetime_parser(raw_date: str) -> datetime:
     """
     Parse the input into a valid datetime string of the format YYYY-mm-ddThh:mm:ss
@@ -138,7 +138,7 @@ class Animal(BaseModel):
     leg_count: int
 
 
-@declarai.task
+@openai.task
 def suggest_animals(location: str) -> Dict[int, List[Animal]]:
     """
     Create a list of numbers from 0 to 5
@@ -168,7 +168,7 @@ suggest_animals(location="jungle")
 
 ### Simple Chat interface
 ```python
-@declarai.experimental.chat
+@openai.experimental.chat
 class CalculatorBot:
     """
     You a calculator bot,

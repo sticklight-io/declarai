@@ -29,7 +29,7 @@ class WandDBMonitorCreator:
              key="<decorators-key>",
          )
 
-         @declarai.task(middlewares=[WandDBMonitor])
+         @openai.task(middlewares=[WandDBMonitor])
          def generate_a_poem(title: str):
              '''
              Generate a poem based on the given title

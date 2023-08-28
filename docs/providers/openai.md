@@ -68,12 +68,12 @@ passed to the declarai task/chat interface as a dictionary. The following parame
 Pass your custom parameters to the declarai task/chat interface as a dictionary:
 
 ```python
-from declarai import Declarai
+import declarai
 
-declarai = Declarai(provide="openai", model="gpt4", openai_token="<your API key>")
+openai = declarai.openai(model="gpt-4", openai_token="<your API key>")
 
 
-@declarai.task(llm_params={"temperature": 0.5, "max_tokens": 1000})  # (1)!
+@openai.task(llm_params={"temperature": 0.5, "max_tokens": 1000})  # (1)!
 def generate_song():
     """
     Generate a song about declarai

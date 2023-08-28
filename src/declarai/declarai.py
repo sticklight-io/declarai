@@ -36,7 +36,7 @@ def magic(
 
     Example:
         ```py
-        @declarai.task
+        @openai.task
         def add(a: int, b: int) -> int:
             return magic(a, b)
         ```
