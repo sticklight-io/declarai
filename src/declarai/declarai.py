@@ -61,45 +61,52 @@ class Declarai:
         experimental: A namespace for experimental features.
         experimental.chat (Callable): A decorator for chat operators.
     """
-    if SUPPORT_018_BACK_COMPAT:
-        def openai(self,
-                   model: ModelsOpenai,
-                   version: str = None,
-                   openai_token: str = None,
-                   headers: dict = None,
-                   timeout: int = None,
-                   stream: bool = None,
-                   request_timeout: int = None, ):
-            warnings.warn('This function is deprecated', DeprecationWarning)
-            openai(model=model,
-                   version=version,
-                   openai_token=openai_token,
-                   headers=headers,
-                   timeout=timeout,
-                   stream=stream,
-                   request_timeout=request_timeout
-                   )
 
-        def azure_openai(self,
-                         deployment_name: str,
-                         azure_openai_key: str = None,
-                         azure_openai_api_base: str = None,
-                         api_version: str = None,
-                         headers: dict = None,
-                         timeout: int = None,
-                         stream: bool = None,
-                         request_timeout: int = None
-                         ):
-            warnings.warn('This function is deprecated', DeprecationWarning)
-            azure_openai(deployment_name=deployment_name,
-                         azure_openai_key=azure_openai_key,
-                         azure_openai_api_base=azure_openai_api_base,
-                         api_version=api_version,
-                         headers=headers,
-                         timeout=timeout,
-                         stream=stream,
-                         request_timeout=request_timeout
-                         )
+    if SUPPORT_018_BACK_COMPAT:
+
+        def openai(
+            self,
+            model: ModelsOpenai,
+            version: str = None,
+            openai_token: str = None,
+            headers: dict = None,
+            timeout: int = None,
+            stream: bool = None,
+            request_timeout: int = None,
+        ):
+            warnings.warn("This function is deprecated", DeprecationWarning)
+            openai(
+                model=model,
+                version=version,
+                openai_token=openai_token,
+                headers=headers,
+                timeout=timeout,
+                stream=stream,
+                request_timeout=request_timeout,
+            )
+
+        def azure_openai(
+            self,
+            deployment_name: str,
+            azure_openai_key: str = None,
+            azure_openai_api_base: str = None,
+            api_version: str = None,
+            headers: dict = None,
+            timeout: int = None,
+            stream: bool = None,
+            request_timeout: int = None,
+        ):
+            warnings.warn("This function is deprecated", DeprecationWarning)
+            azure_openai(
+                deployment_name=deployment_name,
+                azure_openai_key=azure_openai_key,
+                azure_openai_api_base=azure_openai_api_base,
+                api_version=api_version,
+                headers=headers,
+                timeout=timeout,
+                stream=stream,
+                request_timeout=request_timeout,
+            )
 
     @overload
     def __init__(
