@@ -2,7 +2,7 @@
 Base class for task middlewares.
 """
 from abc import abstractmethod  # pylint: disable=E0611
-from typing import Any
+from typing import Any, Dict
 
 from declarai._base import TaskType
 
@@ -20,7 +20,7 @@ class TaskMiddleware:
         _kwargs: The keyword arguments to pass to the task
     """
 
-    def __init__(self, task: TaskType, kwargs):
+    def __init__(self, task: TaskType, kwargs: Dict[str, Any] = None):
         self._task = task
         self._kwargs = kwargs
 
