@@ -2,9 +2,6 @@
 Environment level configurations for working with openai and Azure openai providers.
 """
 import os
-
-import openai
-
 from declarai.core.core_settings import DECLARAI_PREFIX
 
 OPENAI_API_KEY: str = os.getenv(
@@ -31,7 +28,7 @@ AZURE_OPENAI_API_BASE: str = os.getenv(
 
 AZURE_API_VERSION: str = os.getenv(
     f"{DECLARAI_PREFIX}_AZURE_API_VERSION",
-    os.getenv("AZURE_API_VERSION", openai.api_version),
+    os.getenv("AZURE_API_VERSION", "2023-05-15"),
 )  # pylint: disable=E1101
 "API version for Azure openai provider."
 
