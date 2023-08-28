@@ -2,19 +2,10 @@
 #
 # from pytest import fixture
 #
-# from declarai.operators.base.types import Message
-# from declarai.tasks.llm_chat import LLMChat
+# from declarai.operators import Message
+# from declarai.chat import Chat
 #
-# CHAT_TEMPLATE = "{system_prompt}{output_instructions}"
-# TEMPLATE_KWARGS = {
-#     "system_prompt": "You are an assistant making people laugh.",
-#     "output_instructions": "",
-# }
 #
-# SYSTEM_MESSAGE = Message(
-#     message="You are an assistant making people laugh.",
-#     role="system",
-# )
 #
 #
 # def test_chat_message():
@@ -34,10 +25,9 @@
 # def llm_chat():
 #     test_llm = MagicMock()
 #     test_llm.predict.return_value = MagicMock()
-#     llm_chat = LLMChat(
-#         template=CHAT_TEMPLATE,
-#         template_kwargs=TEMPLATE_KWARGS,
-#         llm=test_llm,
+#     llm_chat = Chat(
+#         system="You are a translator from english to french",
+#         operator,
 #         prompt_kwargs={"structured": False},
 #     )
 #     return llm_chat

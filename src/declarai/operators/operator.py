@@ -102,7 +102,9 @@ class BaseChatOperator(BaseOperator):
         parsed_send_func (PythonParser): The parsed object that is used to compile the send function.
     """
 
-    def __init__(self, system: str, greeting: Optional[str] = None, **kwargs):
+    def __init__(
+        self, system: Optional[str] = None, greeting: Optional[str] = None, **kwargs
+    ):
         super().__init__(**kwargs)
         self.system = system or self.parsed.docstring_freeform
         self.greeting = greeting or getattr(self.parsed.decorated, "greeting", None)

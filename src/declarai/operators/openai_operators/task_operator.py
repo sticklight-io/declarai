@@ -3,6 +3,7 @@ Task implementation for openai operator.
 """
 import logging
 
+from declarai.operators.registry import register_operator
 from declarai.operators.message import Message, MessageRole
 from declarai.operators.operator import BaseOperator, CompiledTemplate
 from declarai.operators.templates import (
@@ -11,7 +12,7 @@ from declarai.operators.templates import (
     compile_output_prompt,
 )
 
-from .openai_llm import OpenAILLM
+from .openai_llm import AzureOpenAILLM, OpenAILLM
 
 logger = logging.getLogger("OpenAITaskOperator")
 
@@ -20,6 +21,7 @@ INPUT_LINE_TEMPLATE = "{param}: {{{param}}}"
 NEW_LINE_INPUT_LINE_TEMPLATE = "\n{param}: {{{param}}}"
 
 
+@register_operator(provider="openai", operator_type="task")
 class OpenAITaskOperator(BaseOperator):
     """
     Task implementation for openai operator. This is a child of the BaseOperator class. See the BaseOperator class for further documentation.
@@ -124,3 +126,15 @@ class OpenAITaskOperator(BaseOperator):
             template[-1].message = template[-1].message.format(**kwargs)
             return {"messages": template}
         return {"messages": template}
+
+
+@register_operator(provider="azure-openai", operator_type="task")
+class AzureOpenAITaskOperator(OpenAITaskOperator):
+    """
+    Task implementation for openai operator that uses Azure as the llm provider.
+
+    Attributes:
+        llm: AzureOpenAILLM
+    """
+
+    llm: AzureOpenAILLM

@@ -20,3 +20,8 @@
 .md-banner a:hover {
     color: #e31849; /* Adjust this for the link hover color inside the banner */
 }
+
+/* Maximum space for text block */
+.md-grid {
+  max-width: 80%; /* or 100%, if you want to stretch to full-width */
+}

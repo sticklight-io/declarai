@@ -1,3 +1,6 @@
+"""
+Base classes for declarai tasks.
+"""
 from abc import abstractmethod
 from typing import Any, TypeVar
 
@@ -78,6 +81,7 @@ class BaseChat(BaseTask):
     """
 
     operator: BaseChatOperator
+    "The operator to use for the chat task."
 
 
 TaskType = TypeVar("TaskType", bound=BaseTask)

@@ -1,4 +1,6 @@
-"""Chat tasks are tasks that are meant to be used in an iterative fashion, where the user and the assistant exchange
+"""Chat tasks definition.
+
+Chat tasks are tasks that are meant to be used in an iterative fashion, where the user and the assistant exchange
  messages.
 
 Unlike tasks, chat tasks are storing the message history in a `BaseChatMessageHistory` object, which is used to compile
@@ -16,10 +18,10 @@ from declarai.memory import InMemoryMessageHistory
 from declarai.memory.base import BaseChatMessageHistory
 from declarai.middleware.base import TaskMiddleware
 from declarai.operators import (
+    LLM,
     BaseChatOperator,
     LLMParamsType,
     LLMResponse,
-    LLMSettings,
     Message,
     MessageRole,
     resolve_operator,
@@ -229,17 +231,14 @@ class ChatDecorator:
     This class provides the `chat` method which acts as a decorator to create a Chat object.
 
     Args:
-        llm_settings (LLMSettings): Settings for the LLM like model provider, model name, etc.
-        **kwargs: Additional keyword arguments like openai_api_key, etc.
+        llm (LLM): Resolved LLM object.
 
     Attributes:
-        llm_settings (LLMSettings): Settings for the LLM.
-        _kwargs (dict): Dictionary storing keyword arguments passed during initialization.
+        llm (LLM): Resolved LLM object.
     """
 
-    def __init__(self, llm_settings: LLMSettings, **kwargs):
-        self.llm_settings = llm_settings
-        self._kwargs = kwargs
+    def __init__(self, llm: LLM):
+        self.llm = llm
 
     @staticmethod
     @overload
@@ -310,9 +309,7 @@ class ChatDecorator:
             ```
 
         """
-        operator_type, llm = resolve_operator(
-            self.llm_settings, operator_type="chat", **self._kwargs
-        )
+        operator_type = resolve_operator(self.llm, operator_type="chat")
 
         def wrap(cls) -> Type[Chat]:
             non_private_methods = {
@@ -327,8 +324,7 @@ class ChatDecorator:
 
             _decorator_kwargs = dict(
                 operator=operator_type(
-                    llm=llm,
-                    system=parsed_cls.docstring_freeform,
+                    llm=self.llm,
                     parsed=parsed_cls,
                     llm_params=llm_params,
                 ),

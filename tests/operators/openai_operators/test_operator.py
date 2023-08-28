@@ -1,4 +1,4 @@
-from declarai.operators import OpenAITaskOperator, OpenAILLM
+from declarai.operators import OpenAILLM, OpenAITaskOperator
 from declarai.python_parser.parser import PythonParser
 
 
