@@ -2,7 +2,7 @@
 
 Decorates the package functionalities and serve as the main interface for the user.
 """
-
+import warnings
 from typing import Any, Dict, Optional, Type, overload
 
 from declarai.chat import ChatDecorator
@@ -17,7 +17,7 @@ from declarai.operators import (
     resolve_llm,
 )
 from declarai.task import TaskDecorator
-
+SUPPORT_018_BACK_COMPAT = True
 
 def magic(
     return_name: Optional[str] = None,
@@ -59,6 +59,17 @@ class Declarai:
         experimental: A namespace for experimental features.
         experimental.chat (Callable): A decorator for chat operators.
     """
+    if SUPPORT_018_BACK_COMPAT:
+        @property
+        def openai(self,
+                   model: ModelsOpenai,
+                   version: str = None,
+                   openai_token: str = None,
+                   headers: dict = None,
+                   timeout: int = None,
+                   stream: bool = None,
+                   request_timeout: int = None,):
+            warnings.warn('This function is deprecated', DeprecationWarning)
 
     @overload
     def __init__(
@@ -190,3 +201,13 @@ def register_operator(
         model=model,
         operator_cls=operator_cls,
     )
+
+
+def _patch_back_compat():
+    Declarai.openai = openai
+    Declarai.azure_openai = azure_openai
+    Declarai.register_llm = register_llm
+    Declarai.register_operator = register_operator
+
+if SUPPORT_018_BACK_COMPAT:
+    _patch_back_compat()

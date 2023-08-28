@@ -27,6 +27,24 @@ def test_declarai_openai():
     assert dec.llm.api_key == "test_token"
 
 
+def test_declarai_openai_back_compat():
+    from declarai import Declarai
+    kwargs = {"model": "davinci", "openai_token": "test_token"}
+    dec = Declarai.openai(**kwargs)
+    assert dec.llm.provider == "openai"
+    assert dec.llm.model == "davinci"
+    assert dec.llm.api_key == "test_token"
+
+
+def test_declarai_openai_back_compat2():
+
+    kwargs = {"model": "davinci", "openai_token": "test_token"}
+    dec = declarai.OpenAi(**kwargs)
+    assert dec.llm.provider == "openai"
+    assert dec.llm.model == "davinci"
+    assert dec.llm.api_key == "test_token"
+
+
 def test_declarai_azure_openai():
     kwargs = {
         "deployment_name": "test",
