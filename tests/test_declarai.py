@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from declarai import Declarai
+import declarai
 
 
 @patch("declarai.declarai.resolve_llm")
@@ -10,30 +10,21 @@ def test_declarai(mocked_task_decorator, mocked_resolve_llm):
     mocked_resolve_llm.return_value = MagicMock()
     mocked_task_decorator.return_value.task = MagicMock()
 
-    declarai = Declarai(provider="test",
+    dec = declarai.Declarai(provider="test", model="test", **kwargs)
 
-                        **kwargs)
-
-    assert declarai.llm == mocked_resolve_llm.return_value
-    assert declarai.task == mocked_task_decorator.return_value.task
+    assert dec.llm == mocked_resolve_llm.return_value
+    assert dec.task == mocked_task_decorator.return_value.task
 
     # Test experimental apis
-    assert declarai.experimental
+    assert dec.experimental
 
 
 def test_declarai_openai():
-    kwargs = {
-        "model": "davinci",
-        "openai_token": "test_token"
-    }
-    declarai = Declarai.openai(
-        **kwargs
-    )
-
-    assert declarai.llm.provider == "openai"
-    assert declarai.llm.model == "davinci"
-    assert declarai.llm.api_key == "test_token"
-
+    kwargs = {"model": "davinci", "openai_token": "test_token"}
+    dec = declarai.openai(**kwargs)
+    assert dec.llm.provider == "openai"
+    assert dec.llm.model == "davinci"
+    assert dec.llm.api_key == "test_token"
 
 
 def test_declarai_azure_openai():
@@ -43,13 +34,10 @@ def test_declarai_azure_openai():
         "azure_openai_api_base": "456",
         "api_version": "789",
     }
-    declarai = Declarai.azure_openai(
-        **kwargs
-    )
+    dec = declarai.azure_openai(**kwargs)
 
-    assert declarai.llm.provider == "azure-openai"
-    assert declarai.llm.model == "test"
-    assert declarai.llm.api_key == "123"
-    assert declarai.llm._kwargs["api_base"] == "456"
-    assert declarai.llm._kwargs["api_version"] == "789"
-
+    assert dec.llm.provider == "azure-openai"
+    assert dec.llm.model == "test"
+    assert dec.llm.api_key == "123"
+    assert dec.llm._kwargs["api_base"] == "456"
+    assert dec.llm._kwargs["api_version"] == "789"
