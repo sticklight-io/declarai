@@ -96,15 +96,15 @@ class Task(BaseTask):
     Attributes:
         operator: the operator to use to interact with the LLM
         llm_response (LLMResponse): the response from the LLM
-        _kwargs: the kwargs that were passed to the task are set as attributes on the task and passed to the middlewares
+        _call_kwargs: the kwargs that were passed to the task are set as attributes on the task and passed to the middlewares
     """
 
     is_declarai = True
     llm_response: LLMResponse
-    _kwargs: Dict[str, Any]
+    _call_kwargs: Dict[str, Any]
 
     def __init__(
-        self, operator: BaseOperator, middlewares: List[TaskMiddleware] = None
+        self, operator: BaseOperator, middlewares: List[Type[TaskMiddleware]] = None
     ):
         self.middlewares = middlewares
         self.operator = operator
@@ -147,7 +147,7 @@ class Task(BaseTask):
         if self.middlewares:
             exec_with_middlewares = None
             for middleware in self.middlewares:
-                exec_with_middlewares = middleware(self, self._kwargs)
+                exec_with_middlewares = middleware(self, self._call_kwargs)
             if exec_with_middlewares:
                 return exec_with_middlewares()
         return self._exec(kwargs)
@@ -162,13 +162,14 @@ class Task(BaseTask):
         Returns: the user defined return type of the task
 
         """
-        self._kwargs = kwargs
         runtime_llm_params = (
             llm_params or self.llm_params
         )  # order is important! We prioritize runtime params that
         # were passed
         if runtime_llm_params:
-            self._kwargs["llm_params"] = runtime_llm_params
+            kwargs["llm_params"] = runtime_llm_params
+
+        self._call_kwargs = kwargs
         return self._exec_middlewares(kwargs)
 
 
