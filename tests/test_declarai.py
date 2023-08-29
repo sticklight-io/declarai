@@ -24,16 +24,17 @@ def test_declarai(mocked_task_decorator, mocked_resolve_llm):
 def test_declarai_openai():
     kwargs = {
         "model": "davinci",
-        "openai_token": "test_token"
+        "openai_token": "test_token",
+        "stream": True,
     }
     declarai = Declarai.openai(
         **kwargs
     )
 
+    assert declarai.llm.streaming is True
     assert declarai.llm.provider == "openai"
     assert declarai.llm.model == "davinci"
     assert declarai.llm.api_key == "test_token"
-
 
 
 def test_declarai_azure_openai():
@@ -52,4 +53,3 @@ def test_declarai_azure_openai():
     assert declarai.llm.api_key == "123"
     assert declarai.llm._kwargs["api_base"] == "456"
     assert declarai.llm._kwargs["api_version"] == "789"
-

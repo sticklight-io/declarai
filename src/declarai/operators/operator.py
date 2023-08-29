@@ -35,11 +35,28 @@ class BaseOperator:
         llm: LLM,
         parsed: PythonParser,
         llm_params: LLMParamsType = None,
+        streaming: bool = None,
         **kwargs: Dict,
     ):
         self.llm = llm
         self.parsed = parsed
         self.llm_params = llm_params or {}
+        self._call_streaming = streaming
+
+    @property
+    def streaming(self) -> bool:
+        """
+        Returns whether the operator is streaming or not
+        Returns:
+
+        """
+        if self._call_streaming is not None:
+            return self._call_streaming
+
+        if hasattr(self.llm, "streaming"):
+            return self.llm.streaming
+
+        return False
 
     @abstractmethod
     def compile(self, **kwargs) -> CompiledTemplate:
@@ -70,6 +87,8 @@ class BaseOperator:
             The response from the LLM
         """
         llm_params = llm_params or self.llm_params  # Order is important -
+        if self.streaming is not None:
+            llm_params["stream"] = self.streaming  # streaming should be the last param
         # provided params during execution should override the ones provided during initialization
         return self.llm.predict(**self.compile(**kwargs), **llm_params)
 
@@ -103,9 +122,13 @@ class BaseChatOperator(BaseOperator):
     """
 
     def __init__(
-        self, system: Optional[str] = None, greeting: Optional[str] = None, **kwargs
+        self,
+        system: Optional[str] = None,
+        greeting: Optional[str] = None,
+        parsed: PythonParser = None,
+        **kwargs,
     ):
-        super().__init__(**kwargs)
+        super().__init__(parsed=parsed, **kwargs)
         self.system = system or self.parsed.docstring_freeform
         self.greeting = greeting or getattr(self.parsed.decorated, "greeting", None)
         self.parsed_send_func = (
@@ -113,3 +136,8 @@ class BaseChatOperator(BaseOperator):
             if getattr(self.parsed.decorated, "send", None)
             else None
         )
+
+        if self.streaming:
+            raise ValueError(
+                "Streaming is not supported for chat operators. Please disable streaming."
+            )

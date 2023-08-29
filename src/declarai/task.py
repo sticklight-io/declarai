@@ -141,7 +141,9 @@ class Task(BaseTask):
 
     def _exec(self, kwargs) -> Any:
         self.llm_response = self.operator.predict(**kwargs)
-        return self.operator.parse_output(self.llm_response.response)
+        if not self.operator.streaming:
+            return self.operator.parse_output(self.llm_response.response)
+        return self.llm_response
 
     def _exec_middlewares(self, kwargs) -> Any:
         if self.middlewares:
@@ -199,6 +201,7 @@ class TaskDecorator:
         *,
         middlewares: List[Type[TaskMiddleware]] = None,
         llm_params: LLMParamsType = None,
+        streaming: bool = None,
         **kwargs,
     ) -> Callable[[Callable], Task]:
         ...
@@ -209,6 +212,7 @@ class TaskDecorator:
         *,
         middlewares: List[Type[TaskMiddleware]] = None,
         llm_params: LLMParamsType = None,
+        streaming: bool = None,
     ):
         """
         The decorator that creates the task
@@ -216,6 +220,7 @@ class TaskDecorator:
             func: the function to decorate that represents the task
             middlewares: middleware to use while executing the task
             llm_params: llm_params to use when calling the llm
+            streaming: whether to stream the response from the llm or not
 
         Returns:
             (Task): the task that was created
@@ -228,6 +233,7 @@ class TaskDecorator:
                 parsed=PythonParser(_func),
                 llm=self.llm,
                 llm_params=llm_params,
+                streaming=streaming,
             )
             llm_task = Task(operator=operator, middlewares=middlewares)
             llm_task.__name__ = _func.__name__

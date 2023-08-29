@@ -26,6 +26,8 @@ class LLMResponse(BaseModel):
     prompt_tokens: Optional[int] = None
     completion_tokens: Optional[int] = None
     total_tokens: Optional[int] = None
+    role: str = "assistant"
+    raw_response: Optional[dict] = None
 
 
 class BaseLLMParams(TypedDict):

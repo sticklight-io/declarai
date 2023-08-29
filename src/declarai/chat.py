@@ -149,7 +149,7 @@ class Chat(BaseChat, metaclass=ChatMeta):
         """
         self._chat_history.add_message(Message(message=message, role=role))
 
-    def _exec(self, kwargs) -> LLMResponse:
+    def _exec(self, kwargs) -> Any:
         """
         Executes the call to the LLM.
 
@@ -161,9 +161,11 @@ class Chat(BaseChat, metaclass=ChatMeta):
         """
         self.llm_response = self.operator.predict(**kwargs)
         self.add_message(self.llm_response.response, role=MessageRole.assistant)
+
         if self.operator.parsed_send_func:
             return self.operator.parsed_send_func.parse(self.llm_response.response)
-        return self.llm_response
+
+        return self.llm_response.response
 
     def _exec_middlewares(self, kwargs) -> Any:
         if self.middlewares:
@@ -324,9 +326,7 @@ class ChatDecorator:
 
             _decorator_kwargs = dict(
                 operator=operator_type(
-                    llm=self.llm,
-                    parsed=parsed_cls,
-                    llm_params=llm_params,
+                    llm=self.llm, parsed=parsed_cls, llm_params=llm_params
                 ),
                 middlewares=middlewares,
                 chat_history=chat_history,
