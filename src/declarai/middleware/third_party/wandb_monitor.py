@@ -85,7 +85,7 @@ class WandDBMonitorCreator:
                     },
                     start_time_ms=self._start_time_ms,
                     end_time_ms=end_time_ms,
-                    inputs={"query": task.compile(**task.call_kwargs)},
+                    inputs={"query": task.compile(**self._kwargs)},
                     outputs={"response": task.llm_response.response},
                 )
 

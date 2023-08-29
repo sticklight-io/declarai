@@ -45,6 +45,21 @@ def test_declarai_openai_back_compat2():
     assert dec.llm.api_key == "test_token"
 
 
+    kwargs = {
+        "model": "davinci",
+        "openai_token": "test_token",
+        "stream": True,
+    }
+    declarai = Declarai.openai(
+        **kwargs
+    )
+
+    assert declarai.llm.streaming is True
+    assert declarai.llm.provider == "openai"
+    assert declarai.llm.model == "davinci"
+    assert declarai.llm.api_key == "test_token"
+
+
 def test_declarai_azure_openai():
     kwargs = {
         "deployment_name": "test",
@@ -59,3 +74,13 @@ def test_declarai_azure_openai():
     assert dec.llm.api_key == "123"
     assert dec.llm._kwargs["api_base"] == "456"
     assert dec.llm._kwargs["api_version"] == "789"
+
+    declarai = Declarai.azure_openai(
+        **kwargs
+    )
+
+    assert declarai.llm.provider == "azure-openai"
+    assert declarai.llm.model == "test"
+    assert declarai.llm.api_key == "123"
+    assert declarai.llm._kwargs["api_base"] == "456"
+    assert declarai.llm._kwargs["api_version"] == "789"

@@ -1,8 +1,9 @@
 """
 LLM implementation for OpenAI
 """
-from typing import List, Optional
+from typing import List, Optional, Iterator, Union
 
+from openai.openai_object import OpenAIObject
 import openai
 
 from declarai.operators import BaseLLM, BaseLLMParams, LLMResponse, Message
@@ -51,14 +52,23 @@ class BaseOpenAILLM(BaseLLM):
         self._kwargs = {
             "headers": headers,
             "timeout": timeout,
-            "stream": stream,
             "request_timeout": request_timeout,
             **kwargs,
         }
         self.openai = openai
         self.api_key = api_key
         self.api_type = api_type
+        self.stream = stream
         self.model = model_name
+
+    @property
+    def streaming(self) -> bool:
+        """
+        Returns whether the LLM is streaming or not
+        Returns:
+            bool: True if the LLM is streaming, False otherwise
+        """
+        return self.stream
 
     def predict(
         self,
@@ -69,10 +79,12 @@ class BaseOpenAILLM(BaseLLM):
         top_p: float = 1,
         frequency_penalty: int = 0,
         presence_penalty: int = 0,
-    ) -> LLMResponse:
+        stream: bool = None,
+    ) -> Union[Iterator[LLMResponse], LLMResponse]:
         """
         Predicts the next message using OpenAI
         Args:
+            stream: if to stream the response
             messages: List of messages that are used as context for the prediction
             model: the model to use for the prediction
             temperature: the temperature to use for the prediction
@@ -85,6 +97,8 @@ class BaseOpenAILLM(BaseLLM):
             LLMResponse: The response from the LLM
 
         """
+        if stream is None:
+            stream = self.stream
         openai_messages = [{"role": m.role, "content": m.message} for m in messages]
         res = self.openai.ChatCompletion.create(
             model=model or self.model,
@@ -96,15 +110,22 @@ class BaseOpenAILLM(BaseLLM):
             presence_penalty=presence_penalty,
             api_key=self.api_key,
             api_type=self.api_type,
+            stream=stream,
             **self._kwargs,
         )
-        return LLMResponse(
-            response=res.choices[0]["message"]["content"],
-            model=res.model,
-            prompt_tokens=res["usage"]["prompt_tokens"],
-            completion_tokens=res["usage"]["completion_tokens"],
-            total_tokens=res["usage"]["total_tokens"],
-        )
+
+        if stream:
+            return handle_streaming_response(res)
+
+        else:
+            return LLMResponse(
+                response=res.choices[0]["message"]["content"],
+                model=res.model,
+                prompt_tokens=res["usage"]["prompt_tokens"],
+                completion_tokens=res["usage"]["completion_tokens"],
+                total_tokens=res["usage"]["total_tokens"],
+                raw_response=res.to_dict_recursive(),
+            )
 
 
 @register_llm(provider="openai")
@@ -214,3 +235,39 @@ class AzureOpenAILLM(BaseOpenAILLM):
             api_version=api_version,
             api_base=api_base,
         )
+
+
+def handle_streaming_response(api_response: OpenAIObject) -> Iterator[LLMResponse]:
+    """
+    Accumulate chunk deltas into a full response. Returns the full message.
+    """
+    response = {"role": None, "response": "", "raw_response": ""}
+
+    for r in api_response:  # noqa
+        response["raw_response"] = r.to_dict_recursive()
+
+        delta = r.choices[0]["delta"]
+        response["model"] = r.model
+        if r.usage:
+            response["prompt_tokens"] = r.usage["prompt_tokens"]
+            response["completion_tokens"] = r.usage["completion_tokens"]
+            response["total_tokens"] = r.usage["total_tokens"]
+
+        if "role" in delta:
+            response["role"] = delta["role"]
+
+        if delta.get("function_call"):
+            fn_call = delta.get("function_call")
+            if "function_call" not in response["data"]:
+                response["data"]["function_call"] = {"name": None, "arguments": ""}
+            if "name" in fn_call:
+                response["data"]["function_call"]["name"] = fn_call.name
+            if "arguments" in fn_call:
+                response["data"]["function_call"]["arguments"] += (
+                    fn_call.arguments or ""
+                )
+
+        if "content" in delta:
+            response["response"] += delta.content or ""
+
+        yield LLMResponse(**response)
