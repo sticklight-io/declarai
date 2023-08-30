@@ -13,7 +13,7 @@ the different LLM API providers as well as custom models have different APIs wit
 structures. For that reason, there are multiple implementations of operators, depending on the required use case.
 """
 
-from typing import Any, Callable, Dict, List, Optional, Type, overload
+from typing import Any, Callable, Dict, List, Optional, Type, overload, Iterator, Union
 
 from declarai._base import BaseTask
 from declarai.middleware.base import TaskMiddleware
@@ -22,6 +22,7 @@ from declarai.operators import (
     BaseOperator,
     LLMParamsType,
     resolve_operator,
+    LLMResponse,
 )
 from declarai.python_parser.parser import PythonParser
 
@@ -138,9 +139,9 @@ class Task(BaseTask):
 
     def _exec(self, kwargs) -> Any:
         if self.operator.streaming:
-            raw_stream = self.operator.predict(**kwargs)
-            stream = self.stream_handler(stream=raw_stream)
-            return stream
+            stream = self.stream_handler(self.operator.predict(**kwargs))
+            self.llm_stream_response = stream
+            return self.llm_stream_response
         else:
             self.llm_response = self.operator.predict(**kwargs)
             return self.operator.parse_output(self.llm_response.response)
@@ -154,7 +155,9 @@ class Task(BaseTask):
                 return exec_with_middlewares()
         return self._exec(kwargs)
 
-    def __call__(self, *, llm_params: LLMParamsType = None, **kwargs) -> Any:
+    def __call__(
+        self, *, llm_params: LLMParamsType = None, **kwargs
+    ) -> Union[Any, Iterator[LLMResponse]]:
         """
         Orchestrates the execution of the task.
         Args:

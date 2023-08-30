@@ -167,7 +167,8 @@ class Chat(BaseTask, metaclass=ChatMeta):
         if self.operator.streaming:
             # Use the stream_handler generator if streaming is enabled
             stream = self.stream_handler(self.operator.predict(**kwargs))
-            return stream
+            self.llm_stream_response = stream
+            return self.llm_stream_response
         else:
             self.llm_response = self.operator.predict(**kwargs)
             self.add_message(self.llm_response.response, role=MessageRole.assistant)

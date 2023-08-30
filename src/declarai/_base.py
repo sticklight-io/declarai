@@ -88,7 +88,6 @@ class BaseTask:
         A generator that yields each chunk from the stream and collects them in a buffer.
         After the stream is exhausted, it runs the cleanup logic.
         """
-        self.llm_stream_response = stream
         response_buffer = []
         for chunk in stream:
             response_buffer.append(chunk)
