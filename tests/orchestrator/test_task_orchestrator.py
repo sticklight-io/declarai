@@ -7,6 +7,7 @@ from declarai.task import Task
 def test_task():
     operator = MagicMock()
     instantiated_operator = MagicMock()
+    instantiated_operator.streaming = False
     operator.return_value = instantiated_operator
 
     instantiated_operator.compile.return_value = "compiled_result"
@@ -32,3 +33,21 @@ def test_task():
 
     res = task(llm_params={"temperature": 0.5})
     instantiated_operator.predict.assert_called_with(llm_params={"temperature": 0.5})
+
+
+def test_task_streaming():
+    operator = MagicMock()
+    instantiated_operator = MagicMock()
+    instantiated_operator.streaming = True
+    operator.return_value = instantiated_operator
+
+    instantiated_operator.compile.return_value = "compiled_result"
+    llm_response = MagicMock()
+    llm_response.response = "predicted_result"
+    instantiated_operator.predict.return_value = [llm_response]
+
+    def test_task() -> str:
+        pass
+
+    task = Task(instantiated_operator)
+    assert list(task()) == [llm_response]

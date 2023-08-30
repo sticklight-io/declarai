@@ -21,7 +21,6 @@ from declarai.operators import (
     LLM,
     BaseOperator,
     LLMParamsType,
-    LLMResponse,
     resolve_operator,
 )
 from declarai.python_parser.parser import PythonParser
@@ -95,12 +94,10 @@ class Task(BaseTask):
 
     Attributes:
         operator: the operator to use to interact with the LLM
-        llm_response (LLMResponse): the response from the LLM
         _call_kwargs: the kwargs that were passed to the task are set as attributes on the task and passed to the middlewares
     """
 
     is_declarai = True
-    llm_response: LLMResponse
     _call_kwargs: Dict[str, Any]
 
     def __init__(
@@ -140,10 +137,13 @@ class Task(BaseTask):
         )
 
     def _exec(self, kwargs) -> Any:
-        self.llm_response = self.operator.predict(**kwargs)
-        if not self.operator.streaming:
+        if self.operator.streaming:
+            raw_stream = self.operator.predict(**kwargs)
+            stream = self.stream_handler(stream=raw_stream)
+            return stream
+        else:
+            self.llm_response = self.operator.predict(**kwargs)
             return self.operator.parse_output(self.llm_response.response)
-        return self.llm_response
 
     def _exec_middlewares(self, kwargs) -> Any:
         if self.middlewares:
