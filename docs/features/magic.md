@@ -43,9 +43,9 @@ In the scenario that you do not wan't to rely on the docstring for prompt genera
 ```python
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.task
+@gpt_35.task
 def suggest_nickname(real_name: str) -> str:
     return declarai.magic(
         real_name=real_name,

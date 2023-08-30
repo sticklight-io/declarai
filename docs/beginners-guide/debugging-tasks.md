@@ -17,9 +17,9 @@ Let's take the last task from the previous section and add a call to the `compil
 from typing import Dict
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.task
+@gpt_35.task
 def movie_recommender(user_input: str) -> Dict[str, str]:
     """
     Recommend a selection of movies to watch based on the user input

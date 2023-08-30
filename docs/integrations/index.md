@@ -27,7 +27,7 @@ import declarai
 from declarai.middleware import WandDBMonitorCreator
 
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
 WandDBMonitor = WandDBMonitorCreator(
     name="<context-name>",
@@ -36,7 +36,7 @@ WandDBMonitor = WandDBMonitorCreator(
 )
 
 
-@openai.task(middlewares=[WandDBMonitor])
+@gpt_35.task(middlewares=[WandDBMonitor])
 def extract_info(text: str) -> Dict[str, str]:
     """
     Extract the phone number, name and email from the provided text

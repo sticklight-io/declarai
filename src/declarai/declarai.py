@@ -64,8 +64,8 @@ class Declarai:
 
     if SUPPORT_018_BACK_COMPAT:
 
+        @staticmethod
         def openai(
-            self,
             model: ModelsOpenai,
             version: str = None,
             openai_token: str = None,
@@ -74,7 +74,10 @@ class Declarai:
             stream: bool = None,
             request_timeout: int = None,
         ):
-            warnings.warn("This function is deprecated", DeprecationWarning)
+            warnings.warn(
+                "Declarai.openai is deprecated. Will be removed in 0.2.*. Please use `import declarai; declarai.openai`",
+                DeprecationWarning,
+            )
             openai(
                 model=model,
                 version=version,
@@ -85,8 +88,8 @@ class Declarai:
                 request_timeout=request_timeout,
             )
 
+        @staticmethod
         def azure_openai(
-            self,
             deployment_name: str,
             azure_openai_key: str = None,
             azure_openai_api_base: str = None,
@@ -96,7 +99,10 @@ class Declarai:
             stream: bool = None,
             request_timeout: int = None,
         ):
-            warnings.warn("This function is deprecated", DeprecationWarning)
+            warnings.warn(
+                "Declarai.azure_openai is deprecated. Will be removed in 0.2.*. Please use `import declarai; declarai.azure_openai`",
+                DeprecationWarning,
+            )
             azure_openai(
                 deployment_name=deployment_name,
                 azure_openai_key=azure_openai_key,
@@ -243,8 +249,6 @@ def register_operator(
 def _patch_back_compat():
     Declarai.openai = openai
     Declarai.azure_openai = azure_openai
-    Declarai.register_llm = register_llm
-    Declarai.register_operator = register_operator
 
 
 if SUPPORT_018_BACK_COMPAT:

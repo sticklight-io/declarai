@@ -9,9 +9,9 @@ The simplest Declarai usage is a function decorated with `@task`:
 ```py
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.task
+@gpt_35.task
 def say_something() -> str:
     """
     Say something short to the world

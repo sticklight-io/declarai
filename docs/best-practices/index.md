@@ -22,8 +22,8 @@ Reviewing the movie recommender example from the beginner's guide, we can see a 
 from typing import Dict
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
-@openai.task
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+@gpt_35.task
 def movie_recommender(user_input: str) -> Dict[str, str]:
     """
     Recommend a selection of movies to watch based on the user input
@@ -58,9 +58,9 @@ For example, in the following, the prompt is written in single form, while the r
 from typing import List
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.task
+@gpt_35.task
 def movie_recommender(user_input: str) -> List[str]:
     """
     Recommend a movie to watch based on the user input
@@ -74,8 +74,8 @@ Instead, we could write the prompt as follows:
 from typing import List
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
-@openai.task
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+@gpt_35.task
 def movie_recommender(user_input: str) -> List[str]:
     """
     Recommend a selection of movies to watch based on the user input
@@ -94,9 +94,9 @@ For example in this implementation of a calculator bot, the bot usually returns 
 from typing import Union
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.experimental.chat
+@gpt_35.experimental.chat
 class CalculatorBot:
     """
     You a calculator bot,

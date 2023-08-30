@@ -6,9 +6,9 @@ The plan is an object you call and get the results. This is very helpful when yo
 ```py
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo") 
+gpt_35 = declarai.openai(model="gpt-3.5-turbo") 
 
-@openai.task
+@gpt_35.task
 def say_something_about_movie(movie: str) -> str:  
     """
     Say something short about the following movie

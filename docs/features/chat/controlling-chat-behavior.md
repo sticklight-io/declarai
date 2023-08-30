@@ -5,9 +5,9 @@ The `greeting` attribute defines this first message and is added to the conversa
 
 ```py
 import declarai
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.experimental.chat
+@gpt_35.experimental.chat
 class SQLBot:
     """
     You are a sql assistant. You help with SQL queries with one-line answers.
@@ -71,9 +71,9 @@ This value will be populated at runtime and will allow us to easily create base 
 
 ```py
 import declarai
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.experimental.chat
+@gpt_35.experimental.chat
 class JokeGenerator:
     """
     You are a joke generator. You generate jokes that a {character} would tell.

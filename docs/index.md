@@ -18,9 +18,9 @@ handles the rest.
   ```py title="poem_generator.py"
   import declarai
   
-  openai = declarai.openai(model="gpt-3.5-turbo")
+  gpt_35 = declarai.openai(model="gpt-3.5-turbo")
   
-  @openai.task
+  @gpt_35.task
   def generate_poem(title: str) -> str:
       """
       Write a 4 line poem on the provided title
@@ -85,9 +85,9 @@ Integrating deeply into python's native syntax, declarai understands your code a
 ```python title="Simple Syntax"
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.task # (1)!
+@gpt_35.task # (1)!
 def rank_by_severity(message: str) -> int: # (2)!
     """
     Rank the severity of the provided message by it's urgency.
@@ -104,7 +104,7 @@ print(rank_by_severity(message="How was your weekend?"))
 ```
 
 1. The `@openai.task` decorator marks the function as a Declarai prompt task.
-2. The type hints `List[str]` are used to parse the output of the llm into a list of strings.
+2. The type hint `int` is used to parse the output of the llm into a integer.
 3. The docstring represents the task's description which is used to generate the prompt.
     - `description` - the context of the task
     - `:param` - The function's parameters and their description
@@ -117,9 +117,9 @@ Declarai will return a serialized object as defined by the type hints at runtime
 from typing import List
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.task
+@gpt_35.task
 def extract_phone_number(email_content: str) -> List[str]:
     """
     Extract the phone numbers from the provided email_content
@@ -135,9 +135,9 @@ print(extract_phone_number(email_content="Hi, my phone number is 123-456-7890"))
 from datetime import datetime
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.task
+@gpt_35.task
 def datetime_parser(raw_date: str) -> datetime:
     """
     Parse the input into a valid datetime string of the format YYYY-mm-ddThh:mm:ss
@@ -156,7 +156,7 @@ from pydantic import BaseModel, Field
 from typing import Dict, List
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
 class Animal(BaseModel):
     name: str
@@ -164,7 +164,7 @@ class Animal(BaseModel):
     leg_count: int = Field(description="The number of legs")
 
 
-@openai.task
+@gpt_35.task
 def suggest_animals(location: str) -> Dict[int, List[Animal]]:
     """
     Create a list of numbers from 0 to 5
@@ -200,9 +200,9 @@ Create chat interfaces with ease, simply by writing a class with docstrings
 ```python
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.experimental.chat
+@gpt_35.experimental.chat
 class CalculatorBot:
     """
     You a calculator bot,
@@ -226,9 +226,9 @@ from declarai.middleware import LoggingMiddleware
 from typing import Dict
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.task(middlewares=[LoggingMiddleware])
+@gpt_35.task(middlewares=[LoggingMiddleware])
 def extract_info(text: str) -> Dict[str, str]:
     """
     Extract the phone number, name and email from the provided text

@@ -11,8 +11,8 @@ Let's see how we can initialize a chatbot by passing the `system` and `greeting`
 ```py
 import declarai
 
-openai = declarai.openai(model="gpt-3.5-turbo")
-@openai.experimental.chat
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+@gpt_35.experimental.chat
 class SQLBot:
     ...
 

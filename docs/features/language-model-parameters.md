@@ -8,10 +8,10 @@ Here is an example of how to control these parameters in a declarai task/chat:
 
 ```python
 import declarai
-openai = declarai.openai(model="gpt-3.5-turbo", openai_token="<your API key>")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo", openai_token="<your API key>")
 
 
-@openai.task(llm_params={"temperature": 0.5, "max_tokens": 1000})
+@gpt_35.task(llm_params={"temperature": 0.5, "max_tokens": 1000})
 def generate_song():
     """
     Generate a song about declarai
@@ -24,9 +24,9 @@ We can also pass parameters to the declarai task/chat interface at runtime:
 
 ```python
 import declarai
-openai = declarai.openai(model="gpt-3.5-turbo", openai_token="<your API key>")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo", openai_token="<your API key>")
 
-@openai.task
+@gpt_35.task
 def generate_song():
     """
     Generate a song about declarai
@@ -43,9 +43,9 @@ Furthermore, we can pass parameters to the declarai task/chat interface at runti
 
 ```python
 import declarai
-openai = declarai.openai(model="gpt-3.5-turbo", openai_token="<your API key>")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo", openai_token="<your API key>")
 
-@openai.task(llm_params={"temperature": 0.5, "max_tokens": 1000})
+@gpt_35.task(llm_params={"temperature": 0.5, "max_tokens": 1000})
 def generate_song():
     """
     Generate a song about declarai
@@ -62,9 +62,9 @@ Same as with tasks, we can pass parameters to the declarai chat interface at dec
 
 ```python
 import declarai
-openai = declarai.openai(model="gpt-3.5-turbo", openai_token="<your API key>")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo", openai_token="<your API key>")
 
-@openai.experimental.chat(llm_params={"temperature": 0.5, "max_tokens": 1000})
+@gpt_35.experimental.chat(llm_params={"temperature": 0.5, "max_tokens": 1000})
 class SQLAdvisor:
     """
     You are a proficient sql adivsor.

@@ -6,9 +6,9 @@ Declarai exposes the `compile` method for chat instances as well!
 ## Compiling chat
 ```py
 import declarai
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.experimental.chat
+@gpt_35.experimental.chat
 class SQLBot:
     """
     You are a sql assistant. You help with SQL queries with one-line answers.

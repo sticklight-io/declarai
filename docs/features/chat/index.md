@@ -11,9 +11,9 @@ The system prompt is the initial command that instructs the bot on who they are 
 
 ```py
 import declarai
-openai = declarai.openai(model="gpt-3.5-turbo")
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-@openai.experimental.chat
+@gpt_35.experimental.chat
 class SQLBot:
     """
     You are a sql assistant. You help with SQL related questions 
