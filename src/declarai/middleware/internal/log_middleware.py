@@ -16,7 +16,7 @@ class LoggingMiddleware(TaskMiddleware):
 
     Example:
         ```py
-        @declarai.task(middlewares=[LoggingMiddleware])
+        @openai.task(middlewares=[LoggingMiddleware])
         def generate_a_poem(title: str):
             '''
             Generate a poem based on the given title
@@ -49,9 +49,10 @@ class LoggingMiddleware(TaskMiddleware):
             "task_name": task.__name__,
             "llm_model": task.llm_response.model,
             "template": str(task.compile()),
-            "call_kwargs": str(task._kwargs),
-            "compiled_template": str(task.compile(**task._kwargs)),
+            "call_kwargs": str(self._kwargs),
+            "compiled_template": str(task.compile(**self._kwargs)),
             "result": task.llm_response.response,
             "time": end_time,
         }
         logger.info(log_record)
+        print(log_record)

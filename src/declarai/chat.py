@@ -13,7 +13,7 @@ The prompt is then sent to the LLM, and the response is parsed and added to the 
 from functools import partial
 from typing import Any, Callable, Dict, List, Type, Union, overload
 
-from declarai._base import BaseChat
+from declarai._base import BaseTask
 from declarai.memory import InMemoryMessageHistory
 from declarai.memory.base import BaseChatMessageHistory
 from declarai.middleware.base import TaskMiddleware
@@ -61,7 +61,7 @@ class ChatMeta(type):
         return instance
 
 
-class Chat(BaseChat, metaclass=ChatMeta):
+class Chat(BaseTask, metaclass=ChatMeta):
     """
     Chat class used for creating chat tasks.
 
@@ -72,7 +72,7 @@ class Chat(BaseChat, metaclass=ChatMeta):
         is_declarai (bool): A class-level attribute indicating if the chat is of type 'declarai'. Always set to `True`.
         llm_response (LLMResponse): The response from the LLM (Language Model).
             This attribute is set during the execution of the chat.
-        _kwargs (Dict[str, Any]): A dictionary to store additional keyword arguments, used for passing kwargs between
+        _call_kwargs (Dict[str, Any]): A dictionary to store additional keyword arguments, used for passing kwargs between
          the execution of the chat and the execution of the middlewares.
         middlewares (List[TaskMiddleware] or None): Middlewares used for every iteration of the chat.
         operator (BaseChatOperator): The operator used for the chat.
@@ -94,14 +94,15 @@ class Chat(BaseChat, metaclass=ChatMeta):
     """
 
     is_declarai = True
+    operator: BaseChatOperator
     llm_response: LLMResponse
-    _kwargs: Dict[str, Any]
+    _call_kwargs: Dict[str, Any]
 
     def __init__(
         self,
         *,
         operator: BaseChatOperator,
-        middlewares: List[TaskMiddleware] = None,
+        middlewares: List[Type[TaskMiddleware]] = None,
         chat_history: BaseChatMessageHistory = None,
         greeting: str = None,
         system: str = None,
@@ -136,7 +137,8 @@ class Chat(BaseChat, metaclass=ChatMeta):
         Returns: List[Message] - The compiled messages that will be sent to the LLM.
 
         """
-        compiled = self.operator.compile(messages=self._chat_history.history, **kwargs)
+        messages = kwargs.pop("messages", None) or self._chat_history.history
+        compiled = self.operator.compile(messages=messages, **kwargs)
         return compiled
 
     def add_message(self, message: str, role: MessageRole) -> None:
@@ -148,7 +150,7 @@ class Chat(BaseChat, metaclass=ChatMeta):
         """
         self._chat_history.add_message(Message(message=message, role=role))
 
-    def _exec(self, kwargs) -> LLMResponse:
+    def _exec(self, kwargs) -> Any:
         """
         Executes the call to the LLM.
 
@@ -159,22 +161,21 @@ class Chat(BaseChat, metaclass=ChatMeta):
              The raw response from the LLM, together with the metadata.
         """
         self.llm_response = self.operator.predict(**kwargs)
-        return self.llm_response
+        self.add_message(self.llm_response.response, role=MessageRole.assistant)
 
-    def _exec_with_message_state(self, kwargs) -> Any:
-        """
-        Executes the call to the LLM and adds the response to the chat history as an assistant message.
-        Args:
-            kwargs: Keyword arguments to pass to the LLM like `temperature`, `max_tokens`, etc.
-
-        Returns:
-            The parsed response from the LLM.
-        """
-        raw_response = self._exec(kwargs).response
-        self.add_message(raw_response, role=MessageRole.assistant)
         if self.operator.parsed_send_func:
-            return self.operator.parsed_send_func.parse(raw_response)
-        return raw_response
+            return self.operator.parsed_send_func.parse(self.llm_response.response)
+
+        return self.llm_response.response
+
+    def _exec_middlewares(self, kwargs) -> Any:
+        if self.middlewares:
+            exec_with_middlewares = None
+            for middleware in self.middlewares:
+                exec_with_middlewares = middleware(self, self._call_kwargs)
+            if exec_with_middlewares:
+                return exec_with_middlewares()
+        return self._exec(kwargs)
 
     def __call__(
         self, *, messages: List[Message], llm_params: LLMParamsType = None, **kwargs
@@ -198,7 +199,9 @@ class Chat(BaseChat, metaclass=ChatMeta):
         )  # order is important! We prioritize runtime params that
         if runtime_llm_params:
             kwargs["llm_params"] = runtime_llm_params
-        return self._exec_with_message_state(kwargs)
+
+        self._call_kwargs = kwargs
+        return self._exec_middlewares(kwargs)
 
     def send(
         self,
@@ -324,9 +327,7 @@ class ChatDecorator:
 
             _decorator_kwargs = dict(
                 operator=operator_type(
-                    llm=self.llm,
-                    parsed=parsed_cls,
-                    llm_params=llm_params,
+                    llm=self.llm, parsed=parsed_cls, llm_params=llm_params
                 ),
                 middlewares=middlewares,
                 chat_history=chat_history,

@@ -1,28 +1,32 @@
+# Azure OpenAI
+
 To use Azure OpenAI models, you can set the following configuration options:
 
 ```py
-from declarai import Declarai
+import declarai
 
-azure = Declarai.azure_openai(
+azure_model = declarai.azure_openai(
     azure_openai_key="<api-token>",
     azure_openai_api_base="<api-base>",
     deployment_name="<deployment-name>",
+    api_version="<api-version>",
     headers={"<header-key>": "<header-value>"},
     timeout="<timeout>",
     request_timeout="<request_timeout>",
-    stream="<stream>", )
+    stream="<stream>",
+)
 ```
 
-| Setting         | <div style="width:180px">Env Variable</div> | <div style="width:280px">Runtime Variable</div>                     | Required? |
-|-----------------|---------------------------------------------|---------------------------------------------------------------------|:---------:|
-| API key         | `DECLARAI_AZURE_OPENAI_KEY`                 | `Declarai.azure_openai(... azure_openai_key=<api-token>)`           |     ✅     |
-| API_BASE        | `DECLARAI_AZURE_OPENAI_API_BASE`            | `Declarai.azure_openai(... azure_openai_api_base=<api-base>)`       |     ✅     |
-| API_VERSION     | `DECLARAI_AZURE_OPENAI_API_VERSION`         | `Declarai.azure_openai(... azure_openai_api_version=<api-version>)` |           |
-| DEPLOYMENT_NAME | `DECLARAI_AZURE_OPENAI_DEPLOYMENT_NAME`     | `Declarai.azure_openai(... deployment_name=<deployment-name>)`      |     ✅     |
-| Headers         |                                             | `Declarai.azure_openai(... headers=<headers>)`                      |           |
-| Timeout         |                                             | `Declarai.azure_openai(... timeout=<timeout>)`                      |           |
-| Request timeout |                                             | `Declarai.azure_openai(... request_timeout=<request_timeout>)`      |           |
-| Stream          |                                             | `Declarai.azure_openai(... stream=<stream>)`                        |           |
+| Argument              | <div style="width:180px">Env Variable</div> | Required? |
+|-----------------------|---------------------------------------------|:---------:|
+| azure_openai_key      | `DECLARAI_AZURE_OPENAI_KEY`                 |     ✅     |
+| azure_openai_api_base | `DECLARAI_AZURE_OPENAI_API_BASE`            |     ✅     |
+| deployment_name       | `DECLARAI_AZURE_OPENAI_DEPLOYMENT_NAME`     |     ✅     |
+| api_version           | `DECLARAI_AZURE_OPENAI_API_VERSION`         |           |
+| headers               |                                             |           |
+| timeout               |                                             |           |
+| request_timeout       |                                             |           |
+| stream                |                                             |           |
 
 ## Getting an API key, API base, and Deployment name
 
@@ -38,13 +42,16 @@ the [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/qu
 You can set your API key at runtime like this:
 
 ```python
-from declarai import Declarai
+import declarai
 
-declarai = Declarai.azure_openai(deployment_name="my-model",
-                                 azure_openai_key="<your API key>")
+my_azure_model = declarai.azure_openai(
+    deployment_name="my-model",
+    azure_openai_key="<your API key>",
+    azure_openai_api_base="https://<my-azure-domain>.com",
+)
 ```
 
-However, it is preferable to pass sensitive settings as an environment variable: `DECLARAI_OPENAI_API_KEY`.
+However, it is preferable to pass sensitive settings as an environment variable: `DECLARAI_AZURE_OPENAI_API_KEY`.
 
 To establish your Azure OpenAI API key as an environment variable, launch your terminal and execute the following
 command,
@@ -73,9 +80,9 @@ passed to the declarai task/chat interface as a dictionary. The following parame
 Pass your custom parameters to the declarai task/chat interface as a dictionary:
 
 ```python
-from declarai import Declarai
+import declarai
 
-declarai = Declarai.azure_openai(
+azure_model = declarai.azure_openai(
     deployment_name="my-model",
     azure_openai_key="<your API key>",
     azure_openai_api_base="https://<my-azure-domain>.com",
@@ -83,7 +90,7 @@ declarai = Declarai.azure_openai(
 )
 
 
-@declarai.task(llm_params={"temperature": 0.5, "max_tokens": 1000})  # (1)!
+@azure_model.task(llm_params={"temperature": 0.5, "max_tokens": 1000})  # (1)!
 def generate_song():
     """
     Generate a song about declarai

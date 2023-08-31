@@ -16,11 +16,11 @@ Designed with a clear focus on developer experience, you simply write Python cod
 handles the rest.
 
   ```py title="poem_generator.py"
-  from declarai import Declarai
+  import declarai
   
-  declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
+  gpt_35 = declarai.openai(model="gpt-3.5-turbo")
   
-  @declarai.task
+  @gpt_35.task
   def generate_poem(title: str) -> str:
       """
       Write a 4 line poem on the provided title
@@ -83,7 +83,11 @@ Done!
 Integrating deeply into python's native syntax, declarai understands your code and generates the prompt accordingly.
 
 ```python title="Simple Syntax"
-@declarai.task # (1)!
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.task # (1)!
 def rank_by_severity(message: str) -> int: # (2)!
     """
     Rank the severity of the provided message by it's urgency.
@@ -99,8 +103,8 @@ print(rank_by_severity(message="How was your weekend?"))
 #> 1
 ```
 
-1. The `@declarai.task` decorator marks the function as a Declarai prompt task.
-2. The type hints `List[str]` are used to parse the output of the llm into a list of strings.
+1. The `@openai.task` decorator marks the function as a Declarai prompt task.
+2. The type hint `int` is used to parse the output of the llm into a integer.
 3. The docstring represents the task's description which is used to generate the prompt.
     - `description` - the context of the task
     - `:param` - The function's parameters and their description
@@ -110,7 +114,12 @@ print(rank_by_severity(message="How was your weekend?"))
 ### Support Python typing and pydantic models
 Declarai will return a serialized object as defined by the type hints at runtime.
 ```py title="Builtins"
-@declarai.task
+from typing import List
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.task
 def extract_phone_number(email_content: str) -> List[str]:
     """
     Extract the phone numbers from the provided email_content
@@ -123,7 +132,12 @@ print(extract_phone_number(email_content="Hi, my phone number is 123-456-7890"))
 ```
 
 ```python title="Builtins"
-@declarai.task
+from datetime import datetime
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.task
 def datetime_parser(raw_date: str) -> datetime:
     """
     Parse the input into a valid datetime string of the format YYYY-mm-ddThh:mm:ss
@@ -138,13 +152,19 @@ print(datetime_parser(raw_date="Janury 1st 2020"))
 
 
 ```python title="Pydantic models"
+from pydantic import BaseModel, Field
+from typing import Dict, List
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
 class Animal(BaseModel):
     name: str
     family: str
     leg_count: int = Field(description="The number of legs")
 
 
-@declarai.task
+@gpt_35.task
 def suggest_animals(location: str) -> Dict[int, List[Animal]]:
     """
     Create a list of numbers from 0 to 5
@@ -178,7 +198,11 @@ Create chat interfaces with ease, simply by writing a class with docstrings
     Notice that `chat` is exposed under the `experimental` namespace, noting this interface is still work in progress.
 
 ```python
-@declarai.experimental.chat
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.experimental.chat
 class CalculatorBot:
     """
     You a calculator bot,
@@ -198,14 +222,20 @@ print(calc_bot.send(message="1 + 1"))
 Easy to use middlewares provided out of the box as well as the ability to easily create your own.
 
 ```py title="Logging Middleware"
-@declarai.task(middlewares=[LoggingMiddleware])
+from declarai.middleware import LoggingMiddleware
+from typing import Dict
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.task(middlewares=[LoggingMiddleware])
 def extract_info(text: str) -> Dict[str, str]:
     """
     Extract the phone number, name and email from the provided text
     :param text: content to extract the info from
     :return: The info extracted from the text
     """
-    return Declarai.magic(text=text)
+    return declarai.magic(text=text)
 
 res = extract_info(
     text="Hey jenny,"

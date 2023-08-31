@@ -6,11 +6,13 @@ For chat that requires a persistent message history with the advantages of scala
 ## Set PostgreSQL memory
 
 ```py
-from declarai import Declarai
+import declarai
 from declarai.memory import PostgresMessageHistory
-declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
-@declarai.experimental.chat(
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+
+@gpt_35.experimental.chat(
     chat_history=PostgresMessageHistory(
         connection_string="postgresql://username:password@localhost:5432/mydatabase",
         session_id="unique_chat_id")
@@ -31,12 +33,11 @@ sql_bot = SQLBot()
 In case you want to set the PostgreSQL memory at runtime, you can use the `set_memory` method.
 
 ```py
-from declarai import Declarai
+import declarai
 from declarai.memory import PostgresMessageHistory
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
-
-@declarai.experimental.chat
+@gpt_35.experimental.chat
 class SQLBot:
     """
     You are a sql assistant. You help with SQL related questions with one-line answers.

@@ -30,7 +30,6 @@ def test_chat(mock_chat_resolve_operator, mock_resolve_llm):
 
     chat = TestChat()
 
-
     assert chat.__name__ == "TestChat"
     assert chat.greeting == "This is a greeting message"
     assert chat.conversation == [
@@ -45,7 +44,6 @@ def test_chat(mock_chat_resolve_operator, mock_resolve_llm):
         """
 
         greeting = "This is a greeting message"
-
 
     chat2 = OverrideChatParams(greeting="New Message")
 

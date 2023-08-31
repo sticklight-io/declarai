@@ -19,7 +19,11 @@ Declarai provide various interfaces to provide context and guidance to the model
 
 Reviewing the movie recommender example from the beginner's guide, we can see a collection of techniques to provide context to the model:
 ```python
-@declarai.task
+from typing import Dict
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+@gpt_35.task
 def movie_recommender(user_input: str) -> Dict[str, str]:
     """
     Recommend a selection of movies to watch based on the user input
@@ -51,7 +55,12 @@ returned and causing unexpected behavior down the line.
 When providing prompts to the model, it is best practice to use language that correlates with the expected input and output.
 For example, in the following, the prompt is written in single form, while the resulting output is in plural form. (i.e. a list)
 ```python
-@declarai.task
+from typing import List
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.task
 def movie_recommender(user_input: str) -> List[str]:
     """
     Recommend a movie to watch based on the user input
@@ -62,7 +71,11 @@ def movie_recommender(user_input: str) -> List[str]:
 This may easily confuse the model and cause it to produce unexpected results which will fail when parsing the results.
 Instead, we could write the prompt as follows:
 ```python
-@declarai.task
+from typing import List
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+@gpt_35.task
 def movie_recommender(user_input: str) -> List[str]:
     """
     Recommend a selection of movies to watch based on the user input
@@ -78,7 +91,12 @@ This way it is clear to the model that we are expecting a list of movies and not
 In some cases, you might be working on a task or chat that has a mixture of behaviors that may not be consistent.
 For example in this implementation of a calculator bot, the bot usually returns numbers, but for the scenario that an error occurs, it returns a string.
 ```python
-@declarai.experimental.chat
+from typing import Union
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.experimental.chat
 class CalculatorBot:
     """
     You a calculator bot,
