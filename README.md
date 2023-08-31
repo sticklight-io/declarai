@@ -67,6 +67,10 @@ def rank_by_severity(message: str) -> int:
 rank_by_severity(message="The server is down!")
 
 >>> 5
+
+rank_by_severity(message="How was your weekend?"))
+
+>>> 1
 ```
 ### Chat 🗣
 
@@ -96,12 +100,12 @@ sql_bot.send("When should I use a LEFT JOIN?")
 - [x] 🖍 **Intelligent Prompts**: Automatically generate prompts using type hints and docstrings.
 - [x] 🚄 **Conversational AI**: Chat interface equipped with memory and context management.
 - [x] ⚡ **Real-time streaming**: Stream LLM responses that take longer to complete.
-- [x] 🔥 **Pydantic Model Parsing**: Seamlessly parse llm responses into[ pydantic models](https://github.com/vendi-ai/declarai#pydantic-models).
+- [x] 🔥 **Pydantic Model Parsing**: Seamlessly parse llm responses into[ Pydantic models](https://github.com/vendi-ai/declarai#pydantic-models).
 - [x] 🐍 **Pythonic**: Native understanding and parsing of llm responses into [Python primitives](https://github.com/vendi-ai/declarai#tasks-with-python-native-output-parsing).
 - [x] 💾 **Multiple AI Backends**: Integrated with OpenAI & Azure AI llm providers.
-- [x] 🛠 **Middleware **: Adapt and extend tasks behavior with a modular middleware system.
+- [x] 🛠 **Middleware**: Adapt and extend tasks behavior with a modular middleware system.
 - [ ] 🤗 **Coming Soon**: Integration with HuggingFace hub
-- 
+
 ## Quickstart 🚀
 
 ### Installation

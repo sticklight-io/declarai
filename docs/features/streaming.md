@@ -70,7 +70,7 @@ def my_task()
     ...
 
 
-@declarai.experimental.chat(streaming=True) # (2)!
+@gpt_35.experimental.chat(streaming=True) # (2)!
 class MyChat
     ...
 
