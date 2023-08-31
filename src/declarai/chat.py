@@ -26,6 +26,7 @@ from declarai.operators import (
     MessageRole,
     resolve_operator,
 )
+from declarai.operators.utils import format_prompt_msg
 from declarai.python_parser.parser import PythonParser
 from declarai.task import Task
 
@@ -89,6 +90,8 @@ class Chat(BaseTask, metaclass=ChatMeta):
          `DEFAULT_CHAT_HISTORY()`.
         greeting (str, optional): Greeting message to use. Defaults to operator's greeting or None.
         system (str, optional): System message to use. Defaults to operator's system message or None.
+        stream (bool, optional): Whether to stream the response from the LLM or not. Defaults to False.
+        **kwargs: Additional keyword arguments to pass to the formatting of the system message.
     """
 
     is_declarai = True
@@ -103,6 +106,7 @@ class Chat(BaseTask, metaclass=ChatMeta):
         chat_history: BaseChatMessageHistory = None,
         greeting: str = None,
         system: str = None,
+        **kwargs,
     ):
         self.middlewares = middlewares
         self.operator = operator
@@ -110,6 +114,11 @@ class Chat(BaseTask, metaclass=ChatMeta):
         self.greeting = greeting or self.operator.greeting
         self.system = system or self.operator.system
         self.__set_memory()
+        self.__set_system_prompt(**kwargs)
+
+    def __set_system_prompt(self, **kwargs):
+        if kwargs:
+            self.system = format_prompt_msg(self.system, **kwargs)
 
     def __set_memory(self):
         if self.greeting and len(self._chat_history.history) == 0:
@@ -186,7 +195,7 @@ class Chat(BaseTask, metaclass=ChatMeta):
         return self._exec(kwargs)
 
     def __call__(
-        self, *, messages: List[Message], llm_params: LLMParamsType = None, **kwargs
+        self, *, messages: List[Message], llm_params: LLMParamsType = None
     ) -> Any:
         """
         Executes the call to the LLM, based on the messages passed as argument, and the llm_params.
@@ -195,21 +204,20 @@ class Chat(BaseTask, metaclass=ChatMeta):
         Args:
             messages: The messages to pass to the LLM.
             llm_params: The llm_params to use for the call to the LLM.
-            **kwargs: run time kwargs to use when formatting the system message prompt.
 
         Returns:
             The parsed response from the LLM.
 
         """
-        kwargs["messages"] = messages
+        runtime_kwargs = dict(messages=messages)
         runtime_llm_params = (
             llm_params or self.llm_params
         )  # order is important! We prioritize runtime params that
         if runtime_llm_params:
-            kwargs["llm_params"] = runtime_llm_params
+            runtime_kwargs["llm_params"] = runtime_llm_params
 
-        self._call_kwargs = kwargs
-        return self._exec_middlewares(kwargs)
+        self._call_kwargs = runtime_kwargs
+        return self._exec_middlewares(runtime_kwargs)
 
     def send(
         self,
@@ -272,6 +280,9 @@ class ChatDecorator:
         middlewares: List[TaskMiddleware] = None,
         llm_params: LLMParamsType = None,
         chat_history: BaseChatMessageHistory = None,
+        greeting: str = None,
+        system: str = None,
+        streaming: bool = None,
         **kwargs,
     ) -> Callable[..., Type[Chat]]:
         """
@@ -304,6 +315,7 @@ class ChatDecorator:
             chat_history (BaseChatMessageHistory, optional): Chat history mechanism to use. Defaults to None.
             greeting (str, optional): Greeting message to use. Defaults to None.
             system (str, optional): System message to use. Defaults to None.
+            streaming (bool, optional): Whether to use streaming or not. Defaults to None.
 
         Returns:
             (Type[Chat]): A new Chat class that inherits from the original class and has chat capabilities.
