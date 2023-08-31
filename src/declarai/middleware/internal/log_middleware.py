@@ -16,7 +16,7 @@ class LoggingMiddleware(TaskMiddleware):
 
     Example:
         ```py
-        @openai.task(middlewares=[LoggingMiddleware])
+        @declarai.task(middlewares=[LoggingMiddleware])
         def generate_a_poem(title: str):
             '''
             Generate a poem based on the given title

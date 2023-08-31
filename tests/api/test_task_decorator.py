@@ -20,7 +20,9 @@ def test_task_decorator_no_args(mocked_resolve_operator, mocked_python_parser):
 
     middlewares = [middleware]
 
-    task_decorator = TaskDecorator(llm=llm)
+    task_decorator = TaskDecorator(
+        llm=llm
+    )
     decorator = task_decorator.task
 
     @decorator(
@@ -40,10 +42,14 @@ def test_task_decorator_no_args(mocked_resolve_operator, mocked_python_parser):
     assert test_task.__name__ == "test_task"
     assert test_task.operator.parsed == mocked_python_parser.return_value
     assert test_task.operator == operator_instance_mock
-    passed_llm = operator_class_mock.call_args.kwargs["llm"]
+    passed_llm = operator_class_mock.call_args.kwargs['llm']
     assert passed_llm == llm
 
-    @decorator(middlewares=middlewares, llm_params={"temperature": 0.5})
+
+    @decorator(
+        middlewares=middlewares,
+        llm_params={"temperature": 0.5}
+    )
     def test_task(a: str, b: int) -> str:
         """
         This is a test task
@@ -52,12 +58,14 @@ def test_task_decorator_no_args(mocked_resolve_operator, mocked_python_parser):
         :return: returns a string
         """
 
-    passed_llm_params = operator_class_mock.call_args.kwargs["llm_params"]
+    passed_llm_params = operator_class_mock.call_args.kwargs['llm_params']
     assert passed_llm_params == {"temperature": 0.5}
     assert test_task.__name__ == "test_task"
     assert test_task.middlewares == middlewares
 
-    @decorator(llm_params={"temperature": 0.5})
+    @decorator(
+        llm_params={"temperature": 0.5}
+    )
     def test_task(a: str, b: int) -> str:
         """
         This is a test task
@@ -67,6 +75,6 @@ def test_task_decorator_no_args(mocked_resolve_operator, mocked_python_parser):
         """
 
     test_task(llm_params={"temperature": 0.7})
-    passed_llm_params = operator_class_mock.call_args.kwargs["llm_params"]
+    passed_llm_params = operator_class_mock.call_args.kwargs['llm_params']
     assert passed_llm_params == {"temperature": 0.5}
     operator_instance_mock.predict.assert_called_with(llm_params={"temperature": 0.7})

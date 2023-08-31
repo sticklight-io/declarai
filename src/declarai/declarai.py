@@ -2,7 +2,6 @@
 
 Decorates the package functionalities and serve as the main interface for the user.
 """
-import warnings
 from typing import Any, Dict, Optional, Type, overload
 
 from declarai.chat import ChatDecorator
@@ -17,8 +16,6 @@ from declarai.operators import (
     resolve_llm,
 )
 from declarai.task import TaskDecorator
-
-SUPPORT_018_BACK_COMPAT = True
 
 
 def magic(
@@ -36,7 +33,7 @@ def magic(
 
     Example:
         ```py
-        @openai.task
+        @declarai.task
         def add(a: int, b: int) -> int:
             return magic(a, b)
         ```
@@ -44,7 +41,7 @@ def magic(
     pass
 
 
-class Declarai:
+class DeclaraiContext:
     """
     Context manager for the Declarai root interface.
     This class is responsible for setting up tasks and initializing experimental features
@@ -62,73 +59,7 @@ class Declarai:
         experimental.chat (Callable): A decorator for chat operators.
     """
 
-    if SUPPORT_018_BACK_COMPAT:
-
-        @staticmethod
-        def openai(
-            model: ModelsOpenai,
-            version: str = None,
-            openai_token: str = None,
-            headers: dict = None,
-            timeout: int = None,
-            stream: bool = None,
-            request_timeout: int = None,
-        ):
-            warnings.warn(
-                "Declarai.openai is deprecated. Will be removed in 0.2.*. Please use `import declarai; declarai.openai`",
-                DeprecationWarning,
-            )
-            openai(
-                model=model,
-                version=version,
-                openai_token=openai_token,
-                headers=headers,
-                timeout=timeout,
-                stream=stream,
-                request_timeout=request_timeout,
-            )
-
-        @staticmethod
-        def azure_openai(
-            deployment_name: str,
-            azure_openai_key: str = None,
-            azure_openai_api_base: str = None,
-            api_version: str = None,
-            headers: dict = None,
-            timeout: int = None,
-            stream: bool = None,
-            request_timeout: int = None,
-        ):
-            warnings.warn(
-                "Declarai.azure_openai is deprecated. Will be removed in 0.2.*. Please use `import declarai; declarai.azure_openai`",
-                DeprecationWarning,
-            )
-            azure_openai(
-                deployment_name=deployment_name,
-                azure_openai_key=azure_openai_key,
-                azure_openai_api_base=azure_openai_api_base,
-                api_version=api_version,
-                headers=headers,
-                timeout=timeout,
-                stream=stream,
-                request_timeout=request_timeout,
-            )
-
-    @overload
-    def __init__(
-        self,
-        provider: ProviderOpenai,
-        model: ModelsOpenai,
-        version: Optional[str] = None,
-        openai_token: Optional[str] = None,
-    ):
-        ...
-
-    @overload
-    def __init__(self, provider: ProviderAzureOpenai, model: str, **kwargs):
-        ...
-
-    def __init__(self, provider: str, model: str, **kwargs):
+    def __init__(self, provider: str, model: str = None, **kwargs):
         self.llm = resolve_llm(provider, model, **kwargs)
         self.task = TaskDecorator(self.llm).task
 
@@ -138,118 +69,151 @@ class Declarai:
         self.experimental = Experimental
 
 
-def openai(
-    model: ModelsOpenai,
-    version: str = None,
-    openai_token: str = None,
-    headers: dict = None,
-    timeout: int = None,
-    stream: bool = None,
-    request_timeout: int = None,
-) -> Declarai:
+class Declarai:
     """
-    Sets up a Declarai context for the OpenAI provider.
+    A root interface to declarai.
+    This class is a factory to build declarai context.
+
+    There are overloads for the constructor that allow for a more declarative way of building the declarai context
+    based on the provider and model.
 
     Args:
-        model (ModelsOpenai): The model to be used.
-        version (str, optional): Model version.
-        openai_token (str, optional): OpenAI authentication token.
-        headers (dict, optional): Additional headers for the request.
-        timeout (int, optional): Timeout for the request.
-        stream (bool, optional): Whether to stream the response.
-        request_timeout (int, optional): Request timeout duration.
+        **kwargs: A set of keyword arguments that are passed to the LLMSettings class.
 
-    Returns:
-        Declarai: Initialized Declarai context.
     """
-    return Declarai(
-        provider=ProviderOpenai,
-        model=model,
-        version=version,
-        openai_token=openai_token,
-        headers=headers,
-        timeout=timeout,
-        stream=stream,
-        request_timeout=request_timeout,
-    )
 
+    magic = magic
 
-def azure_openai(
-    deployment_name: str,
-    azure_openai_key: str = None,
-    azure_openai_api_base: str = None,
-    api_version: str = None,
-    headers: dict = None,
-    timeout: int = None,
-    stream: bool = None,
-    request_timeout: int = None,
-) -> Declarai:
-    """
-    Sets up a Declarai context for the Azure OpenAI provider.
+    @overload
+    def __new__(
+        cls,
+        provider: ProviderOpenai,
+        model: ModelsOpenai,
+        version: Optional[str] = None,
+        openai_token: Optional[str] = None,
+    ) -> DeclaraiContext:
+        ...
 
-    Args:
-        deployment_name (str): Name of the deployment.
-        azure_openai_key (str, optional): Azure OpenAI key.
-        azure_openai_api_base (str, optional): Base API URL for Azure OpenAI.
-        api_version (str, optional): API version.
-        headers (dict, optional): Additional headers for the request.
-        timeout (int, optional): Timeout for the request.
-        stream (bool, optional): Whether to stream the response.
-        request_timeout (int, optional): Request timeout duration.
+    def __new__(cls, *args, **kwargs) -> DeclaraiContext:
+        """
+        Creates a declarai context.
 
-    Returns:
-        DeclaraiContext: Initialized Declarai context.
-    """
-    return Declarai(
-        provider=ProviderAzureOpenai,
-        model=deployment_name,
-        azure_openai_key=azure_openai_key,
-        azure_openai_api_base=azure_openai_api_base,
-        api_version=api_version,
-        headers=headers,
-        timeout=timeout,
-        stream=stream,
-        request_timeout=request_timeout,
-    )
+        Args:
+            *args:
+            **kwargs:
+        """
+        return DeclaraiContext(*args, **kwargs)
 
+    # *-------------------------------------------------------------------------- *
+    # * Custom overloads to enforce the relationship between PROVIDER and MODELS  *
+    # * Additionally supported providers should be exposed via the Declarai class *
+    # * here:                                                                     *
+    # *-------------------------------------------------------------------------- *
 
-def register_llm(provider: str, llm_cls: Type[LLM], model: str = None):
-    """
-    Registers an LLM.
-    Args:
-        provider: Name of the LLM provider.
-        model: Specific model name (optional).
-        llm_cls: The LLM class to register.
-    """
-    llm_registry.register(provider=provider, llm_cls=llm_cls, model=model)
+    @staticmethod
+    def openai(
+        model: ModelsOpenai,
+        version: str = None,
+        openai_token: str = None,
+        headers: dict = None,
+        timeout: int = None,
+        stream: bool = None,
+        request_timeout: int = None,
+    ) -> DeclaraiContext:
+        """
+        Sets up a Declarai context for the OpenAI provider.
 
+        Args:
+            model (ModelsOpenai): The model to be used.
+            version (str, optional): Model version.
+            openai_token (str, optional): OpenAI authentication token.
+            headers (dict, optional): Additional headers for the request.
+            timeout (int, optional): Timeout for the request.
+            stream (bool, optional): Whether to stream the response.
+            request_timeout (int, optional): Request timeout duration.
 
-def register_operator(
-    provider: str,
-    operator_type: str,
-    operator_cls: Type[BaseOperator],
-    model: str = None,
-):
-    """
-    Registers an operator.
-    Args:
-        provider: Name of the LLM provider.
-        operator_type: The type of operator (e.g., "chat", "task").
-        operator_cls: The operator class to register.
-        model: Specific model name
-    """
-    operator_registry.register(
-        provider=provider,
-        operator_type=operator_type,
-        model=model,
-        operator_cls=operator_cls,
-    )
+        Returns:
+            DeclaraiContext: Initialized Declarai context.
+        """
+        return DeclaraiContext(
+            provider=ProviderOpenai,
+            model=model,
+            version=version,
+            openai_token=openai_token,
+            headers=headers,
+            timeout=timeout,
+            stream=stream,
+            request_timeout=request_timeout,
+        )
 
+    @staticmethod
+    def azure_openai(
+        deployment_name: str,
+        azure_openai_key: str = None,
+        azure_openai_api_base: str = None,
+        api_version: str = None,
+        headers: dict = None,
+        timeout: int = None,
+        stream: bool = None,
+        request_timeout: int = None,
+    ) -> DeclaraiContext:
+        """
+        Sets up a Declarai context for the Azure OpenAI provider.
 
-def _patch_back_compat():
-    Declarai.openai = openai
-    Declarai.azure_openai = azure_openai
+        Args:
+            deployment_name (str): Name of the deployment.
+            azure_openai_key (str, optional): Azure OpenAI key.
+            azure_openai_api_base (str, optional): Base API URL for Azure OpenAI.
+            api_version (str, optional): API version.
+            headers (dict, optional): Additional headers for the request.
+            timeout (int, optional): Timeout for the request.
+            stream (bool, optional): Whether to stream the response.
+            request_timeout (int, optional): Request timeout duration.
 
+        Returns:
+            DeclaraiContext: Initialized Declarai context.
+        """
+        return DeclaraiContext(
+            provider=ProviderAzureOpenai,
+            model=deployment_name,
+            azure_openai_key=azure_openai_key,
+            azure_openai_api_base=azure_openai_api_base,
+            api_version=api_version,
+            headers=headers,
+            timeout=timeout,
+            stream=stream,
+            request_timeout=request_timeout,
+        )
 
-if SUPPORT_018_BACK_COMPAT:
-    _patch_back_compat()
+    @staticmethod
+    def register_llm(provider: str, llm_cls: Type[LLM], model: str = None):
+        """
+        Registers an LLM.
+        Args:
+            provider: Name of the LLM provider.
+            model: Specific model name (optional).
+            llm_cls: The LLM class to register.
+        """
+        llm_registry.register(provider=provider, llm_cls=llm_cls, model=model)
+
+    @staticmethod
+    def register_operator(
+        provider: str,
+        operator_type: str,
+        operator_cls: Type[BaseOperator],
+        model: str = None,
+    ):
+        """
+        Registers an operator.
+        Args:
+            provider: Name of the LLM provider.
+            operator_type: The type of operator (e.g., "chat", "task").
+            operator_cls: The operator class to register.
+            model: Specific model name
+        """
+        operator_registry.register(
+            provider=provider,
+            operator_type=operator_type,
+            model=model,
+            operator_cls=operator_cls,
+        )

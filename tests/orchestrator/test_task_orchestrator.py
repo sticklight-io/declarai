@@ -17,9 +17,7 @@ def test_task():
     def test_task() -> str:
         pass
 
-    instantiated_operator.parse_output.return_value = PythonParser(test_task).parse(
-        llm_response.response
-    )
+    instantiated_operator.parse_output.return_value = PythonParser(test_task).parse(llm_response.response)
 
     task = Task(instantiated_operator)
     assert task.compile() == "compiled_result"

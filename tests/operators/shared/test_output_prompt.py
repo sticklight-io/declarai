@@ -1,10 +1,7 @@
 import pytest
 
 from declarai.operators.openai_operators.task_operator import compile_output_prompt
-from declarai.operators.templates import (
-    StructuredOutputInstructionPrompt,
-    compile_output_schema_template,
-)
+from declarai.operators.templates import StructuredOutputInstructionPrompt, compile_output_schema_template
 
 
 @pytest.mark.parametrize(
