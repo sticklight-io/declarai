@@ -45,23 +45,23 @@ pip install declarai
 
 ### Setup
 ```bash
-export OPENAI_API_KEY=<your openai token>
+export DECLARAI_OPENAI_API_KEY=<your openai token>
 ```
 or pass the token when initializing the declarai object
 ```python
-import declarai
+from declarai import Declarai
 
-gpt_35 = declarai.openai(model="gpt-3.5-turbo", openai_token="<your-openai-key>")
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo", openai_token="<your-openai-key>")
 ```
 
 ## 💡 Basic Usage
 Craft AI-powered functionalities with ease using the `@task` decorator. Just add some type hints and a bit of documentation, and watch Declarai do its magic!
 ```python
-import declarai
+from declarai import Declarai
 
-gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
-@gpt_35.task
+@declarai.task
 def generate_poem(title: str) -> str:
     """
     Write a 4 line poem on the provided title
@@ -96,11 +96,7 @@ The resulting code is readable and easily maintainable.
 
 Python primitives
 ```python
-import declarai
-
-gpt_35 = declarai.openai(model="gpt-3.5-turbo")
-
-@gpt_35.task
+@declarai.task
 def rank_by_severity(message: str) -> int:
     """
     Rank the severity of the provided message by it's urgency.
@@ -120,11 +116,7 @@ rank_by_severity(message="How was your weekend?"))
 
 Python complex objects
 ```python
-import declarai
-
-gpt_35 = declarai.openai(model="gpt-3.5-turbo")
-
-@gpt_35.task
+@declarai.task
 def datetime_parser(raw_date: str) -> datetime:
     """
     Parse the input into a valid datetime string of the format YYYY-mm-ddThh:mm:ss
@@ -140,14 +132,13 @@ datetime_parser(raw_date="Janury 1st 2020"))
 
 pydantic models
 ```python
-from pydantic import BaseModel
 class Animal(BaseModel):
     name: str
     family: str
     leg_count: int
 
 
-@gpt_35.task
+@declarai.task
 def suggest_animals(location: str) -> Dict[int, List[Animal]]:
     """
     Create a list of numbers from 0 to 5
@@ -177,7 +168,7 @@ suggest_animals(location="jungle")
 
 ### Simple Chat interface
 ```python
-@gpt_35.experimental.chat
+@declarai.experimental.chat
 class CalculatorBot:
     """
     You a calculator bot,

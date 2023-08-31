@@ -4,13 +4,13 @@ Declarai allows you to use multiple models from different providers in the same 
 All you need to do is configure seperate Declarai instances for each model and provider.
 
 ```python
-import declarai
+from declarai import Declarai
 
 # Configure the first Declarai instance
-declarai_gpt35 = declarai.openai(model="gpt-3.5-turbo")
+declarai_gpt35 = Declarai(provider="openai", model="gpt-3.5-turbo")
 
 # Configure the second Declarai instance
-declarai_gpt4 = declarai.openai(model="gpt-4")
+declarai_gpt4 = Declarai(provider="openai", model="gpt-4")
 
 # Now use the instances to create tasks
 @declarai_gpt35.task

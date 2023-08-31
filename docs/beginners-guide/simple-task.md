@@ -4,14 +4,14 @@ hide:
 ---
 
 # Simple task :material-flash:
-The simplest Declarai usage is a function decorated with `@task`:
+The simplest Declarai usage is a function decorated with `@declarai.task`:
 
 ```py
-import declarai
+from declarai import Declarai
 
-gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
-@gpt_35.task
+@declarai.task
 def say_something() -> str:
     """
     Say something short to the world

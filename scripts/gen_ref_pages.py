@@ -5,7 +5,9 @@ from pathlib import Path
 import mkdocs_gen_files
 
 nav = mkdocs_gen_files.Nav()
-exclude_patterns = [Path("src", "declarai", "evals")]
+exclude_patterns = [
+    Path("src", "declarai", "evals")
+]
 mod_symbol = '<code class="doc-symbol doc-symbol-nav doc-symbol-module"></code>'
 for path in sorted(Path("src").rglob("*.py")):
     skip = False
@@ -19,6 +21,7 @@ for path in sorted(Path("src").rglob("*.py")):
             pass
     if skip:
         continue
+
 
     module_path = path.relative_to("src").with_suffix("")
     doc_path = path.relative_to("src").with_suffix(".md")

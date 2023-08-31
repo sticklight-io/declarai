@@ -4,10 +4,7 @@ Greetings are used to start the conversation with a bot message instead of a use
 The `greeting` attribute defines this first message and is added to the conversation on initialization.
 
 ```py
-import declarai
-gpt_35 = declarai.openai(model="gpt-3.5-turbo")
-
-@gpt_35.experimental.chat
+@declarai.experimental.chat
 class SQLBot:
     """
     You are a sql assistant. You help with SQL queries with one-line answers.
@@ -70,10 +67,7 @@ In the following example, we will pass a parameter to the chatbot system prompt.
 This value will be populated at runtime and will allow us to easily create base chatbots with varying behaviors.
 
 ```py
-import declarai
-gpt_35 = declarai.openai(model="gpt-3.5-turbo")
-
-@gpt_35.experimental.chat
+@declarai.experimental.chat
 class JokeGenerator:
     """
     You are a joke generator. You generate jokes that a {character} would tell.

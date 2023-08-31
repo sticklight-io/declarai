@@ -4,18 +4,19 @@ Once you have defined your task, you can create a plan for it that is already po
 The plan is an object you call and get the results. This is very helpful when you want to populate the task with the real values of the parameters but delay the execution of it. 
     
 ```py
-import declarai
 
-gpt_35 = declarai.openai(model="gpt-3.5-turbo") 
+from declarai import init_declarai, magic
 
-@gpt_35.task
+task = init_declarai(provider="openai", model="gpt-3.5-turbo")
+
+@task
 def say_something_about_movie(movie: str) -> str:  
     """
     Say something short about the following movie
     :param movie: The movie name
     """
 
-    return declarai.magic(movie)
+    return magic(movie)
 
 plan = say_something_about_movie.plan(movie="Avengers")
 

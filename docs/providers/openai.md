@@ -1,29 +1,25 @@
-# OpenAI
-
 To use OpenAI models, you can set the following configuration options:
 
 ```py
-import declarai
+from declarai import Declarai
 
-openai_model = declarai.openai(
-    model="<model>",
+azure = Declarai.openai(
     openai_token="<api-token>",
+    model="<model>",
     headers={"<header-key>": "<header-value>"},
     timeout="<timeout>",
     request_timeout="<request_timeout>",
-    stream="<stream>", 
- )
+    stream="<stream>", )
 ```
 
 
-| Setting         | <div style="width:180px">Env Variable</div> | Required? |
-|-----------------|---------------------------------------------|:---------:|
-| Model           |                                             |     ✅     |
-| API key         | `OPENAI_API_KEY`                            |     ✅     |
-| Headers         |                                             |           |
-| Timeout         |                                             |           |
-| Request timeout |                                             |           |
-| Stream          |                                             |           |
+| Setting         | <div style="width:180px">Env Variable</div> | <div style="width:280px">Runtime Variable</div>   | Required? |
+|-----------------|---------------------------------------------|---------------------------------------------------|:---------:|
+| API key         | `DECLARAI_OPENAI_API_KEY`                   | `Declarai(... openai_token=<api-token>)`          |     ✅     |
+| Headers         |                                             | `Declarai(... headers=<headers>)`                 |           |
+| Timeout         |                                             | `Declarai(... timeout=<timeout>)`                 |           |
+| Request timeout |                                             | `Declarai(... request_timeout=<request_timeout>)` |           |
+| Stream          |                                             | `Declarai(... stream=<stream>)`                   |           |
 
 ## Getting an API key
 
@@ -39,18 +35,18 @@ To obtain an OpenAI API key, follow these steps:
 You can set your API key at runtime like this:
 
 ```python
-import declarai
+from declarai import Declarai
 
-gpt4 = declarai.openai(model="gpt4", openai_token="<your API key>")
+declarai = Declarai(provide="openai", model="gpt4", openai_token="<your API key>")
 ```
 
-However, it is preferable to pass sensitive settings as an environment variable: `OPENAI_API_KEY`.
+However, it is preferable to pass sensitive settings as an environment variable: `DECLARAI_OPENAI_API_KEY`.
 
 To establish your OpenAI API key as an environment variable, launch your terminal and execute the following command,
 substituting <your API key> with your actual key:
 
 ```shell
-export OPENAI_API_KEY=<your API key>
+export DECLARAI_OPENAI_API_KEY=<your API key>
 ```
 
 This action will maintain the key for the duration of your terminal session. To ensure a longer retention, modify your
@@ -72,12 +68,12 @@ passed to the declarai task/chat interface as a dictionary. The following parame
 Pass your custom parameters to the declarai task/chat interface as a dictionary:
 
 ```python
-import declarai
+from declarai import Declarai
 
-gpt4 = declarai.openai(model="gpt-4", openai_token="<your API key>")
+declarai = Declarai(provide="openai", model="gpt4", openai_token="<your API key>")
 
 
-@gpt4.task(llm_params={"temperature": 0.5, "max_tokens": 1000})  # (1)!
+@declarai.task(llm_params={"temperature": 0.5, "max_tokens": 1000})  # (1)!
 def generate_song():
     """
     Generate a song about declarai

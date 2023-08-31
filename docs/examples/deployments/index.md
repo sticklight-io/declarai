@@ -10,13 +10,14 @@ Here's how you can deploy your Declarai code behind a REST API using FastAPI:
 from typing import Dict
 from pydantic import BaseModel
 from fastapi import FastAPI, APIRouter
-import declarai
+from declarai import Declarai
+
 app = FastAPI()
 router = APIRouter()
-gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
 
-@gpt_35.task
+@declarai.task
 def movie_recommender(user_input: str) -> Dict[str, str]:
     """
     Recommend a selection of real movies to watch based on the user input

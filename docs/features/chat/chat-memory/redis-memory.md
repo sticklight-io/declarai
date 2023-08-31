@@ -6,11 +6,11 @@ For chat that requires a fast and scalable message history, you can use a Redis 
 ## Set Redis memory
 
 ```py
-import declarai
+from declarai import Declarai
 from declarai.memory import RedisMessageHistory
-gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
-@gpt_35.experimental.chat(
+@declarai.experimental.chat(
     chat_history=RedisMessageHistory(
         session_id="unique_chat_id",
         url="redis://localhost:6379/0"
@@ -33,11 +33,11 @@ We can also initialize the `RedisMessageHistory` class with custom connection de
 In case you want to set the Redis memory at runtime, you can use the `set_memory` method.
 
 ```py
-import declarai
+from declarai import Declarai
 from declarai.memory import RedisMessageHistory
-gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
-@gpt_35.experimental.chat
+@declarai.experimental.chat
 class SQLBot:
     """
     You are a sql assistant. You help with SQL related questions with one-line answers.

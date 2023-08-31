@@ -4,7 +4,7 @@ Base classes for declarai tasks.
 from abc import abstractmethod
 from typing import Any, TypeVar
 
-from declarai.operators import BaseOperator, LLMParamsType
+from declarai.operators import BaseChatOperator, BaseOperator, LLMParamsType
 
 
 class BaseTask:
@@ -72,6 +72,16 @@ class BaseTask:
 
         """
         pass
+
+
+class BaseChat(BaseTask):
+    """
+    Base class for chat tasks. Same as `BaseTask`, but with a `BaseChatOperator` instead of a `BaseOperator`.
+    See `Chat` for default implementation.
+    """
+
+    operator: BaseChatOperator
+    "The operator to use for the chat task."
 
 
 TaskType = TypeVar("TaskType", bound=BaseTask)

@@ -61,12 +61,12 @@ If you prefer to have a persistent history, you can use the `FileMessageHistory`
 Setting up a memory is done by passing `chat_history` as a keyword argument to the `declarai.experimental.chat` decorator.
 
 ```py
-import declarai
+from declarai import Declarai
 from declarai.memory import FileMessageHistory
 
-gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
-@gpt_35.experimental.chat(chat_history=FileMessageHistory("sql_bot_history.txt")) # (1)!
+@declarai.experimental.chat(chat_history=FileMessageHistory("sql_bot_history.txt")) # (1)!
 class SQLBot:
     """
     You are a sql assistant. You help with SQL related questions with one-line answers.
@@ -78,12 +78,12 @@ class SQLBot:
 We can also initialize the chat_history at runtime
 
 ```py
-import declarai
+from declarai import Declarai
 from declarai.memory import FileMessageHistory
 
-gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+declarai = Declarai(provider="openai", model="gpt-3.5-turbo")
 
-@gpt_35.experimental.chat
+@declarai.experimental.chat
 class SQLBot:
     """
     You are a sql assistant. You help with SQL related questions with one-line answers.

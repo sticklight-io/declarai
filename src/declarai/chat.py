@@ -13,7 +13,7 @@ The prompt is then sent to the LLM, and the response is parsed and added to the 
 from functools import partial
 from typing import Any, Callable, Dict, List, Type, Union, overload
 
-from declarai._base import BaseTask
+from declarai._base import BaseChat
 from declarai.memory import InMemoryMessageHistory
 from declarai.memory.base import BaseChatMessageHistory
 from declarai.middleware.base import TaskMiddleware
@@ -61,7 +61,7 @@ class ChatMeta(type):
         return instance
 
 
-class Chat(BaseTask, metaclass=ChatMeta):
+class Chat(BaseChat, metaclass=ChatMeta):
     """
     Chat class used for creating chat tasks.
 
@@ -94,7 +94,6 @@ class Chat(BaseTask, metaclass=ChatMeta):
     """
 
     is_declarai = True
-    operator: BaseChatOperator
     llm_response: LLMResponse
     _call_kwargs: Dict[str, Any]
 

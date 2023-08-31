@@ -3,12 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from declarai.operators import (
-    LLMSettings,
-    resolve_operator,
-    resolve_llm,
-    AzureOpenAITaskOperator,
-)
+from declarai.operators import LLMSettings, resolve_operator, resolve_llm, AzureOpenAITaskOperator
 from declarai.operators.openai_operators import OpenAIError, OpenAITaskOperator
 
 
