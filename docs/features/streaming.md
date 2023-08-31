@@ -1,21 +1,16 @@
 # Streaming
 
-Some LLM providers support streaming of the LLM responses. This is useful when you want to get the results as they are
-generated.
-In contrast to regular tasks, streaming tasks return a generator that yields the results as they are generated.
+Some LLM providers support streaming of the LLM responses. This is very useful when you want to get the results as soon they are generated, and not wait for the entire response to be generated.
 
 ## Streaming example
 
 ```py
-from declarai import Declarai
+import declarai
 
-declarai = Declarai(
-    provider="openai",
-    model="gpt-3.5-turbo"
-)
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
 
-@declarai.task(streaming=True)  # (1)!
+@gpt_35.task(streaming=True)  # (1)!
 def say_something_about_movie(movie: str) -> str:
     """
     Say something short about the following movie
@@ -25,7 +20,7 @@ def say_something_about_movie(movie: str) -> str:
     return declarai.magic(movie)
 
 
-res = say_something_about_movie(movie="Avengers")
+res = say_something_about_movie(movie="Avengers") # (2)!_
 
 for chunk in res:
     print(chunk.response)
@@ -57,47 +52,44 @@ for chunk in res:
 ```
 
 1. Set the `streaming` flag to `True` when defining the task
+2. `res` is a generator. You can iterate over the generator to get the results.
 
-.
 Currently only **OpenAI** & **Azure OpenAI** support streaming.
 
 ## Turn on streaming
 
-In order to turn on streaming, you need to set the `streaming` flag to `True` when defining the task.
+In order to enable streaming, all you have to do is set the `streaming` flag to `True` when defining the task.
 
 ```py
-from declarai import Declarai
+import declarai
 
-declarai = Declarai(
-    provider="openai",
-    model="gpt-3.5-turbo"
-)
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
-
-@declarai.task(streaming=True)
+@gpt_35.task(streaming=True)  # (1)!
 def my_task()
     ...
 
 
-@declarai.experimental.chat(streaming=True)
+@declarai.experimental.chat(streaming=True) # (2)!
 class MyChat
     ...
 
 ```
 
-You can also enable streaming globally by settings `stream=True` when initializing the `Declarai` object.
+1. Set the `streaming` flag to `True` when defining the task
+2. Set the `streaming` flag to `True` when defining the chat class
+
+You can also enable streaming globally by settings `stream=True` when initializing the `declarai` object.
 
 ```py
-from declarai import Declarai
+import declarai
 
-openai_declarai = Declarai(
-    provider="openai",
+gpt_35_with_streaming = declarai.openai(
     model="gpt-3.5-turbo",
     stream=True
 )
 
-azure_declarai = Declarai(
-    provider="azure",
+azure_gpt_35_with_streaming = declarai.azure_openai(
     model="gpt-3.5-turbo",
     stream=True
 )
@@ -108,15 +100,12 @@ azure_declarai = Declarai(
 The results are returned as a generator. You can iterate over the generator to get the results.
 
 ```py
-from declarai import Declarai
+import declarai
 
-declarai = Declarai(
-    provider="openai",
-    model="gpt-3.5-turbo"
-)
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
 
-@declarai.task(streaming=True)
+@gpt_35.task(streaming=True)
 def say_something_about_movie(movie: str) -> str:
     """
     Say something short about the following movie
@@ -134,18 +123,15 @@ for chunk in res_stream:
     type(chunk)  # <class 'declarai.operators.llm.LLMResponse'>
 ```
 
-The responses are also saved on the task object.
+The responses are also saved on the task object. 
 
 ```py
-from declarai import Declarai
+import declarai
 
-declarai = Declarai(
-    provider="openai",
-    model="gpt-3.5-turbo"
-)
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
 
-@declarai.task(streaming=True)
+@gpt_35.task(streaming=True)
 def say_something_about_movie(movie: str) -> str:
     """
     Say something short about the following movie
@@ -175,16 +161,11 @@ response all over again and again.
 
 
 ```py
-from declarai import Declarai
+import declarai
 
-declarai = Declarai(
-    provider="openai",
-    model="gpt-3.5-turbo",
-    stream=True
-)
+gpt_35 = declarai.openai(model="gpt-3.5-turbo", stream=True)
 
-
-@declarai.task
+@gpt_35.task
 def say_something_about_movie(movie: str) -> str:
     """
     Say something short about the following movie
