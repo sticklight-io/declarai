@@ -25,18 +25,84 @@
 
 ---
 
-**Documentation**: <a href="https://vendi-ai.github.io/declarai" target="_blank">https://declarai.com </a>
+**Documentation 📖**: <a href="https://vendi-ai.github.io/declarai" target="_blank">https://declarai.com </a>
 
-**Source Code**: <a href="https://github.com/vendi-ai/declarai" target="_blank">https://github.com/vendi-ai/declarai </a>
+**Source Code 💻** : <a href="https://github.com/vendi-ai/declarai" target="_blank">https://github.com/vendi-ai/declarai </a>
 
 ---
 
-Using AI in your code shouldn't be difficult. Supporting the mission of bringing AI to the masses,
-Declarai is meant to abstract the know-how of prompt engineering and make using LLMs for daily programming accessible to everyone.
+## What is Declarai 🤔?
 
-If you know how to write python code and have written any doc-string in your life, this should be a breeze.
+**Declarai** turns your Python code into LLM tasks, allowing you to easily integrate LLM into your existing codebase.
+It operates on a simple principle: just define a Python function/class. 
+By annotating this function with docstrings and type hints, you provide a clear instruction set for the AI model without any additional effort.
 
-##  🚀 Quickstart
+Once you've declared your function, Declarai intelligently compiles the function's docstrings and type hints into a prompt for the AI model, ensuring the model understands exactly what's required.
+
+After executing the task, Declarai retrieves the AI's response and parses it, translating it back into the declared return type of your Python function. This eliminates any manual parsing or post-processing on your part.
+
+**Declarai** Keeps It Native: At its core, Declarai is about embracing native Python practices. You don't need to learn a new syntax or adapt to a different coding paradigm. Just write Python functions as you always have, and let Declarai handle the AI integration seamlessly.
+
+---
+## Main Components 🧩
+
+### Tasks 💡
+
+AI tasks are used for any business logic or transformation.
+```python
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.task 
+def rank_by_severity(message: str) -> int:
+    """
+    Rank the severity of the provided message by it's urgency.
+    Urgency is ranked on a scale of 1-5, with 5 being the most urgent.
+    :param message: The message to rank
+    :return: The urgency of the message
+    """
+
+
+rank_by_severity(message="The server is down!")
+
+>>> 5
+```
+### Chat 🗣
+
+AI Chats are used for an iterative conversation with the AI model, where the AI model can remember previous messages and context.
+
+```python
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.experimental.chat
+class SQLBot:
+    """
+    You are a sql assistant. You help with SQL related questions 
+    """
+
+
+sql_bot = SQLBot()
+sql_bot.send("When should I use a LEFT JOIN?")
+
+> "You should use a LEFT JOIN when you want to return all rows from ....
+```
+
+ 
+### Features:
+
+- [x] 🖍 **Intelligent Prompts**: Automatically generate prompts using type hints and docstrings.
+- [x] 🚄 **Conversational AI**: Chat interface equipped with memory and context management.
+- [x] ⚡ **Real-time streaming**: Stream LLM responses that take longer to complete.
+- [x] 🔥 **Pydantic Model Parsing**: Seamlessly parse llm responses into[ pydantic models](https://github.com/vendi-ai/declarai#pydantic-models).
+- [x] 🐍 **Pythonic**: Native understanding and parsing of llm responses into [Python primitives](https://github.com/vendi-ai/declarai#tasks-with-python-native-output-parsing).
+- [x] 💾 **Multiple AI Backends**: Integrated with OpenAI & Azure AI llm providers.
+- [x] 🛠 **Middleware **: Adapt and extend tasks behavior with a modular middleware system.
+- [ ] 🤗 **Coming Soon**: Integration with HuggingFace hub
+- 
+## Quickstart 🚀
 
 ### Installation
 ```bash
@@ -82,16 +148,7 @@ Not the best poem out there, but hey! You've written your first declarative AI c
 Declarai aims to promote clean and readable code by enforcing the use of doc-strings and typing.
 The resulting code is readable and easily maintainable.
 
-## 🔍 Why Declarai?
-- **Intuitive Pythonic Interface**: Use your Python expertise instead of wrestling with complex prompts.
-- **Lightweight**: Minimal dependencies to avoid clutter.
-- **Extensible**: Modify and customize as per your needs.
-- **Type-Driven Prompt Design**: Automatic detailed prompts using Python's type annotations.
-- **Context-Rich Prompts via Docstrings**: Make your tasks clear and improve LLM performance.
-- **Automated LLM Task Execution**: Declarai manages the heavy lifting, letting you focus on the logic.
 
-
-## Features
 ### Tasks with python native output parsing:
 
 Python primitives
@@ -117,9 +174,32 @@ rank_by_severity(message="How was your weekend?"))
 
 >>> 1
 ```
+Python Lists/Dicts etc..
 
+```python
+from typing import List
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.task
+def multi_value_extraction(text: str) -> List[str]:
+    """
+    Extract the phone numbers from the provided text
+    :param text: content to extract phone number from
+    :return: The phone numbers that where identified in the input text
+    """
+
+
+multi_value_extraction(
+    text="Hey jenny,\nyou can call me at 124-3435-132.\n"
+         "you can also reach me at +43-938-243-223"
+)
+>>> ['124-3435-132', '+43-938-243-223']
+```
 Python complex objects
 ```python
+from datetime import datetime
 import declarai
 
 gpt_35 = declarai.openai(model="gpt-3.5-turbo")
@@ -138,14 +218,19 @@ datetime_parser(raw_date="Janury 1st 2020"))
 >>> 2020-01-01 00:00:00
 ```
 
-pydantic models
+### Pydantic models
 ```python
 from pydantic import BaseModel
+from typing import List, Dict
+import declarai
+
+
 class Animal(BaseModel):
     name: str
     family: str
     leg_count: int
 
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
 
 @gpt_35.task
 def suggest_animals(location: str) -> Dict[int, List[Animal]]:
@@ -177,6 +262,10 @@ suggest_animals(location="jungle")
 
 ### Simple Chat interface
 ```python
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
 @gpt_35.experimental.chat
 class CalculatorBot:
     """

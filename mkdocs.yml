@@ -46,6 +46,7 @@ nav:
               - Control LLM parameters: features/language-model-parameters.md
           - Control LLM parameters: features/language-model-parameters.md
           - Magic: features/magic.md
+          - Streaming: features/streaming.md
           - Multi models and providers: features/multi-model-multi-provider.md
           - Middlewares:
               - features/middlewares/index.md

@@ -248,7 +248,7 @@ def handle_streaming_response(api_response: OpenAIObject) -> Iterator[LLMRespons
 
         delta = r.choices[0]["delta"]
         response["model"] = r.model
-        if r.usage:
+        if "usage" in r:
             response["prompt_tokens"] = r.usage["prompt_tokens"]
             response["completion_tokens"] = r.usage["completion_tokens"]
             response["total_tokens"] = r.usage["total_tokens"]

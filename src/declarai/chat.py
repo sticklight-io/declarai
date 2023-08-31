@@ -70,8 +70,6 @@ class Chat(BaseTask, metaclass=ChatMeta):
 
     Attributes:
         is_declarai (bool): A class-level attribute indicating if the chat is of type 'declarai'. Always set to `True`.
-        llm_response (LLMResponse): The response from the LLM (Language Model).
-            This attribute is set during the execution of the chat.
         _call_kwargs (Dict[str, Any]): A dictionary to store additional keyword arguments, used for passing kwargs between
          the execution of the chat and the execution of the middlewares.
         middlewares (List[TaskMiddleware] or None): Middlewares used for every iteration of the chat.
@@ -95,7 +93,6 @@ class Chat(BaseTask, metaclass=ChatMeta):
 
     is_declarai = True
     operator: BaseChatOperator
-    llm_response: LLMResponse
     _call_kwargs: Dict[str, Any]
 
     def __init__(
@@ -150,6 +147,13 @@ class Chat(BaseTask, metaclass=ChatMeta):
         """
         self._chat_history.add_message(Message(message=message, role=role))
 
+    def stream_cleanup(self, last_chunk: LLMResponse) -> None:
+        """
+        Add the combined response to the database and run any other cleanup logic.
+        """
+        super().stream_cleanup(last_chunk)
+        self.add_message(last_chunk.response, role=MessageRole.assistant)
+
     def _exec(self, kwargs) -> Any:
         """
         Executes the call to the LLM.
@@ -160,13 +164,17 @@ class Chat(BaseTask, metaclass=ChatMeta):
         Returns:
              The raw response from the LLM, together with the metadata.
         """
-        self.llm_response = self.operator.predict(**kwargs)
-        self.add_message(self.llm_response.response, role=MessageRole.assistant)
-
-        if self.operator.parsed_send_func:
-            return self.operator.parsed_send_func.parse(self.llm_response.response)
-
-        return self.llm_response.response
+        if self.operator.streaming:
+            # Use the stream_handler generator if streaming is enabled
+            stream = self.stream_handler(self.operator.predict(**kwargs))
+            self.llm_stream_response = stream
+            return self.llm_stream_response
+        else:
+            self.llm_response = self.operator.predict(**kwargs)
+            self.add_message(self.llm_response.response, role=MessageRole.assistant)
+            if self.operator.parsed_send_func:
+                return self.operator.parsed_send_func.parse(self.llm_response.response)
+            return self.llm_response.response
 
     def _exec_middlewares(self, kwargs) -> Any:
         if self.middlewares:
@@ -283,6 +291,7 @@ class ChatDecorator:
         chat_history: BaseChatMessageHistory = None,
         greeting: str = None,
         system: str = None,
+        streaming: bool = None,
     ):
         """
         Decorator method that converts a class into a chat task class.
@@ -327,7 +336,10 @@ class ChatDecorator:
 
             _decorator_kwargs = dict(
                 operator=operator_type(
-                    llm=self.llm, parsed=parsed_cls, llm_params=llm_params
+                    llm=self.llm,
+                    parsed=parsed_cls,
+                    llm_params=llm_params,
+                    streaming=streaming,
                 ),
                 middlewares=middlewares,
                 chat_history=chat_history,

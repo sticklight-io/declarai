@@ -121,11 +121,18 @@ class Declarai:
         model: ModelsOpenai,
         version: Optional[str] = None,
         openai_token: Optional[str] = None,
+        stream: Optional[bool] = None,
     ):
         ...
 
     @overload
-    def __init__(self, provider: ProviderAzureOpenai, model: str, **kwargs):
+    def __init__(
+        self,
+        provider: ProviderAzureOpenai,
+        model: str,
+        stream: Optional[bool] = None,
+        **kwargs
+    ):
         ...
 
     def __init__(self, provider: str, model: str, **kwargs):

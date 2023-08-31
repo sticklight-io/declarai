@@ -2,7 +2,7 @@
 Operator is a class that is used to wrap the compilation of prompts and the singular execution of the LLM.
 """
 from abc import abstractmethod
-from typing import Any, Dict, Optional, TypeVar
+from typing import Any, Dict, Optional, TypeVar, Union, Iterator
 
 from declarai.operators.llm import LLM, LLMParamsType, LLMResponse
 from declarai.python_parser.parser import PythonParser
@@ -75,7 +75,7 @@ class BaseOperator:
     # Should add validate that llm params are valid part of the llm (attach llmparams on base operator?)
     def predict(
         self, *, llm_params: Optional[LLMParamsType] = None, **kwargs: object
-    ) -> LLMResponse:
+    ) -> Union[LLMResponse, Iterator[LLMResponse]]:
         """
         Executes prediction using the LLM.
         It first compiles the prompts using the `compile` method, and then executes the LLM with the compiled prompts and the llm_params.
@@ -126,9 +126,10 @@ class BaseChatOperator(BaseOperator):
         system: Optional[str] = None,
         greeting: Optional[str] = None,
         parsed: PythonParser = None,
+        streaming: bool = None,
         **kwargs,
     ):
-        super().__init__(parsed=parsed, **kwargs)
+        super().__init__(parsed=parsed, streaming=streaming, **kwargs)
         self.system = system or self.parsed.docstring_freeform
         self.greeting = greeting or getattr(self.parsed.decorated, "greeting", None)
         self.parsed_send_func = (
@@ -136,8 +137,3 @@ class BaseChatOperator(BaseOperator):
             if getattr(self.parsed.decorated, "send", None)
             else None
         )
-
-        if self.streaming:
-            raise ValueError(
-                "Streaming is not supported for chat operators. Please disable streaming."
-            )

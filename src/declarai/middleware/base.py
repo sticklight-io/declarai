@@ -2,7 +2,7 @@
 Base class for task middlewares.
 """
 from abc import abstractmethod  # pylint: disable=E0611
-from typing import Any, Dict
+from typing import Any, Dict, Iterator
 
 from declarai._base import TaskType
 
@@ -24,6 +24,16 @@ class TaskMiddleware:
         self._task = task
         self._kwargs = kwargs
 
+    def _stream(self) -> Iterator:
+        """
+        Re-streams the streaming response while adding the after sideeffects execution to the generator
+        Returns:
+
+        """
+        for chunk in self._task._exec(self._kwargs):
+            yield chunk
+        self.after(self._task)
+
     def __call__(self) -> Any:
         """
         Once the middleware is called, it executes the task and returns the result.
@@ -32,9 +42,15 @@ class TaskMiddleware:
             The result of the task
         """
         self.before(self._task)
-        res = self._task._exec(self._kwargs)
-        self.after(self._task)
-        return res
+        # # If the task is streaming, handle it differently
+        if self._task.operator.streaming:
+            # Yield chunks from the task, then call the after method
+            return self._stream()
+        else:
+            # Non-streaming tasks can be handled as before
+            res = self._task._exec(self._kwargs)
+            self.after(self._task)
+            return res
 
     @abstractmethod
     def before(self, task: TaskType) -> None:

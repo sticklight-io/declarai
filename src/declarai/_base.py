@@ -2,9 +2,13 @@
 Base classes for declarai tasks.
 """
 from abc import abstractmethod
-from typing import Any, TypeVar
+from typing import Any, TypeVar, Iterator
 
-from declarai.operators import BaseOperator, LLMParamsType
+from declarai.operators import (
+    BaseOperator,
+    LLMParamsType,
+    LLMResponse,
+)
 
 
 class BaseTask:
@@ -14,6 +18,12 @@ class BaseTask:
 
     operator: BaseOperator
     "The operator to use for the task"
+
+    llm_response: LLMResponse
+    "The response from the LLM"
+
+    llm_stream_response: Iterator[LLMResponse] = None
+    "The response from the LLM when streaming"
 
     @property
     def llm_params(self) -> LLMParamsType:
@@ -72,6 +82,22 @@ class BaseTask:
 
         """
         pass
+
+    def stream_handler(self, stream: Iterator[LLMResponse]) -> Iterator[LLMResponse]:
+        """
+        A generator that yields each chunk from the stream and collects them in a buffer.
+        After the stream is exhausted, it runs the cleanup logic.
+        """
+        response_buffer = []
+        for chunk in stream:
+            response_buffer.append(chunk)
+            yield chunk
+
+        # After the stream is exhausted, run the cleanup logic
+        self.stream_cleanup(response_buffer[-1])
+
+    def stream_cleanup(self, last_chunk: LLMResponse):
+        self.llm_response = last_chunk
 
 
 TaskType = TypeVar("TaskType", bound=BaseTask)
