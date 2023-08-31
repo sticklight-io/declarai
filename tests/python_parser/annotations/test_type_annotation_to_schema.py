@@ -3,7 +3,9 @@ from typing import Any, Dict, List
 import pytest
 from pydantic import BaseModel, Field
 
-from declarai.python_parser.type_annotation_to_schema import type_annotation_to_str_schema
+from declarai.python_parser.type_annotation_to_schema import (
+    type_annotation_to_str_schema,
+)
 
 
 class MockSimpleModel(BaseModel):

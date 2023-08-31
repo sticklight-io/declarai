@@ -10,7 +10,7 @@ The Magic callable is an "empty" function that can be used for two main scenario
 
 Without magic:
 ```python
-@declarai.task
+@openai.task
 def suggest_nickname(real_name: str) -> str: # (1)!
     """
     Suggest a nickname for a person
@@ -23,7 +23,7 @@ def suggest_nickname(real_name: str) -> str: # (1)!
 
 with magic:
 ```python
-@declarai.task
+@openai.task
 def suggest_nickname(real_name: str) -> str:
     """
     Suggest a nickname for a person
@@ -41,7 +41,11 @@ def suggest_nickname(real_name: str) -> str:
 In the scenario that you do not wan't to rely on the docstring for prompt generation, you can use the magic function to provide the description and parameters.
 
 ```python
-@declarai.task
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.task
 def suggest_nickname(real_name: str) -> str:
     return declarai.magic(
         real_name=real_name,

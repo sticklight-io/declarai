@@ -21,9 +21,7 @@ def test_chat_openai_operator():
     assert isinstance(compiled, dict)
     messages = list(compiled["messages"])
     assert len(messages) == 1
-    assert (
-        messages[0].message == "This is my beloved chat"
-    )
+    assert messages[0].message == "This is my beloved chat"
     assert messages[0].role == "system"
 
     # def openai_task():
