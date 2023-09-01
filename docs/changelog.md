@@ -1,3 +1,64 @@
+
+---
+### v0.1.10
+
+[View full release on GitHub](https://github.com/vendi-ai/declarai/releases/tag/v0.1.10) and [PyPi](https://pypi.org/project/declarai/0.1.10/)
+
+**Streaming, Docstring Templates, and System Message Fixes**
+
+New features around streaming for chat tasks and the use of Jinja templates in docstrings, plus a crucial fix for system messages in chat.
+
+Features:
+
+  - Streaming for chat tasks.
+  - Support for Jinja templates in docstrings.
+
+Fixes:
+
+  - System message correctly set when passed through the chat decorator.
+
+Changes:
+
+  - Added streaming support with middleware for chat tasks as well. Closes #112.
+  - Typos in README fixed.
+  - Jinja templates in docstrings supported. Closes #118.
+  - Fixed issue with passing system messages in chat decorator. Closes #121.
+
+Contributors:
+
+  - @matankley
+
+---
+### v0.1.9
+
+[View full release on GitHub](https://github.com/vendi-ai/declarai/releases/tag/v0.1.9) and [PyPi](https://pypi.org/project/declarai/0.1.9/)
+
+**Streaming, Middleware, and API Refactoring**
+
+Introducing the support for streaming responses and middlewares in Declarai chats, along with API improvements.
+
+Features:
+
+  - Streaming responses for Declarai tasks enabled.
+  - Middleware support for Declarai chats.
+  
+Changes:
+
+  - Introduced middleware support to chat. Closes #105.
+  - Added streaming for OpenAI tasks. Closes #107.
+  - API flattened and refactored, thanks to @giladbarnea.
+  
+New Contributors:
+
+  - @giladbarnea made their first contribution in #104
+
+Contributors:
+
+  - @giladbarnea
+  - @matankley
+
+---
+
 ### v0.1.8
 
 [View full release on GitHub](https://github.com/vendi-ai/declarai/releases/tag/v0.1.8) and [PyPi](https://pypi.org/project/declarai/0.1.8/)
