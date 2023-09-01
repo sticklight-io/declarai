@@ -6,6 +6,7 @@ import logging
 from declarai.operators.registry import register_operator
 from declarai.operators.message import Message, MessageRole
 from declarai.operators.operator import BaseOperator, CompiledTemplate
+from ..utils import can_be_jinja
 from declarai.operators.templates import (
     InstructFunctionTemplate,
     StructuredOutputInstructionPrompt,
@@ -104,28 +105,16 @@ class OpenAITaskOperator(BaseOperator):
         if output_schema:
             messages.append(Message(message=output_schema, role=MessageRole.system))
 
-        populated_instruction = instruction_template.format(
-            input_instructions=self.parsed.docstring_freeform,
-            input_placeholder=self._compile_input_placeholder(),
-        )
-        messages.append(Message(message=populated_instruction, role=MessageRole.user))
+        if not can_be_jinja(self.parsed.docstring_freeform):
+            instruction_message = instruction_template.format(
+                input_instructions=self.parsed.docstring_freeform,
+                input_placeholder=self._compile_input_placeholder(),
+            )
+        else:
+            instruction_message = self.parsed.docstring_freeform
+
+        messages.append(Message(message=instruction_message, role=MessageRole.user))
         return messages
-
-    def compile(self, **kwargs) -> CompiledTemplate:
-        """
-        Implements the compile method of the BaseOperator class.
-        Args:
-            **kwargs:
-
-        Returns:
-            Dict[str, List[Message]]: A dictionary containing a list of messages.
-
-        """
-        template = self.compile_template()
-        if kwargs:
-            template[-1].message = template[-1].message.format(**kwargs)
-            return {"messages": template}
-        return {"messages": template}
 
 
 @register_operator(provider="azure-openai", operator_type="task")

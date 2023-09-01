@@ -153,7 +153,7 @@ Declarai aims to promote clean and readable code by enforcing the use of doc-str
 The resulting code is readable and easily maintainable.
 
 
-### Tasks with python native output parsing:
+### Tasks with python native output parsing
 
 Python primitives
 ```python
@@ -262,9 +262,31 @@ suggest_animals(location="jungle")
        ]
  }
 ```
+### Jinja templates 🥷
+```python
+import declarai
 
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+@gpt_35.task
+def sentiment_classification(string: str, examples: List[str, int]) -> int:
+    """
+    Classify the sentiment of the provided string, based on the provided examples.
+    The sentiment is ranked on a scale of 1-5, with 5 being the most positive.
+    {% for example in examples %}
+    {{ example[0] }} // {{ example[1] }}
+    {% endfor %}
+    {{ string }} //
+    """
+    
+sentiment_classification(string="I love this product but there are some annoying bugs",
+                         examples=[["I love this product", 5], ["I hate this product", 1]])
+
+>>> 4
+```
 
 ### Simple Chat interface
+
 ```python
 import declarai
 

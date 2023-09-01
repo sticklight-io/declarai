@@ -2,12 +2,20 @@
 Operator is a class that is used to wrap the compilation of prompts and the singular execution of the LLM.
 """
 from abc import abstractmethod
-from typing import Any, Dict, Optional, TypeVar, Union, Iterator
-
+from typing import Any, Dict, Optional, TypeVar, Union, Iterator, List
+from logging import getLogger
+from declarai.operators import Message, MessageRole
 from declarai.operators.llm import LLM, LLMParamsType, LLMResponse
+from declarai.operators.templates import (
+    compile_output_prompt,
+    StructuredOutputChatPrompt,
+)
+from declarai.operators.utils import format_prompt_msg
 from declarai.python_parser.parser import PythonParser
 
 CompiledTemplate = TypeVar("CompiledTemplate")
+
+logger = getLogger("Operator")
 
 
 class BaseOperator:
@@ -17,6 +25,7 @@ class BaseOperator:
         llm: The LLM to use for the operator
         parsed (PythonParser): The parsed object that is used to compile the prompts
         llm_params: The parameters to pass to the LLM
+        streaming: Whether to use streaming or not
         kwargs: Enables passing of additional parameters to the operator
     Attributes:
         llm (LLM): The LLM to use for the operator
@@ -59,18 +68,25 @@ class BaseOperator:
         return False
 
     @abstractmethod
+    def compile_template(self) -> CompiledTemplate:
+        ...
+
     def compile(self, **kwargs) -> CompiledTemplate:
         """
-        An abstract method that compiles the prompts using the parsed object and returns the compiled prompts.
-        The implementation of this method should be specific to the operator, and should be implemented in the child class.
+        Implements the compile method of the BaseOperator class.
         Args:
-            **kwargs: Any runtime parameters that are passed to the operator. Used to format the prompts placeholders.
+            **kwargs:
 
         Returns:
-            The compiled prompts that can be directly passed to the `predict` method of the LLM
+            Dict[str, List[Message]]: A dictionary containing a list of messages.
 
         """
-        ...
+        template = self.compile_template()
+        if kwargs:
+            template[-1].message = format_prompt_msg(
+                _string=template[-1].message, **kwargs
+            )
+        return {"messages": template}
 
     # Should add validate that llm params are valid part of the llm (attach llmparams on base operator?)
     def predict(
@@ -137,3 +153,45 @@ class BaseChatOperator(BaseOperator):
             if getattr(self.parsed.decorated, "send", None)
             else None
         )
+
+    def _compile_output_prompt(self, template) -> str:
+        if not self.parsed_send_func.has_any_return_defs:
+            logger.warning(
+                "Couldn't create output schema for function %s."
+                "Falling back to unstructured output."
+                "Please add at least one of the following: return type, return doc, return name",
+                self.parsed_send_func.name,
+            )
+            return ""
+
+        signature_return = self.parsed_send_func.signature_return
+        return_name, return_doc = self.parsed_send_func.docstring_return
+        return compile_output_prompt(
+            return_type=signature_return.str_schema,
+            str_schema=return_name,
+            return_docstring=return_doc,
+            return_magic=self.parsed_send_func.magic.return_name,
+            structured=self.parsed_send_func.has_structured_return_type,
+            structured_template=template,
+        )
+
+    def compile_template(self) -> Message:
+        """
+        Compiles the system prompt.
+        Returns: The compiled system message
+        """
+        structured_template = StructuredOutputChatPrompt
+        if self.parsed_send_func:
+            output_schema = self._compile_output_prompt(structured_template)
+        else:
+            output_schema = None
+
+        if output_schema:
+            compiled_system_prompt = f"{self.system}/n{output_schema}"
+        else:
+            compiled_system_prompt = self.system
+        return Message(message=compiled_system_prompt, role=MessageRole.system)
+
+    def compile(self, messages: List[Message], **kwargs) -> CompiledTemplate:
+        system_message = self.compile_template()
+        return dict(messages=[system_message] + messages)

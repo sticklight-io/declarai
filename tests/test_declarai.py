@@ -37,13 +37,13 @@ def test_declarai_openai_back_compat():
 
 
 def test_declarai_openai_back_compat2():
-
+    from declarai import Declarai
+    import declarai
     kwargs = {"model": "davinci", "openai_token": "test_token"}
     dec = declarai.openai(**kwargs)
     assert dec.llm.provider == "openai"
     assert dec.llm.model == "davinci"
     assert dec.llm.api_key == "test_token"
-
 
     kwargs = {
         "model": "davinci",
@@ -61,6 +61,8 @@ def test_declarai_openai_back_compat2():
 
 
 def test_declarai_azure_openai():
+    from declarai import Declarai
+    import declarai
     kwargs = {
         "deployment_name": "test",
         "azure_openai_key": "123",
