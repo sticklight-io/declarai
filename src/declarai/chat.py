@@ -112,13 +112,17 @@ class Chat(BaseTask, metaclass=ChatMeta):
         self.operator = operator
         self._chat_history = chat_history or DEFAULT_CHAT_HISTORY()
         self.greeting = greeting or self.operator.greeting
-        self.system = system or self.operator.system
+        self.system = self.__set_system_prompt(system=system, **kwargs)
         self.__set_memory()
-        self.__set_system_prompt(**kwargs)
 
-    def __set_system_prompt(self, **kwargs):
+    def __set_system_prompt(self, system: str, **kwargs) -> str:
+        if system:
+            self.operator.system = system
         if kwargs:
-            self.system = format_prompt_msg(self.system, **kwargs)
+            formatted_system = format_prompt_msg(self.operator.system, **kwargs)
+            self.operator.system = formatted_system
+
+        return self.operator.system
 
     def __set_memory(self):
         if self.greeting and len(self._chat_history.history) == 0:
