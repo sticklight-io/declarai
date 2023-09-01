@@ -49,3 +49,12 @@ def test_chat(mock_chat_resolve_operator, mock_resolve_llm):
 
     assert chat2.__name__ == "OverrideChatParams"
     assert chat2.greeting == "New Message"
+
+    @declarai.experimental.chat(system="This is a decorated chat.\n", greeting="This is a greeting message")
+    class ChatWithParamsDecorated:
+        ...
+
+    chat3 = ChatWithParamsDecorated()
+
+    assert chat3.system == "This is a decorated chat.\n"
+    assert chat3.greeting == "This is a greeting message"

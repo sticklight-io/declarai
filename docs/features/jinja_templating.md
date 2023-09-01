@@ -52,3 +52,30 @@ sentiment_classification(string="I love this product but there are some annoying
 2. The user message is generated based on the docstring of the function. The Jinja template is rendered with the provided parameters.
 
 
+Same thing can be done with the `chat` decorator:
+
+```python
+import declarai
+
+gpt_35 = declarai.openai(model="gpt-3.5-turbo")
+
+
+@gpt_35.experimental.chat
+class TranslatorBot:
+    """
+    You are a translator bot,
+    You will translate the provided text from English to {{ language }}.
+    Do not translate the following categories of words: {{ exclude_words }}
+    """
+
+
+bot = TranslatorBot(language="French", exclude_words=["bad words"])
+
+bot.compile()
+
+>>> {'messages': [
+    system: You are a translator bot, You will translate the provided text from English to French.
+            Do not translate the following categories of words: ['bad words']
+    ]
+}
+```
