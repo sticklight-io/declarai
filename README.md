@@ -309,8 +309,8 @@ calc_bot.send(message="1 + 1")
 ```
 
 
-📚 For a thorough introduction, features, and best practices, explore our [official documentation](https://vendi-ai.github.io/declarai/) and [beginner's guide](https://vendi-ai.github.io/declarai/src/beginners-guide/).
+📚 For a thorough introduction, features, and best practices, explore our [official documentation](https://vendi-ai.github.io/declarai/) and [beginner's guide](https://vendi-ai.github.io/declarai/beginners-guide/).
 
 ## Contributing 💼
-Join our mission to make declarative AI even better together! Check out our [contributing guide](https://vendi-ai.github.io/declarai/src/contribute/) to get started.
+Join our mission to make declarative AI even better together! Check out our [contributing guide](https://vendi-ai.github.io/declarai/) and [beginner's guide](https://vendi-ai.github.io/declarai/contribute/) to get started.
 
