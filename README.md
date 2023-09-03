@@ -17,6 +17,9 @@
   <a href="https://discord.gg/GrszSXNTDm">
     <img src="https://dcbadge.vercel.app/api/server/GrszSXNTDm?compact=true&style=flat" alt="Discord invite">
   </a>
+  <a target="_blank" href="https://colab.research.google.com/github/vendi-ai/declarai/examples/colab_intro.ipynb">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+  </a>
 </p>
 
 <p align="center">
