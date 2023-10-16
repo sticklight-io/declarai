@@ -243,15 +243,15 @@ def handle_streaming_response(api_response: OpenAIObject) -> Iterator[LLMRespons
     """
     response = {"role": None, "response": "", "raw_response": ""}
 
-    for r in api_response:  # noqa
-        response["raw_response"] = r.to_dict_recursive()
-
-        delta = r.choices[0]["delta"]
-        response["model"] = r.model
-        if r.get('usage'):
-            response["prompt_tokens"] = r.usage["prompt_tokens"]
-            response["completion_tokens"] = r.usage["completion_tokens"]
-            response["total_tokens"] = r.usage["total_tokens"]
+    chunk: OpenAIObject
+    for chunk in api_response:  # noqa
+        response["raw_response"] = chunk.to_dict_recursive()
+        delta = chunk.choices[0]["delta"]
+        response["model"] = chunk.model
+        if chunk.get("usage"):
+            response["prompt_tokens"] = chunk.usage.get("prompt_tokens")
+            response["completion_tokens"] = chunk.usage.get("completion_tokens")
+            response["total_tokens"] = chunk.usage.get("total_tokens")
 
         if "role" in delta:
             response["role"] = delta["role"]
