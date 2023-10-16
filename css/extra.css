@@ -1,0 +1,27 @@
+.md-header{
+  background-color: #1a1c1b;
+}
+
+.md-annotation__index:before{
+  background: rgba(133, 236, 199, 0.62);
+}
+
+.md-nav__link{
+    justify-content: inherit;
+}
+.md-banner {
+    background-color: #1E3D58;
+    color: #ffffff;
+}
+.md-banner a {
+    color: #DAA520; /* Adjust this for the link color inside the banner */
+}
+
+.md-banner a:hover {
+    color: #e31849; /* Adjust this for the link hover color inside the banner */
+}
+
+/* Maximum space for text block */
+.md-grid {
+  max-width: 80%; /* or 100%, if you want to stretch to full-width */
+}
